@@ -1,0 +1,66 @@
+import org.gradle.internal.os.OperatingSystem;
+
+apply plugin: 'com.android.application'
+
+def getNdkExecutable() {
+    def ndkDir = android.ndkDirectory.getAbsolutePath()
+    if (OperatingSystem.current().isWindows()) {
+        "$ndkDir/ndk-build.cmd"
+    }
+    else {
+        "$ndkDir/ndk-build"
+    }
+}
+
+task buildNative(type: Exec) {
+    commandLine getNdkExecutable(),
+            '-C', file('src/main/jni').absolutePath,
+            'APP_PLATFORM=android-22'
+}
+
+task cleanNative(type: Exec) {
+    commandLine getNdkExecutable(),
+            '-C', file('src/main/jni').absolutePath,
+            'clean'
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.3"
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    defaultConfig {
+        applicationId "rtandroid.ballsort"
+        minSdkVersion 22
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['src/main/libs']
+        }
+
+        tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn buildNative }
+        clean.dependsOn cleanNative
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    testCompile 'junit:junit:4.12'
+    compile fileTree(include: '*.jar', dir: 'libs')
+    provided fileTree(include: 'rtandroid-20160721.jar', dir: 'api')
+}
