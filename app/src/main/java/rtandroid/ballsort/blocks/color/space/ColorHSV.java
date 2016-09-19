@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks.color;
+package rtandroid.ballsort.blocks.color.space;
 
-public class ColorRGB
+public class ColorHSV
 {
-    public int R = 0;
-    public int G = 0;
-    public int B = 0;
+    public int H = 0;
+    public double S = 0;
+    public double V = 0;
 
-    public ColorRGB(int r, int g, int b)
+    public ColorHSV(int h, double s, double v)
     {
-        R = r;
-        G = g;
-        B = b;
+        H = h;
+        S = s;
+        V = v;
     }
 
     @Override
     public String toString()
     {
-        return "{ " + R + ", " + G + ", " + B + " }";
+        return "HSV { " + H + ", " + S + ", " + V + " }";
     }
 }

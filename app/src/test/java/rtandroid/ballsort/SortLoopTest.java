@@ -58,7 +58,6 @@ public class SortLoopTest extends SortLoop
     {
         cleanup();
 
-        assertTrue(((MockColorPattern) mColorPattern).mWasTerminated);
         assertTrue(((MockFeeder)mFeeder).mWasTerminated);
     }
 }

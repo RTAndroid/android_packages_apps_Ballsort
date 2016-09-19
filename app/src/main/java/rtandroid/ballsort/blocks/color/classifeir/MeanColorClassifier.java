@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks.color.Classifier;
+package rtandroid.ballsort.blocks.color.classifeir;
 
 import android.util.Log;
 
@@ -23,9 +23,9 @@ import java.util.Map;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.blocks.color.ColorRGB;
+import rtandroid.ballsort.blocks.color.space.ColorRGB;
 
-public class ColorMeanClassifier
+public class MeanColorClassifier implements IColorClassifier
 {
     private static final HashMap<ColorData, ColorRGB> AVERAGE_DATA = new HashMap<>();
 
@@ -128,7 +128,14 @@ public class ColorMeanClassifier
         }
     }
 
-    public static ColorData classify(ColorRGB color)
+    @Override
+    public String getName()
+    {
+        return MeanColorClassifier.class.getSimpleName();
+    }
+
+    @Override
+    public ColorData classify(ColorRGB color)
     {
         double minDistance = Long.MAX_VALUE;
         ColorData minName = ColorData.BLACK;
@@ -144,11 +151,6 @@ public class ColorMeanClassifier
 
             minDistance = distance;
             minName = entry.getKey();
-        }
-
-        if(minName.equals(ColorData.YELLOW))
-        {
-            minName = ColorTreeClassifier.classify(color);
         }
 
         Log.d(MainActivity.TAG, "Detected color: " + color.toString() + " -> " + minName.name().toLowerCase());

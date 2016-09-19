@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks;
+package rtandroid.ballsort.blocks.color.space;
 
-public class MockSlingshot extends Slingshot
+public class ColorRGB
 {
-    public boolean mAllowShotCalled = false;
-    public boolean mWasTerminated = false;
+    public int R = 0;
+    public int G = 0;
+    public int B = 0;
 
-    @Override
-    public void terminate()
+    public ColorRGB(int r, int g, int b)
     {
-        mWasTerminated = true;
+        R = r;
+        G = g;
+        B = b;
     }
 
     @Override
-    public void allowShot()
+    public String toString()
     {
-        mAllowShotCalled = true;
-    }
-
-    public void setNextState(SlingshotState state)
-    {
-        mState = state;
+        return "RGB { " + R + ", " + G + ", " + B + " }";
     }
 }

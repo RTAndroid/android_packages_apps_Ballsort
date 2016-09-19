@@ -14,19 +14,26 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks.color.Classifier;
+package rtandroid.ballsort.blocks.color.classifeir;
 
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.blocks.color.ColorRGB;
+import rtandroid.ballsort.blocks.color.space.ColorRGB;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
-public class ColorTreeClassifier
+public class TreeColorClassifier implements IColorClassifier
 {
-    public static ColorData classify(ColorRGB color)
+    @Override
+    public String getName()
+    {
+        return TreeColorClassifier.class.getSimpleName();
+    }
+
+    @Override
+    public ColorData classify(ColorRGB color)
     {
         Settings settings = SettingsManager.getSettings();
 

@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks.color;
+package rtandroid.ballsort.blocks.color.space;
 
-import android.graphics.Color;
-
-public enum ColorData
+public class ColorLAB
 {
-    BLACK(Color.BLACK),
-    BLUE(Color.BLUE),
-    GREEN(Color.GREEN),
-    RED(Color.RED),
-    YELLOW(Color.YELLOW),
-    WHITE(Color.WHITE),
-    EMPTY(Color.GRAY);
+    public double L = 0;
+    public double A = 0;
+    public double B = 0;
 
-    private int mPaintColor = Color.GRAY;
-    ColorData(int paint) { mPaintColor = paint; }
+    public ColorLAB(double l, double a, double b)
+    {
+        L = l;
+        A = a;
+        B = b;
+    }
 
-    public int getPaintColor() { return mPaintColor; }
-    public int getDefaultColumn() { return ordinal(); }
+    @Override
+    public String toString()
+    {
+        return "LAB { " + L + ", " + A + ", " + B + " }";
+    }
 }

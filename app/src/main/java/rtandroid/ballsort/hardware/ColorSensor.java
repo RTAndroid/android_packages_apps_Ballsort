@@ -19,14 +19,17 @@ package rtandroid.ballsort.hardware;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.Classifier.ClassifierManager;
 import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.blocks.color.ColorRGB;
+import rtandroid.ballsort.blocks.color.space.ColorRGB;
+import rtandroid.ballsort.blocks.color.classifeir.MeanColorClassifier;
+import rtandroid.ballsort.blocks.color.classifeir.IColorClassifier;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.root.PrivilegeElevator;
 
 public class ColorSensor
 {
+    private static final IColorClassifier COLOR_CLASSIFIER = new MeanColorClassifier();
+
     public boolean open()
     {
         try
@@ -80,7 +83,8 @@ public class ColorSensor
         int b = (int)(values) & 0xFFFF;
         ColorRGB rgb = new ColorRGB(r, g, b);
 
-        return ClassifierManager.classify(rgb);
+        Log.d(MainActivity.TAG, "Detecting the color using "+ COLOR_CLASSIFIER.getName() + " classifier...");
+        return COLOR_CLASSIFIER.classify(rgb);
     }
 
     public boolean close()

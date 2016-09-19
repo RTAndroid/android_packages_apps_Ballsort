@@ -38,7 +38,7 @@ public class AStateBlockTest
     {
         // start thread and wait at least one loop pass
         mStateBlock.start();
-        Utils.delay(10);
+        Utils.delayMs(10);
 
         // our handleState should set mIsRunning to false
         assertTrue(mStateBlock.isRunning());
@@ -54,7 +54,7 @@ public class AStateBlockTest
     {
         // start thread and wait at least one loop pass
         mStateBlock.start();
-        Utils.delay(10);
+        Utils.delayMs(10);
 
         // now terminate it again and wait until it finishes
         mStateBlock.terminate();
