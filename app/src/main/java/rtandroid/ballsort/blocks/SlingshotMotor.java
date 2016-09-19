@@ -7,10 +7,10 @@ import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
 
-public class SlingshotMotor extends AStateBlock{
-
-    private Stepper mStepper;
+public class SlingshotMotor extends AStateBlock
+{
     private static final int[] ROTATE_PATTERN = { Stepper.WHILE_OPENED, Stepper.WHILE_CLOSED, 35 };
+    private Stepper mStepper;
 
     public SlingshotMotor()
     {
@@ -52,9 +52,9 @@ public class SlingshotMotor extends AStateBlock{
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
 
-        if(mStepper.isEmergencyWaiting())
+        if (mStepper.isEmergencyWaiting())
         {
-            data.SlingshotMotorState = "STOPED";
+            data.SlingshotMotorState = "STOPPED";
         }
         else
         {

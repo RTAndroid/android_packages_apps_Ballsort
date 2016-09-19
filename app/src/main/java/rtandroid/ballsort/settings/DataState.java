@@ -24,9 +24,6 @@ public class DataState
     public ColorData mQueuedColor = ColorData.WHITE;
     public ColorData mDropColor = ColorData.WHITE;
 
-    public int BallsInFeeder = 40;
-    public int BallsInPattern = 0;
-    public int BallsInSlingshot = 0;
     public String SlingshotState = "UNKNOWN";
     public String FeederState = "UNKNOWN";
     public String PatternState = "UNKNOWN";

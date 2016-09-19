@@ -46,7 +46,6 @@ public class MainActivity extends Activity
         @Override public void run() { updateUi(); }
     };
 
-
     private enum LoopType { LOOP_SORT, LOOP_RESET }
 
     private AStateBlock mCurrentSortLoop = null;
@@ -57,8 +56,6 @@ public class MainActivity extends Activity
     private ColorView mCvQueued = null;
     private ColorView mCvNext = null;
     private ColorView mCvDrop = null;
-    private TextView mTvBallsInFeeder = null;
-    private TextView mTvBallsInSlingshot = null;
     private TextView mTvBallsDropped = null;
     private TextView mTvFreeMemory = null;
 
@@ -77,11 +74,8 @@ public class MainActivity extends Activity
         mCvNext = (ColorView) findViewById(R.id.cvNextBall);
         mCvDrop = (ColorView) findViewById(R.id.cvDropBall);
 
-        mTvBallsInFeeder = (TextView) findViewById(R.id.tvBallsInFeeder);
-        mTvBallsInSlingshot = (TextView) findViewById(R.id.tvBallsInSlingshot);
         mTvBallsDropped = (TextView) findViewById(R.id.tvBallsDropped);
         mTvFreeMemory = (TextView) findViewById(R.id.tvFreeMemory);
-
         mTvSlingshotState = (TextView) findViewById(R.id.tvSlingshotState);
         mTvSlingshotMotorState = (TextView) findViewById(R.id.tvSlingshotMotorState);
         mTvFeederState = (TextView) findViewById(R.id.tvFeederState);
@@ -183,10 +177,6 @@ public class MainActivity extends Activity
         mCvNext.setColor(data.mNextColor.getPaintColor());
         mCvDrop.setColor(data.mDropColor.getPaintColor());
 
-        mTvBallsInFeeder.setText("Feeder: " + data.BallsInFeeder + "");
-        mTvBallsInSlingshot.setText("Slingshot: " + data.BallsInSlingshot + "");
-        mTvBallsDropped.setText("Dropped: " + Sorter.getBallCount() + "");
-
         mTvSlingshotState.setText("Slingshot LightSwitch: " + data.SlingshotState + "");
         mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
         mTvFeederState.setText("Feeder state: " + data.FeederState + "");
@@ -196,17 +186,11 @@ public class MainActivity extends Activity
         long freeKB = rt.freeMemory() / 1024;
         long totalKB = rt.totalMemory() / 1024;
         mTvFreeMemory.setText("Free memory: " + freeKB + " kb / " + totalKB + " kb");
+        mTvBallsDropped.setText("Dropped: " + Sorter.getBallCount() + "");
 
-        // If the loops terminated change the switch
-        if(mCurrentSortLoop!= null && !mCurrentSortLoop.isRunning())
-        {
-            mSwchSort.setChecked(false);
-        }
-
-        if(mCurrentResetLoop!= null && !mCurrentResetLoop.isRunning())
-        {
-            mSwchReset.setChecked(false);
-        }
+        // if the loops terminated change the switch
+        if (mCurrentSortLoop!= null && !mCurrentSortLoop.isRunning()) { mSwchSort.setChecked(false); }
+        if (mCurrentResetLoop!= null && !mCurrentResetLoop.isRunning()) { mSwchReset.setChecked(false); }
 
         // the execution terminates eventually
         if (mCurrentSortLoop == null && mCurrentResetLoop == null) { return; }

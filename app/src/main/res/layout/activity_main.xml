@@ -10,17 +10,16 @@
         android:layout_height="0px"
         android:focusable="true"
         android:focusableInTouchMode="true" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <rtandroid.ballsort.gui.ColorView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/cvQueuedBall"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
         <rtandroid.ballsort.gui.ColorView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/cvNextBall"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -30,33 +29,22 @@
             android:id="@+id/cvDropBall"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_toRightOf="@id/cvNextBall"
+            android:layout_toEndOf="@id/cvNextBall"
             android:layout_below="@id/cvQueuedBall"/>
     </RelativeLayout>
-    <TextView
-        android:id="@+id/tvBallsInFeeder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/feeder" />
-
-    <TextView
-        android:id="@+id/tvBallsInSlingshot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/slingshot" />
 
     <TextView
         android:id="@+id/tvBallsDropped"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:text="@string/dropped" />
 
     <TextView
         android:id="@+id/tvFreeMemory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/slingshot" />
+        android:text="@string/memory" />
 
     <TextView
         android:id="@+id/tvSlingshotState"

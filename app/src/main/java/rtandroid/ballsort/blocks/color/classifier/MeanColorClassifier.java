@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks.color.classifeir;
+package rtandroid.ballsort.blocks.color.classifier;
 
 import android.util.Log;
 

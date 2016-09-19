@@ -30,7 +30,6 @@ public class ColorPattern
 {
     public static final int SKIP = -1;
 
-
     protected GPIOPin mBottomPins = null;
     protected int[] mFillings = null;
 
@@ -50,17 +49,12 @@ public class ColorPattern
         data.PatternState = Constants.BLOCK_STOPPED;
     }
 
-
     public void resetPattern()
     {
         mBottomPins.setValue(false);
         mIgnoredBalls = 0;
         mShouldOpenPins = 0;
-        DataState data = SettingsManager.getData();
-        data.BallsInSlingshot += data.BallsInPattern;
-        data.BallsInPattern = 0;
     }
-
 
     /**
      * This will map an upcoming ball to its corresponding location in the pattern.
@@ -70,20 +64,18 @@ public class ColorPattern
      */
     public int getNextColumn(ColorData color)
     {
-        //TODO remove tmp solution
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
 
         if (mIgnoredBalls < settings.BallsToIgnoreAtReset)
         {
-            data.BallsInSlingshot++;
             mIgnoredBalls++;
 
             data.PatternState = "IGNORING";
-
-            return  Constants.PATTERN_COLUMNS_COUNT - 1;
+            return Constants.PATTERN_COLUMNS_COUNT - 1;
         }
-        if(mShouldOpenPins == 0) { mShouldOpenPins = 1; }
+
+        if (mShouldOpenPins == 0) { mShouldOpenPins = 1; }
         
         data.PatternState = "BUILDING";
         // ignore empty spaces
@@ -92,8 +84,9 @@ public class ColorPattern
         int col = color.getDefaultColumn();
         if(mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
         mFillings[col]++;
-        if(1==1)return col;
 
+        // TODO: remove
+        if (1 == 1) { return col; }
 
         for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
         {
@@ -103,12 +96,10 @@ public class ColorPattern
             if (settings.Pattern[row][place] == color.getPaintColor() && place < Constants.PATTERN_COLUMNS_SIZE)
             {
                 mFillings[row]++;
-                data.BallsInPattern++;
                 return row;
             }
         }
 
-        data.BallsInSlingshot++;
         return SKIP;
     }
 
@@ -158,7 +149,7 @@ public class ColorPattern
 
     public void preparePins()
     {
-        if(mShouldOpenPins == 1)
+        if (mShouldOpenPins == 1)
         {
             Settings settings = SettingsManager.getSettings();
             mBottomPins.setValue(true);

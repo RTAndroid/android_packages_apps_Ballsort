@@ -20,15 +20,16 @@ import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorData;
+import rtandroid.ballsort.blocks.color.classifier.NeuronalColorClassifier;
 import rtandroid.ballsort.blocks.color.space.ColorRGB;
-import rtandroid.ballsort.blocks.color.classifeir.MeanColorClassifier;
-import rtandroid.ballsort.blocks.color.classifeir.IColorClassifier;
+import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
+import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.root.PrivilegeElevator;
 
 public class ColorSensor
 {
-    private static final IColorClassifier COLOR_CLASSIFIER = new MeanColorClassifier();
+    private static final IColorClassifier COLOR_CLASSIFIER = new NeuronalColorClassifier();
 
     public boolean open()
     {

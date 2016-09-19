@@ -131,8 +131,6 @@ public class Feeder extends AStateBlock
             // Drop the ball
             case DROPPING:
                 mDropPin.setValueForMs(settings.FeederValveDropDelay, 0);
-                data.BallsInFeeder--;
-                data.BallsInPattern++;
                 mState = FeederState.ROTATING;
                 break;
         }

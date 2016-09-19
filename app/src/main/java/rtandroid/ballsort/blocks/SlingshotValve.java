@@ -29,27 +29,28 @@ import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
 
 /**
- * Block that shoots the balls back into the feeder. Used for resetting
+ * Block that shoots the balls back into the feeder. Used for resetting.
  */
-public class SlingshotLightSwitch extends AStateBlock
+public class SlingshotValve extends AStateBlock
 {
-    public enum SlingshotState
+    private enum SlingshotState
     {
         CHECKING, // Check if the ball is in the lightswitch
         READY,    // Ball is ready to be shot
         SHOOTING, // Ball is being shot
     }
 
+    private long mLastShot = 0;
+    private boolean mError = false;
+
     protected SlingshotState mState = SlingshotState.CHECKING;
     protected GPIOPin mLightswitch = null;
     protected TimedGPIOPin mValvePin = null;
     protected int mEmptyRotations = 0;
-    private long mLastShot = 0;
-    private boolean mError = false;
 
-    public SlingshotLightSwitch()
+    public SlingshotValve()
     {
-        super("SlingshotLightSwitch", Constants.THREAD_BLOCK_PRIORITY);
+        super("SlingshotValve", Constants.THREAD_BLOCK_PRIORITY);
 
         int lightSwitchPinID = Constants.SLINGSHOT_LIGHTSWITCH_PIN;
         mLightswitch = new GPIOPin("SlingshotLightswitch", lightSwitchPinID, GPIOPin.DIRECTION_IN, false);
@@ -60,27 +61,18 @@ public class SlingshotLightSwitch extends AStateBlock
 
     public void allowShot()
     {
-        if (mState != SlingshotState.READY) { return; }
-        if (mState == SlingshotState.SHOOTING) { return; }
-
         Log.d(MainActivity.TAG, "Allowing slingshot...");
         mState = SlingshotState.SHOOTING;
     }
 
     public boolean ballReady()
     {
-        return mState.equals(SlingshotState.READY);
+        return mState == SlingshotState.READY;
     }
 
     public boolean isError()
     {
         return mError;
-    }
-
-    @Override
-    protected void cancel()
-    {
-        super.cancel();
     }
 
     @Override
@@ -102,40 +94,34 @@ public class SlingshotLightSwitch extends AStateBlock
 
         switch (mState)
         {
+        // Shoot ball up
+        case SHOOTING:
+            mValvePin.setValueForMs(settings.SlingshotValveOpenDelay);
+            mState = SlingshotState.CHECKING;
+            break;
 
-            // Shoot ball up
-            case SHOOTING:
-                mValvePin.setValueForMs(settings.SlingshotValveOpenDelay);
-                data.BallsInSlingshot--;
-                data.BallsInFeeder++;
-                mState = SlingshotState.CHECKING;
-                break;
+        // Wait for all to arrive
+        case CHECKING:
+            long thisTime = System.nanoTime()/1000;
+            long timeDelta = thisTime - mLastShot;
+            if (timeDelta < settings.SlingshotErrorThreshold) { mError = true; }
 
-            // Wait for all to arrive
-            case CHECKING:
-                long thisTime = System.nanoTime()/1000;
-                long timeDelta = thisTime - mLastShot;
+            if (!mLightswitch.getValue())
+            {
+                Utils.delayMs(settings.SlingshotDelayBeforeShoot);
+                mState = SlingshotState.READY;
+                mEmptyRotations = 0;
+                mLastShot = thisTime;
+            }
 
-                if (!mLightswitch.getValue())
-                {
-                    Utils.delayMs(settings.SlingshotDelayBeforeShoot);
+            // release error
+            if (mError && timeDelta > settings.SlingshotErrorFreeThreshold) { mError = false; }
+            break;
 
-                    // Check for error
-                    if(timeDelta < settings.SlingshotErrorThreshold) { mError = true; }
-
-                    mState = SlingshotState.READY;
-                    mEmptyRotations = 0;
-                    mLastShot = thisTime;
-                }
-
-                // Release error
-                if(mError && timeDelta > settings.SlingshotErrorFreeThreshold) { mError = false; }
-                break;
-
-            // Do nothing until a ball is infront of the slighshot
-            case READY:
-                if (mLightswitch.getValue()) { mState = SlingshotState.CHECKING; }
-                break;
+        // Do nothing until a ball is infront of the slighshot
+        case READY:
+            if (mLightswitch.getValue()) { mState = SlingshotState.CHECKING; }
+            break;
         }
     }
 }

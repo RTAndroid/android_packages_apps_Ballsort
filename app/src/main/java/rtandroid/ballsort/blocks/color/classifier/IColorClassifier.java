@@ -1,4 +1,4 @@
-package rtandroid.ballsort.blocks.color.classifeir;
+package rtandroid.ballsort.blocks.color.classifier;
 
 import rtandroid.ballsort.blocks.color.ColorData;
 import rtandroid.ballsort.blocks.color.space.ColorRGB;

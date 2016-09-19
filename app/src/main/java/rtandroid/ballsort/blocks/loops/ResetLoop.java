@@ -17,14 +17,14 @@
 package rtandroid.ballsort.blocks.loops;
 
 import rtandroid.ballsort.blocks.AStateBlock;
-import rtandroid.ballsort.blocks.SlingshotLightSwitch;
+import rtandroid.ballsort.blocks.SlingshotValve;
 import rtandroid.ballsort.blocks.SlingshotMotor;
 import rtandroid.ballsort.blocks.color.ColorPattern;
 import rtandroid.ballsort.settings.Constants;
 
 public class ResetLoop extends AStateBlock
 {
-    protected SlingshotLightSwitch mSlingshotLightSwitch = null;
+    protected SlingshotValve mSlingshotValve = null;
     protected SlingshotMotor mSlingshotMotor = null;
     protected ColorPattern mColorRows = null;
 
@@ -32,7 +32,7 @@ public class ResetLoop extends AStateBlock
     {
         super("ResetLoop", Constants.THREAD_BLOCK_PRIORITY);
 
-        mSlingshotLightSwitch = new SlingshotLightSwitch();
+        mSlingshotValve = new SlingshotValve();
         mSlingshotMotor = new SlingshotMotor();
         mColorRows = new ColorPattern();
     }
@@ -43,7 +43,7 @@ public class ResetLoop extends AStateBlock
         super.prepare();
 
         // start all the other threads
-        mSlingshotLightSwitch.start();
+        mSlingshotValve.start();
         mSlingshotMotor.start();
 
         // Open the pattern
@@ -56,11 +56,11 @@ public class ResetLoop extends AStateBlock
         super.cleanup();
 
         // terminate all the other threads
-        mSlingshotLightSwitch.terminate();
+        mSlingshotValve.terminate();
         mSlingshotMotor.terminate();
 
         // now wait for all of them to terminate
-        mSlingshotLightSwitch.waitFor();
+        mSlingshotValve.waitFor();
         mSlingshotMotor.waitFor();
 
         mColorRows.cleanup();
@@ -69,10 +69,13 @@ public class ResetLoop extends AStateBlock
     @Override
     protected void handleState()
     {
-        if (mSlingshotLightSwitch.isError()) { mSlingshotMotor.forbid(); }
-        else { mSlingshotMotor.allow(); }
+        if (mSlingshotValve.isError()) { mSlingshotMotor.forbid(); }
+                                        else { mSlingshotMotor.allow(); }
 
-        if (mSlingshotLightSwitch.ballReady()) { mSlingshotLightSwitch.allowShot(); }
+        // there is currently nothing to do here
+        if (!mSlingshotValve.ballReady()) { return; }
 
+        // we know there is a ball ready to be shot
+        mSlingshotValve.allowShot();
     }
 }
