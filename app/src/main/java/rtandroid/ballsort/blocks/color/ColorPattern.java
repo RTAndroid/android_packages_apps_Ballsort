@@ -82,7 +82,7 @@ public class ColorPattern
         if(color.equals(ColorData.EMPTY)) { return SKIP; }
 
         int col = color.getDefaultColumn();
-        if(mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
+        if (mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
         mFillings[col]++;
 
         // TODO: remove

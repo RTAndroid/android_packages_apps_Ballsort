@@ -16,13 +16,13 @@
 
 package rtandroid.ballsort.blocks.color.space;
 
-public class ColorLAP
+public class ColorLAB
 {
     public double L = 0;
     public double A = 0;
     public double B = 0;
 
-    public ColorLAP(double l, double a, double b)
+    public ColorLAB(double l, double a, double b)
     {
         L = l;
         A = a;

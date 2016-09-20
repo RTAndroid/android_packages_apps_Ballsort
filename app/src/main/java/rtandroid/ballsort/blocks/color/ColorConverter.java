@@ -3,7 +3,7 @@ package rtandroid.ballsort.blocks.color;
 import android.graphics.Color;
 
 import rtandroid.ballsort.blocks.color.space.ColorHSV;
-import rtandroid.ballsort.blocks.color.space.ColorLAP;
+import rtandroid.ballsort.blocks.color.space.ColorLAB;
 import rtandroid.ballsort.blocks.color.space.ColorRGB;
 
 /**
@@ -28,7 +28,7 @@ public class ColorConverter
         return v;
     }
 
-    public static ColorLAP rgb2lab(ColorRGB color)
+    public static ColorLAB rgb2lab(ColorRGB color)
     {
         double[] whitePointChromaD65 = {0.3127, 0.3290, 100.0};
 
@@ -44,6 +44,6 @@ public class ColorConverter
         double a = 500.0 * (x - y);
         double b = 200.0 * (y - z);
 
-        return new ColorLAP(l, a, b);
+        return new ColorLAB(l, a, b);
     }
 }

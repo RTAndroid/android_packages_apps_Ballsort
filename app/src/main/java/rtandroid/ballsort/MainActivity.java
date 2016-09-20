@@ -17,6 +17,7 @@
 package rtandroid.ballsort;
 
 import android.app.Activity;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import rtandroid.ballsort.blocks.AStateBlock;
+import rtandroid.ballsort.blocks.color.classifier.NeuronalColorClassifier;
 import rtandroid.ballsort.blocks.loops.ResetLoop;
 import rtandroid.ballsort.blocks.loops.SortLoop;
 import rtandroid.ballsort.gui.ColorView;
@@ -138,10 +140,15 @@ public class MainActivity extends Activity
         Sorter.extract(this);
         Sorter.load();
 
-        // Create two temporary loops to initialise the needed hardware
+        // create two temporary loops to initialise the needed hardware
         Log.i(TAG, "Initialising Hardware");
         mCurrentSortLoop = new SortLoop();
         mCurrentResetLoop = new ResetLoop();
+
+        // start some learning
+//        Runnable job = new Runnable() { @Override public void run() { NeuronalColorClassifier.startLearning(); } };
+//        Thread learner = new Thread(job, "NeuralNet Learning Thread");
+//        learner.start();
     }
 
     private void startMainLoop(LoopType type)
