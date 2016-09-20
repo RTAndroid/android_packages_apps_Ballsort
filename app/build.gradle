@@ -26,7 +26,7 @@ task cleanNative(type: Exec) {
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '24.0.2'
 
     testOptions {
         unitTests.returnDefaultValues = true
@@ -38,6 +38,10 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        jackOptions {
+            enabled true
+        }
     }
 
     buildTypes {
@@ -56,12 +60,18 @@ android {
         tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn buildNative }
         clean.dependsOn cleanNative
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile files('src/main/libs/neuroph-core-2.92.jar')
-
+    compile files('src/main/libs/slf4j-android-1.7.21.jar')
+    compile files('src/main/libs/slf4j-api-1.7.21.jar')
     provided fileTree(include: 'rtandroid-20160721.jar', dir: 'api')
 }

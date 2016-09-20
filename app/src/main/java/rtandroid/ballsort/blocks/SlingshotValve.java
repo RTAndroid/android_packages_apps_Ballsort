@@ -19,7 +19,6 @@ package rtandroid.ballsort.blocks;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.hardware.Stepper;
 import rtandroid.ballsort.hardware.pins.GPIOPin;
 import rtandroid.ballsort.hardware.pins.TimedGPIOPin;
 import rtandroid.ballsort.settings.Constants;
@@ -40,7 +39,7 @@ public class SlingshotValve extends AStateBlock
         SHOOTING, // Ball is being shot
     }
 
-    private long mLastShot = 0;
+    private long mLastTimestamp = 0;
     private boolean mError = false;
 
     protected SlingshotState mState = SlingshotState.CHECKING;
@@ -61,7 +60,6 @@ public class SlingshotValve extends AStateBlock
 
     public void allowShot()
     {
-        Log.d(MainActivity.TAG, "Allowing slingshot...");
         mState = SlingshotState.SHOOTING;
     }
 
@@ -96,26 +94,27 @@ public class SlingshotValve extends AStateBlock
         {
         // Shoot ball up
         case SHOOTING:
+            Utils.delayMs(settings.SlingshotDelayBeforeShoot);
             mValvePin.setValueForMs(settings.SlingshotValveOpenDelay);
             mState = SlingshotState.CHECKING;
             break;
 
         // Wait for all to arrive
         case CHECKING:
-            long thisTime = System.nanoTime()/1000;
-            long timeDelta = thisTime - mLastShot;
-            if (timeDelta < settings.SlingshotErrorThreshold) { mError = true; }
+            long timestampUs = System.nanoTime() / 1000;
+            long delta = timestampUs - mLastTimestamp;
 
-            if (!mLightswitch.getValue())
+            boolean ready = !mLightswitch.getValue();
+            if (ready && delta < settings.SlingshotErrorThreshold) { mError = true; }
+            if (mError && delta > settings.SlingshotFreeThreshold) { mError = false; }
+
+            if (ready)
             {
-                Utils.delayMs(settings.SlingshotDelayBeforeShoot);
+                Log.d(MainActivity.TAG, "");
                 mState = SlingshotState.READY;
                 mEmptyRotations = 0;
-                mLastShot = thisTime;
+                mLastTimestamp = timestampUs;
             }
-
-            // release error
-            if (mError && timeDelta > settings.SlingshotErrorFreeThreshold) { mError = false; }
             break;
 
         // Do nothing until a ball is infront of the slighshot

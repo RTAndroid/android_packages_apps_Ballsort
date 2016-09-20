@@ -29,17 +29,15 @@ public class Settings implements Serializable
     public final int FeederStepperPwmDelay = 700;
     public int FeederValveDropDelay =  500;
 
-    public final int SlingshotStepperPwmDelay = 350;
-    public final int SlingshotValveOpenDelay = 97;
+    public final int SlingshotStepperPwmDelay = 400;
+    public final int SlingshotValveOpenDelay = 100;
     public final int SlingshotDelayAfterRotate = 350;
     public final int SlingshotDelayBeforeShoot = 400;
-    public final long SlingshotErrorThreshold =  800000;
-    public long SlingshotErrorFreeThreshold   = 2000000;
+    public final long SlingshotErrorThreshold =  700000;
+    public final long SlingshotFreeThreshold = 2000000;
 
     public final int BallsToIgnoreAtReset = 3;
     public final int BeforeDropDelay = 100;
-
-    public final int PatternPinsDelay = 750;
 
     public final int BaseDelayMs = 54;
     public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7800, 8500, 9240 };
@@ -50,9 +48,6 @@ public class Settings implements Serializable
 
     public final int BusyWaitDelay = 1;
     public final int NextBallDelay = 2000;
-    public int StateDelay = 25;
 
     public final int[][] Pattern = new int[PATTERN_COLUMNS_COUNT][PATTERN_COLUMNS_SIZE];
-
-
 }

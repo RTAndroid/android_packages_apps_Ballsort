@@ -149,11 +149,11 @@ public class ColorPattern
 
     public void preparePins()
     {
+        // TODO: WTH is 0,1,2?
         if (mShouldOpenPins == 1)
         {
             Settings settings = SettingsManager.getSettings();
             mBottomPins.setValue(true);
-            Utils.delayMs(settings.PatternPinsDelay);
             mShouldOpenPins = 2;
         }
     }

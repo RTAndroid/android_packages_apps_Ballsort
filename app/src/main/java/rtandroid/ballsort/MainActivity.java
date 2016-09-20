@@ -17,13 +17,10 @@
 package rtandroid.ballsort;
 
 import android.app.Activity;
-import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -43,10 +40,7 @@ public class MainActivity extends Activity
     private static final int REFRESH_RATE_MS = 200;
 
     private final Handler mUiUpdateHandler = new Handler();
-    private final Runnable mUiUpdateRunnable = new Runnable()
-    {
-        @Override public void run() { updateUi(); }
-    };
+    private final Runnable mUiUpdateRunnable = this::updateUi;
 
     private enum LoopType { LOOP_SORT, LOOP_RESET }
 
@@ -87,52 +81,36 @@ public class MainActivity extends Activity
         mSwchReset = (Switch) findViewById(R.id.swReset);
 
         Button btnSave = (Button) findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(new View.OnClickListener()
+        btnSave.setOnClickListener(v ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                SettingsManager.writeToFile();
-                Log.i(TAG, "Settings saved");
-            }
+            SettingsManager.writeToFile();
+            Log.i(TAG, "Settings saved");
         });
 
         Button btnLoad = (Button) findViewById(R.id.btnLoad);
-        btnLoad.setOnClickListener(new View.OnClickListener()
+        btnLoad.setOnClickListener(v ->
         {
-            @Override
-            public void onClick(View v)
+            SettingsManager.readFromFile();
+            Log.i(TAG, "Settings loaded");
+        });
+
+        mSwchSort.setOnCheckedChangeListener((buttonView, isChecked) ->
+        {
+            if (isChecked) { startMainLoop(LoopType.LOOP_SORT); }
+            else
             {
-                SettingsManager.readFromFile();
-                Log.i(TAG, "Settings loaded");
+                stopLoop(mCurrentSortLoop);
+                mCurrentSortLoop = null;
             }
         });
 
-        mSwchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        mSwchReset.setOnCheckedChangeListener((buttonView, isChecked) ->
         {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            if (isChecked) { startMainLoop(LoopType.LOOP_RESET); }
+            else
             {
-                if (isChecked) { startMainLoop(LoopType.LOOP_SORT); }
-                else
-                {
-                    stopLoop(mCurrentSortLoop);
-                    mCurrentSortLoop = null;
-                }
-            }
-        });
-
-        mSwchReset.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if (isChecked) { startMainLoop(LoopType.LOOP_RESET); }
-                else
-                {
-                    stopLoop(mCurrentResetLoop);
-                    mCurrentResetLoop = null;
-                }
+                stopLoop(mCurrentResetLoop);
+                mCurrentResetLoop = null;
             }
         });
 
@@ -146,8 +124,8 @@ public class MainActivity extends Activity
         mCurrentResetLoop = new ResetLoop();
 
         // start some learning
-//        Runnable job = new Runnable() { @Override public void run() { NeuronalColorClassifier.startLearning(); } };
-//        Thread learner = new Thread(job, "NeuralNet Learning Thread");
+        Runnable job = NeuronalColorClassifier::learn;
+        Thread learner = new Thread(job, "NeuralNet Learning Thread");
 //        learner.start();
     }
 

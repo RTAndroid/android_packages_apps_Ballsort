@@ -15,34 +15,23 @@ public class ColorConverter
     public static ColorHSV rgb2hsv(ColorRGB color)
     {
         float[] hsv = new float[3];
-        Color.RGBToHSV(color.R, color.G, color.B, hsv);
-
+        Color.RGBToHSV(color.R / 256, color.G / 256, color.B / 256, hsv);
         return new ColorHSV((int) hsv[0], hsv[1], hsv[2]);
-    }
-
-    private static double normalizeLab(double v)
-    {
-        if (v > 0.008856) { v = Math.pow(v, 1.0 / 3.0); }
-                     else { v = (7.787 * v) + (16.0 / 116.0); }
-
-        return v;
     }
 
     public static ColorLAB rgb2lab(ColorRGB color)
     {
-        double[] whitePointChromaD65 = {0.3127, 0.3290, 100.0};
+        double R = color.R / 256;
+        double G = color.G / 256;
+        double B = color.B / 256;
 
-        double x = color.R / whitePointChromaD65[0];
-        double y = color.G / whitePointChromaD65[1];
-        double z = color.B / whitePointChromaD65[2];
+        double x = 0.4124564 * R + 0.3575761 * G + 0.1804375 * B;
+        double y = 0.2126729 * R + 0.7151522 * G + 0.0721750 * B;
+        double z = 0.0193339 * R + 0.1191920 * G + 0.9503041 * B;
 
-        normalizeLab(x);
-        normalizeLab(y);
-        normalizeLab(z);
-
-        double l = (116.0 * y) - 16.0;
-        double a = 500.0 * (x - y);
-        double b = 200.0 * (y - z);
+        double l = 0 + y;
+        double a = x - y;
+        double b = y - z;
 
         return new ColorLAB(l, a, b);
     }
