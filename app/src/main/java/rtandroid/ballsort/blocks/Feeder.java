@@ -117,22 +117,24 @@ public class Feeder extends AStateBlock
 
         switch (mState)
         {
-            // Rotate ball, that is currently in front of the color sensor to the drop
-            case ROTATING:
-                mStepper.doSteps(ROTATE_PATTERN);
-                data.mDropColor = data.mNextColor;
-                data.mNextColor = data.mQueuedColor;
-                data.mQueuedColor = mColorSensor.detectColor();
-                mState = FeederState.READY;
-                break;
-            // Do nothing
-            case READY:
-                break;
-            // Drop the ball
-            case DROPPING:
-                mDropPin.setValueForMs(settings.FeederValveDropDelay, 0);
-                mState = FeederState.ROTATING;
-                break;
+        // Rotate ball, that is currently in front of the color sensor to the drop
+        case ROTATING:
+            mStepper.doSteps(ROTATE_PATTERN);
+            data.mDropColor = data.mNextColor;
+            data.mNextColor = data.mQueuedColor;
+            data.mQueuedColor = mColorSensor.detectColor();
+            mState = FeederState.READY;
+            break;
+
+        // Do nothing
+        case READY:
+            break;
+
+        // Drop the ball
+        case DROPPING:
+            mDropPin.setValueForMs(settings.FeederValveDropDelay, 0);
+            mState = FeederState.ROTATING;
+            break;
         }
     }
 }

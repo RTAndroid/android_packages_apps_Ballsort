@@ -119,14 +119,9 @@ public class MainActivity extends Activity
         Sorter.load();
 
         // create two temporary loops to initialise the needed hardware
-        Log.i(TAG, "Initialising Hardware");
+        Log.i(TAG, "Initialising hardware state...");
         mCurrentSortLoop = new SortLoop();
         mCurrentResetLoop = new ResetLoop();
-
-        // start some learning
-        Runnable job = NeuronalColorClassifier::learn;
-        Thread learner = new Thread(job, "NeuralNet Learning Thread");
-//        learner.start();
     }
 
     private void startMainLoop(LoopType type)

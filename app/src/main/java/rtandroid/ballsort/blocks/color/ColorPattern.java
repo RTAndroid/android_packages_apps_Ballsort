@@ -152,7 +152,6 @@ public class ColorPattern
         // TODO: WTH is 0,1,2?
         if (mShouldOpenPins == 1)
         {
-            Settings settings = SettingsManager.getSettings();
             mBottomPins.setValue(true);
             mShouldOpenPins = 2;
         }

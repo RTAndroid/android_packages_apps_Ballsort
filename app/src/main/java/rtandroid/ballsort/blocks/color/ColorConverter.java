@@ -21,9 +21,9 @@ public class ColorConverter
 
     public static ColorLAB rgb2lab(ColorRGB color)
     {
-        double R = color.R / 256;
-        double G = color.G / 256;
-        double B = color.B / 256;
+        double R = color.R / 256 / 255.0;
+        double G = color.G / 256 / 255.0;
+        double B = color.B / 256 / 255.0;
 
         double x = 0.4124564 * R + 0.3575761 * G + 0.1804375 * B;
         double y = 0.2126729 * R + 0.7151522 * G + 0.0721750 * B;

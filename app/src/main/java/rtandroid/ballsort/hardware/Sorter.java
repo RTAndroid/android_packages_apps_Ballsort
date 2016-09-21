@@ -73,7 +73,6 @@ public class Sorter
             Log.i(MainActivity.TAG, "Opening native memory returned '" + result + "'");
 
             PrivilegeElevator.disableRoot();
-
             mLoaded = result;
         }
         catch (Error | Exception e) { Log.e(MainActivity.TAG, "Exception during sorting module loading: " + e.getMessage()); }
@@ -86,7 +85,6 @@ public class Sorter
         if(!mLoaded) { return; }
 
         closeMemory();
-
 
         String moduleName = Constants.MODULE_SORTING + ".ko";
         String modulePath = sPath + "/" + moduleName;

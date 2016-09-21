@@ -26,15 +26,15 @@ public class Settings implements Serializable
     public int StepperEnableDelay = 1;
     public int StepperDisableDelay = 1;
 
-    public final int FeederStepperPwmDelay = 700;
+    public final int FeederStepperPwmDelay = 750;
     public int FeederValveDropDelay =  500;
 
-    public final int SlingshotStepperPwmDelay = 400;
+    public final int SlingshotStepperPwmDelay = 450;
     public final int SlingshotValveOpenDelay = 100;
     public final int SlingshotDelayAfterRotate = 350;
     public final int SlingshotDelayBeforeShoot = 400;
     public final long SlingshotErrorThreshold =  700000;
-    public final long SlingshotFreeThreshold = 2000000;
+    public final long SlingshotFreeThreshold = 2200000;
 
     public final int BallsToIgnoreAtReset = 3;
     public final int BeforeDropDelay = 100;
@@ -47,7 +47,7 @@ public class Settings implements Serializable
     public final double ColorYellowThreshold = 0.8;
 
     public final int BusyWaitDelay = 1;
-    public final int NextBallDelay = 2000;
+    public final int AfterDropDelay = 2000;
 
     public final int[][] Pattern = new int[PATTERN_COLUMNS_COUNT][PATTERN_COLUMNS_SIZE];
 }
