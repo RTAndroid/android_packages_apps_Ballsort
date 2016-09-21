@@ -17,26 +17,18 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <jni.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
 
-#include <linux/netlink.h>
-#include <sys/socket.h>
 #include <sys/types.h>
-#include <sys/mman.h>
-
-#include "rt_data.h"
 
 #include <android/log.h>
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, "Ballsort-JNI", __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, "Ballsort-JNI", __VA_ARGS__)
 
 int fd = 0;
-volatile rt_control_data* data;
 
 extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_Sorter_openMemory(JNIEnv* env, jobject obj)
 {
@@ -53,37 +45,31 @@ extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_Sorter_openMemory(J
     fd = open("/proc/rtdma", O_RDWR);
     if (fd < 0)
     {
-        LOGE("Failed to open rtdma debug filesystem. errno: %d", errno);
+        LOGE("Failed to open rtdma proc entry. errno: %d", errno);
         return JNI_FALSE;
     }
-
-    // try to get access to that memory
-    data = (rt_control_data*) mmap(NULL, RT_PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    if (data == NULL || data == MAP_FAILED)
-    {
-        LOGE("Failed to mmap the control data. errno: %d", errno);
-        return JNI_FALSE;
-    }
-
-    // init delays
-    data->base_delay = 0;
-    data->next_delay = 0;
-    data->ball_count = 0;
 
     // we are good to go
-    LOGI("Memory was opened");
+    LOGI("File was opened");
     return JNI_TRUE;
 }
 
 extern "C" void JNICALL Java_rtandroid_ballsort_hardware_Sorter_setDelays(JNIEnv* env, jobject obj, jint baseDelay, jint nextDelay)
 {
-    data->base_delay = baseDelay;
-    data->next_delay = nextDelay;
+    char result[256];
+    memset(result, 0, sizeof(result));
+    sprintf(result, "%d,%d", baseDelay, nextDelay);
+
+    write(fd, result, strlen(result));
 }
 
 extern "C" jint JNICALL Java_rtandroid_ballsort_hardware_Sorter_getBallCount(JNIEnv* env, jobject obj)
 {
-    return data->ball_count;
+    char result[256];
+    memset(result, 0, sizeof(result));
+
+    read(fd, result, sizeof(result));
+    return atoi(result);
 }
 
 extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_Sorter_closeMemory(JNIEnv* env, jobject obj)
@@ -102,4 +88,5 @@ extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_Sorter_closeMemory(
     fd = 0;
 
     LOGI("Memory was closed");
+    return JNI_TRUE;
 }
