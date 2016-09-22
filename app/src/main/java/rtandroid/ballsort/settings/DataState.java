@@ -16,16 +16,15 @@
 
 package rtandroid.ballsort.settings;
 
-import rtandroid.ballsort.blocks.color.ColorData;
+import rtandroid.ballsort.blocks.color.ColorType;
 
 public class DataState
 {
-    public ColorData mNextColor = ColorData.WHITE;
-    public ColorData mQueuedColor = ColorData.WHITE;
-    public ColorData mDropColor = ColorData.WHITE;
+    public ColorType mQueuedColor = ColorType.WHITE;
+    public ColorType mDetectedColor = ColorType.WHITE;
+    public ColorType mDropColor = ColorType.WHITE;
 
-    public String SlingshotState = "UNKNOWN";
+    public String SlingshotValveState = "UNKNOWN";
     public String FeederState = "UNKNOWN";
-    public String PatternState = "UNKNOWN";
     public String SlingshotMotorState = "UNKNOWN";
 }

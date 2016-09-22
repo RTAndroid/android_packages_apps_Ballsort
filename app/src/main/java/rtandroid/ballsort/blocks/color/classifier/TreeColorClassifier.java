@@ -19,8 +19,7 @@ package rtandroid.ballsort.blocks.color.classifier;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.blocks.color.space.ColorRGB;
+import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
@@ -33,12 +32,12 @@ public class TreeColorClassifier implements IColorClassifier
     }
 
     @Override
-    public ColorData classify(ColorRGB color)
+    public ColorType classify(int r, int g, int b)
     {
         Settings settings = SettingsManager.getSettings();
 
-        long colSum = color.R + color.G + color.B;
-        ColorData detected = ColorData.BLACK;
+        long colSum = r + g + b;
+        ColorType detected = ColorType.BLACK;
 
         long colMean = colSum / 3;
         Log.d(MainActivity.TAG, "colMean is: "+colMean);
@@ -46,14 +45,14 @@ public class TreeColorClassifier implements IColorClassifier
         // light color
         if (colMean > settings.ColorLightColorThreshold)
         {
-            double bDivColMean = (double) color.B / colMean;
+            double bDivColMean = (double) b / colMean;
             if (bDivColMean > settings.ColorYellowThreshold)
             {
-                detected = ColorData.WHITE;
+                detected = ColorType.WHITE;
             }
             else
             {
-                detected = ColorData.YELLOW;
+                detected = ColorType.YELLOW;
             }
         // dark color
         }
@@ -62,30 +61,30 @@ public class TreeColorClassifier implements IColorClassifier
             // black
             if(colMean < settings.ColorBlackThreshold)
             {
-                detected = ColorData.BLACK;
+                detected = ColorType.BLACK;
             }
             else
             {
                 long maxColValue =0;
 
-                if (color.R > maxColValue)
+                if (r > maxColValue)
                 {
-                    detected = ColorData.RED;
-                    maxColValue = color.R;
+                    detected = ColorType.RED;
+                    maxColValue = r;
                 }
-                if (color.G > maxColValue)
+                if (g > maxColValue)
                 {
-                    detected = ColorData.GREEN;
-                    maxColValue=color.G;
+                    detected = ColorType.GREEN;
+                    maxColValue = g;
                 }
-                if (color.B > maxColValue)
+                if (b > maxColValue)
                 {
-                    detected = ColorData.BLUE;
+                    detected = ColorType.BLUE;
                 }
             }
 
         }
-        Log.d(MainActivity.TAG, "Detected color: " + color.toString() + " -> " + detected.name().toLowerCase());
+
         return detected;
     }
 }

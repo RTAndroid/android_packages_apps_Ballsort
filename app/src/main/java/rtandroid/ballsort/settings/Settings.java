@@ -30,9 +30,10 @@ public class Settings implements Serializable
     public int FeederValveDropDelay =  500;
 
     public final int SlingshotStepperPwmDelay = 450;
-    public final int SlingshotValveOpenDelay = 100;
-    public final int SlingshotDelayAfterRotate = 350;
-    public final int SlingshotDelayBeforeShoot = 400;
+    public final int SlingshotDelayAfterRotate = 300;
+
+    public final int SlingshotValveOpenDelay = 110;
+    public final int SlingshotDelayBeforeShoot = 200;
     public final long SlingshotErrorThreshold =  700000;
     public final long SlingshotFreeThreshold = 2200000;
 
@@ -43,7 +44,7 @@ public class Settings implements Serializable
     public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7800, 8500, 9240 };
 
     public final int ColorLightColorThreshold = 1350;
-    public final int ColorBlackThreshold = 580 ;
+    public final int ColorBlackThreshold = 580;
     public final double ColorYellowThreshold = 0.8;
 
     public final int BusyWaitDelay = 1;

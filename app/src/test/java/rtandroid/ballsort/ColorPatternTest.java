@@ -8,8 +8,7 @@ import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.*;
 
-import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.hardware.MockOutputPin;
+import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.color.ColorPattern;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.Settings;
@@ -44,7 +43,7 @@ public class ColorPatternTest extends ColorPattern
 
         for (int i = 0; i < Constants.PATTERN_COLUMNS_COUNT * Constants.PATTERN_COLUMNS_SIZE; i++)
         {
-            assertThat(getNextColumn(ColorData.BLACK), not(-1));
+            assertThat(getNextColumn(ColorType.BLACK), not(-1));
         }
         assertTrue(isFull());
     }

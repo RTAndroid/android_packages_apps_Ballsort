@@ -70,7 +70,7 @@ public class ResetLoop extends AStateBlock
     protected void handleState()
     {
         if (mSlingshotValve.isError()) { mSlingshotMotor.forbid(); }
-                                        else { mSlingshotMotor.allow(); }
+                                  else { mSlingshotMotor.allow(); }
 
         // there is currently nothing to do here
         if (!mSlingshotValve.ballReady()) { return; }

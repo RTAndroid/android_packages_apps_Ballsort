@@ -80,7 +80,7 @@ public class SlingshotValve extends AStateBlock
         mValvePin.cleanup();
 
         DataState data = SettingsManager.getData();
-        data.SlingshotState = Constants.BLOCK_STOPPED;
+        data.SlingshotValveState = SlingshotState.READY.name();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class SlingshotValve extends AStateBlock
     {
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
-        data.SlingshotState = mState.name();
+        data.SlingshotValveState = mState.name();
 
         switch (mState)
         {
@@ -117,7 +117,7 @@ public class SlingshotValve extends AStateBlock
             }
             break;
 
-        // Do nothing until a ball is infront of the slighshot
+        // Do nothing until a ball is in front of the slighshot
         case READY:
             if (mLightswitch.getValue()) { mState = SlingshotState.CHECKING; }
             break;

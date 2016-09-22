@@ -1,10 +1,9 @@
 package rtandroid.ballsort.blocks.color.classifier;
 
-import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.blocks.color.space.ColorRGB;
+import rtandroid.ballsort.blocks.color.ColorType;
 
 public interface IColorClassifier
 {
     String getName();
-    ColorData classify(ColorRGB color);
+    ColorType classify(int r, int g, int b);
 }

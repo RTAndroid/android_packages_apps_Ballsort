@@ -16,13 +16,13 @@
 
 package rtandroid.ballsort.hardware;
 
-import rtandroid.ballsort.blocks.color.ColorData;
+import rtandroid.ballsort.blocks.color.ColorType;
 
 public class MockColorSensor extends ColorSensor
 {
     @Override
-    public ColorData detectColor()
+    public int[] receive()
     {
-        return ColorData.BLACK;
+        return new int[] {0, 0, 0, 0, 0};
     }
 }

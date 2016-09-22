@@ -19,6 +19,9 @@ package rtandroid.ballsort.blocks;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
+import rtandroid.ballsort.blocks.color.ColorType;
+import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
+import rtandroid.ballsort.blocks.color.classifier.NeuralColorClassifier;
 import rtandroid.ballsort.hardware.ColorSensor;
 import rtandroid.ballsort.hardware.Stepper;
 import rtandroid.ballsort.hardware.pins.TimedGPIOPin;
@@ -26,6 +29,7 @@ import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
+import rtandroid.ballsort.util.Utils;
 
 /**
  * Rotating wheel block that drops the balls towards the valve
@@ -36,10 +40,11 @@ public class Feeder extends AStateBlock
     {
         ROTATING, // Next ball is moved to the sensor
         READY,    // Wait until we are allowed to drop
-        DROPPING   // Ball is beeing droped
+        DROPPING  // Ball is being droped
     }
 
     private static final int[] ROTATE_PATTERN = { Stepper.WHILE_OPENED, Stepper.WHILE_CLOSED, Stepper.WHILE_OPENED, 32 };
+    private static final IColorClassifier COLOR_CLASSIFIER = new NeuralColorClassifier();
 
     protected FeederState mState = FeederState.DROPPING;
     protected Stepper mStepper = null;
@@ -80,25 +85,22 @@ public class Feeder extends AStateBlock
     protected void prepare()
     {
         super.prepare();
-        if(!mColorSensor.open())
-        {
-            Log.e(MainActivity.TAG, "Could not open the ColorSensor");
-        }
+
+        if (!mColorSensor.open()) { Log.e(MainActivity.TAG, "Could not open the ColorSensor"); }
     }
 
     @Override
     protected void cleanup()
     {
         super.cleanup();
-        if(!mColorSensor.close())
-        {
-            Log.e(MainActivity.TAG, "Could not close the ColorSensor");
-        }
+
+        if (!mColorSensor.close()) { Log.e(MainActivity.TAG, "Could not close the ColorSensor"); }
+
         mStepper.cleanup();
         mDropPin.cleanup();
 
         DataState data = SettingsManager.getData();
-        data.FeederState = Constants.BLOCK_STOPPED;
+        data.FeederState = FeederState.READY.name();
     }
 
     @Override
@@ -106,6 +108,29 @@ public class Feeder extends AStateBlock
     {
         super.cancel();
         mStepper.cancel();
+    }
+
+    private ColorType detectColor()
+    {
+        Settings settings = SettingsManager.getSettings();
+        DataState data = SettingsManager.getData();
+        data.mDetectedColor = ColorType.EMPTY;
+
+        for (int i = 0; i < 10; i++)
+        {
+            mColorSensor.receive();
+            Utils.delayMs(settings.BeforeDropDelay);
+        }
+
+        int[] rgb = mColorSensor.receive();
+        int r = (rgb[1] << 8) | rgb[0];
+        int g = (rgb[3] << 8) | rgb[2];
+        int b = (rgb[5] << 8) | rgb[4];
+
+        ColorType colorType = COLOR_CLASSIFIER.classify(r, g, b);
+        Log.d(MainActivity.TAG, COLOR_CLASSIFIER.getName() + " says: (" + r + ", " + g + ", " + b + ") -> " + colorType.name());
+
+        return colorType;
     }
 
     @Override
@@ -120,9 +145,9 @@ public class Feeder extends AStateBlock
         // Rotate ball, that is currently in front of the color sensor to the drop
         case ROTATING:
             mStepper.doSteps(ROTATE_PATTERN);
-            data.mDropColor = data.mNextColor;
-            data.mNextColor = data.mQueuedColor;
-            data.mQueuedColor = mColorSensor.detectColor();
+            data.mDropColor = data.mQueuedColor;
+            data.mQueuedColor = data.mDetectedColor;
+            data.mDetectedColor = detectColor();
             mState = FeederState.READY;
             break;
 

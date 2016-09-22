@@ -24,7 +24,6 @@ import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
-import rtandroid.ballsort.util.Utils;
 
 public class ColorPattern
 {
@@ -45,8 +44,6 @@ public class ColorPattern
     public void cleanup()
     {
         mBottomPins.cleanup();
-        DataState data = SettingsManager.getData();
-        data.PatternState = Constants.BLOCK_STOPPED;
     }
 
     public void resetPattern()
@@ -62,25 +59,21 @@ public class ColorPattern
      * @param color The color of the upcoming ball
      * @return The number of the row, that ball belongs to or -1 if it can't be of use now
      */
-    public int getNextColumn(ColorData color)
+    public int getNextColumn(ColorType color)
     {
         Settings settings = SettingsManager.getSettings();
-        DataState data = SettingsManager.getData();
-
         if (mIgnoredBalls < settings.BallsToIgnoreAtReset)
         {
             mIgnoredBalls++;
-
-            data.PatternState = "IGNORING";
             return Constants.PATTERN_COLUMNS_COUNT - 1;
         }
 
         if (mShouldOpenPins == 0) { mShouldOpenPins = 1; }
         
-        data.PatternState = "BUILDING";
-        // ignore empty spaces
-        if(color.equals(ColorData.EMPTY)) { return SKIP; }
+        // ignore unknown balls
+        if (color.equals(ColorType.EMPTY)) { return SKIP; }
 
+        // temporary solution
         int col = color.getDefaultColumn();
         if (mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
         mFillings[col]++;
@@ -117,13 +110,14 @@ public class ColorPattern
             int space = mFillings[row];
 
             // hack for missing blue balls
-            if(space == 0 && row == ColorData.BLUE.getDefaultColumn()){ continue; }
+            if(space == 0 && row == ColorType.BLUE.getDefaultColumn()){ continue; }
             if (space >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
 
             // else
             full = false;
         }
-        if(full) { Log.d(MainActivity.TAG, "Pattern is full!"); }
+
+        if (full) { Log.d(MainActivity.TAG, "Pattern is full!"); }
         return full;
 
         /*

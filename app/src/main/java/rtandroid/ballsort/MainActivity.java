@@ -25,7 +25,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import rtandroid.ballsort.blocks.AStateBlock;
-import rtandroid.ballsort.blocks.color.classifier.NeuronalColorClassifier;
 import rtandroid.ballsort.blocks.loops.ResetLoop;
 import rtandroid.ballsort.blocks.loops.SortLoop;
 import rtandroid.ballsort.gui.ColorView;
@@ -55,10 +54,9 @@ public class MainActivity extends Activity
     private TextView mTvBallsDropped = null;
     private TextView mTvFreeMemory = null;
 
-    private TextView mTvSlingshotState = null;
+    private TextView mTvSlingshotValveState = null;
     private TextView mTvSlingshotMotorState = null;
     private TextView mTvFeederState = null;
-    private TextView mTvPatternState = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,10 +70,9 @@ public class MainActivity extends Activity
 
         mTvBallsDropped = (TextView) findViewById(R.id.tvBallsDropped);
         mTvFreeMemory = (TextView) findViewById(R.id.tvFreeMemory);
-        mTvSlingshotState = (TextView) findViewById(R.id.tvSlingshotState);
+        mTvSlingshotValveState = (TextView) findViewById(R.id.tvSlingshotValveState);
         mTvSlingshotMotorState = (TextView) findViewById(R.id.tvSlingshotMotorState);
         mTvFeederState = (TextView) findViewById(R.id.tvFeederState);
-        mTvPatternState = (TextView) findViewById(R.id.tvPatternState);
 
         mSwchSort = (Switch) findViewById(R.id.swSort);
         mSwchReset = (Switch) findViewById(R.id.swReset);
@@ -128,6 +125,10 @@ public class MainActivity extends Activity
     {
         Log.i(TAG, "Starting the main execution");
 
+        // make sure no other thread is running
+        stopLoop(mCurrentSortLoop);
+        stopLoop(mCurrentResetLoop);
+
         // system setup
         Utils.lockPower();
 
@@ -146,6 +147,7 @@ public class MainActivity extends Activity
             mCurrentResetLoop.start();
             break;
         }
+
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
     }
 
@@ -153,14 +155,13 @@ public class MainActivity extends Activity
     {
         DataState data = SettingsManager.getData();
 
-        mCvQueued.setColor(data.mQueuedColor.getPaintColor());
-        mCvNext.setColor(data.mNextColor.getPaintColor());
+        mCvQueued.setColor(data.mDetectedColor.getPaintColor());
+        mCvNext.setColor(data.mQueuedColor.getPaintColor());
         mCvDrop.setColor(data.mDropColor.getPaintColor());
 
-        mTvSlingshotState.setText("Slingshot LightSwitch: " + data.SlingshotState + "");
+        mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
         mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
         mTvFeederState.setText("Feeder state: " + data.FeederState + "");
-        mTvPatternState.setText("Pattern state: " + data.PatternState + "");
 
         Runtime rt = Runtime.getRuntime();
         long freeKB = rt.freeMemory() / 1024;
@@ -169,8 +170,8 @@ public class MainActivity extends Activity
         mTvBallsDropped.setText("Dropped: " + Sorter.getBallCount() + "");
 
         // if the loops terminated change the switch
-        if (mCurrentSortLoop!= null && !mCurrentSortLoop.isRunning()) { mSwchSort.setChecked(false); }
-        if (mCurrentResetLoop!= null && !mCurrentResetLoop.isRunning()) { mSwchReset.setChecked(false); }
+        if (mCurrentSortLoop != null  && !mCurrentSortLoop.isRunning()) { mSwchSort.setChecked(false); }
+        if (mCurrentResetLoop != null && !mCurrentResetLoop.isRunning()) { mSwchReset.setChecked(false); }
 
         // the execution terminates eventually
         if (mCurrentSortLoop == null && mCurrentResetLoop == null) { return; }
@@ -179,11 +180,15 @@ public class MainActivity extends Activity
 
     private void stopLoop(AStateBlock loop)
     {
-        Log.i(TAG, "Stopping the main execution");
-
         if (loop == null) { return; }
+
+        Log.i(TAG, "Stopping the main execution");
         loop.terminate();
         loop.waitFor();
+
+        // make sure there is nothing running
+        if (loop == mCurrentSortLoop) { mCurrentSortLoop = null; }
+        if (loop == mCurrentResetLoop) { mCurrentResetLoop = null; }
 
         // system setup
         Utils.unlockPower();

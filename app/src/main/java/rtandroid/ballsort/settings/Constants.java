@@ -23,8 +23,6 @@ public class Constants implements Serializable
     public static final String MODULE_SORTING = "rtdma";
     public static final int THREAD_BLOCK_PRIORITY = 80;
 
-    public static String BLOCK_STOPPED = "UNKNOWN";
-
                                                              // -----------------------------------------------------|
                                                              // | conn |  pin  |  func   | export |  plan            |
                                                              // -----------------------------------------------------|

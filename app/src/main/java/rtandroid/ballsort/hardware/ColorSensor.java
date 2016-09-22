@@ -18,28 +18,30 @@ package rtandroid.ballsort.hardware;
 
 import android.util.Log;
 
+import java.util.Arrays;
+
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorData;
-import rtandroid.ballsort.blocks.color.classifier.NeuronalColorClassifier;
-import rtandroid.ballsort.blocks.color.space.ColorRGB;
-import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
-import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.root.PrivilegeElevator;
 
 public class ColorSensor
 {
-    private static final IColorClassifier COLOR_CLASSIFIER = new NeuronalColorClassifier();
-
     public boolean open()
     {
+        try { PrivilegeElevator.enableRoot(); }
+        catch (Exception e)
+        {
+            Log.e(MainActivity.TAG, "Failed to close root: " + e.getMessage());
+            return false;
+        }
+
         try
         {
-            PrivilegeElevator.enableRoot();
             Process modprobe = Runtime.getRuntime().exec("modprobe i2c-gpio-custom bus0=10," + Constants.I2C_SDA + "," + Constants.I2C_SCL);
             modprobe.waitFor();
 
-            if (modprobe.exitValue() != 0) {
+            if (modprobe.exitValue() != 0)
+            {
                 Log.e(MainActivity.TAG, "Failed to modprobe i2c-gpio-custom");
                 return false;
             }
@@ -61,31 +63,23 @@ public class ColorSensor
         boolean result = openI2C();
         Log.i(MainActivity.TAG, "Opening i2c color sensor returned '" + result + "'");
 
-        try
-        {
-            PrivilegeElevator.disableRoot();
-        }
-        catch(Exception e)
+        try { PrivilegeElevator.disableRoot(); }
+        catch (Exception e)
         {
             Log.e(MainActivity.TAG, "Failed to close root: " + e.getMessage());
             return false;
         }
 
-        Log.d(MainActivity.TAG, "I2C pin was initialized");
+        Log.i(MainActivity.TAG, "I2C pin was initialized");
         return true;
     }
 
-    public ColorData detectColor()
+    public int[] receive()
     {
-        long values = readI2C();
+        int[] rgb = readI2C();
+        Log.i(MainActivity.TAG, "Received values: " + Arrays.toString(rgb));
 
-        int r = (int)(values >> 32) & 0xFFFF;
-        int g = (int)(values >> 16) & 0xFFFF;
-        int b = (int)(values) & 0xFFFF;
-        ColorRGB rgb = new ColorRGB(r, g, b);
-
-        Log.d(MainActivity.TAG, "Detecting the color using "+ COLOR_CLASSIFIER.getName() + " classifier...");
-        return COLOR_CLASSIFIER.classify(rgb);
+        return rgb;
     }
 
     public boolean close()
@@ -100,10 +94,10 @@ public class ColorSensor
     }
 
     /**
-     * Native Linux interface for ioctl and lowlevel I/O
+     * Native Linux interface for ioctl and low-level I/O
      */
 
     private static native boolean openI2C();
-    private static native long readI2C();
+    private static native int[] readI2C();
     private static native boolean closeI2C();
 }

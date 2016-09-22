@@ -91,7 +91,7 @@ extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_openI2C
     return JNI_TRUE;
 }
 
-extern "C" jlong JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_readI2C(JNIEnv* env, jobject obj)
+extern "C" jintArray JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_readI2C(JNIEnv* env, jobject obj)
 {
     if (i2cFD < 0)
     {
@@ -99,18 +99,23 @@ extern "C" jlong JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_readI2C(JN
         return 0;
     }
 
-    uint8_t rgb[6];
     uint8_t wbuf[1] = { TCS34725_COMMAND_BIT | TCS34725_RDATAL };
-
     i2c_write(wbuf, 1);
-    i2c_read(rgb, 6);
 
-    jlong r = (rgb[1] << 8) | rgb[0];
-    jlong g = (rgb[3] << 8) | rgb[2];
-    jlong b = (rgb[5] << 8) | rgb[4];
+    const int COLOR_SIZE = 6;
+    uint8_t rgb[COLOR_SIZE];
+    i2c_read(rgb, COLOR_SIZE);
 
-    jlong value = (r << 32) | (g << 16) | b;
-    return value;
+    // stay aware of out of memory problems
+    jintArray result = env->NewIntArray(COLOR_SIZE);
+    if (result == NULL) { return NULL; }
+
+    // i2c uses uint8, but it's nice to have int in java
+    jint array[COLOR_SIZE] = { rgb[0], rgb[1], rgb[2], rgb[3], rgb[4], rgb[5] };
+
+    // move from the temp structure to the java structure
+    env->SetIntArrayRegion(result, 0, COLOR_SIZE, &array[0]);
+    return result;
 }
 
 extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_closeI2C(JNIEnv* env, jobject obj)

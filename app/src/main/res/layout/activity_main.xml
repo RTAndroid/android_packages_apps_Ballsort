@@ -47,7 +47,7 @@
         android:text="@string/memory" />
 
     <TextView
-        android:id="@+id/tvSlingshotState"
+        android:id="@+id/tvSlingshotValveState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/slingshot_state"
@@ -63,11 +63,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/feeder_state"/>
-    <TextView
-        android:id="@+id/tvPatternState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pattern_state"/>
 
     <Switch
         android:id="@+id/swSort"

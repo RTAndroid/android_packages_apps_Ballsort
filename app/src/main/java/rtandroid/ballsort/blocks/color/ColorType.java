@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.blocks.color.space;
+package rtandroid.ballsort.blocks.color;
 
-public class ColorRGB
+import android.graphics.Color;
+
+public enum ColorType
 {
-    public int R = 0;
-    public int G = 0;
-    public int B = 0;
+    BLACK(Color.BLACK),
+    BLUE(Color.BLUE),
+    GREEN(Color.GREEN),
+    RED(Color.RED),
+    YELLOW(Color.YELLOW),
+    WHITE(Color.WHITE),
+    EMPTY(Color.GRAY);
 
-    public ColorRGB(int r, int g, int b)
-    {
-        R = r;
-        G = g;
-        B = b;
-    }
+    private int mPaintColor = Color.GRAY;
+    ColorType(int paint) { mPaintColor = paint; }
 
-    @Override
-    public String toString()
-    {
-        return "RGB { " + R + ", " + G + ", " + B + " }";
-    }
+    public int getPaintColor() { return mPaintColor; }
+    public int getDefaultColumn() { return ordinal(); }
 }
