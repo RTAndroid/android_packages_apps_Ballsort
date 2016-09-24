@@ -355,12 +355,12 @@ public class NeuralColorClassifier implements IColorClassifier
 
     private void learn()
     {
+        final double learningRate = 0.3;
+        final double learningGoal = 1E-100;
         final int learningIterations = 1000;
-        final double learningRate = 0.4;
-        final double learningGoal = 1E-30;
-        final long learningStart = System.nanoTime();
 
-        // set learning settings
+        // apply learning settings
+        final long learningStart = System.nanoTime();
         BackPropagation learningRule = ((MultiLayerPerceptron) mNetwork).getLearningRule();
         learningRule.setLearningRate(learningRate);
         learningRule.setMaxIterations(learningIterations);
@@ -374,7 +374,7 @@ public class NeuralColorClassifier implements IColorClassifier
             {
                 Log.i(MainActivity.TAG, "Training completed in " + bp.getCurrentIteration() + " iterations");
 
-                long totalTime = (System.nanoTime() - learningStart) / 1000 / 1000 / 1000;
+                long totalTime = (System.nanoTime() - learningStart) / 1000 / 1000 / 1000 + 1;
                 long totalSpeed = (learningIterations * 3600) / totalTime;
                 Log.i(MainActivity.TAG, "With learning speed of " + totalSpeed + " iterations / hour");
 
