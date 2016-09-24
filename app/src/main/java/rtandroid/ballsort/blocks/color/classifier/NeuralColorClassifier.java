@@ -34,7 +34,6 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.RunnableFuture;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorType;
@@ -46,9 +45,11 @@ public class NeuralColorClassifier implements IColorClassifier
     private static final int HIDDEN_NEURONS = INPUT_COUNT * OUTPUT_COUNT;   // random guess
 
     private static final String NETWORK_FILENAME = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                                                   "/colors-" + INPUT_COUNT +
-                                                   "-" + HIDDEN_NEURONS +
-                                                   "-" + OUTPUT_COUNT + ".nnet";
+                                                   "/colors" +
+                                                   "_" + INPUT_COUNT +
+                                                   "_" + HIDDEN_NEURONS +
+                                                   "_" + OUTPUT_COUNT +
+                                                   ".nnet";
 
     private static final double[][] BLACK_DATA = new double[][]
     {
