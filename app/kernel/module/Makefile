@@ -1,5 +1,5 @@
 obj-m += rtdma.o
-rtdma-objs := main.o mmap.o file.o gpio.o ntlink.o
+rtdma-objs := main.o file.o gpio.o
 
 PWD := $(shell pwd)
 
