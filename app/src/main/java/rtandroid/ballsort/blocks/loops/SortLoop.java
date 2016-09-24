@@ -83,36 +83,34 @@ public class SortLoop extends AStateBlock
 
         switch (mState)
         {
-            // Wait for the ball to arrive
-            case WAIT_PATTERN:
-                if (mColorPattern.isFull()) { terminate(); } // no need to process if everything is finished
-                                       else { mState = MainStates.WAIT_FEEDER; }
-                break;
+        // Wait for the ball to arrive
+        case WAIT_PATTERN:
+            if (mColorPattern.isFull()) { terminate(); } // no need to process if everything is finished
+                                   else { mState = MainStates.WAIT_FEEDER; }
+            break;
 
-            // Wait for the next ball being prepared
-            case WAIT_FEEDER:
-                if (mFeeder.getFeederState() == Feeder.FeederState.READY) { mState = MainStates.RECIEVE_COLORINFO; }
-                break;
+        // Wait for the next ball being prepared
+        case WAIT_FEEDER:
+            if (mFeeder.getFeederState() == Feeder.FeederState.READY) { mState = MainStates.RECIEVE_COLORINFO; }
+            break;
 
-            // Measure current ball
-            case RECIEVE_COLORINFO:
-                int nextColumn = mColorPattern.getNextColumn(data.mDropColor);
-                Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + nextColumn);
+        // Measure current ball
+        case RECIEVE_COLORINFO:
+            int nextColumn = mColorPattern.getNextColumn(data.mDropColor);
+            Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + nextColumn);
+            int delayUs = (nextColumn == ColorPattern.SKIP) ? 0 : settings.ColumnDelaysUs[nextColumn];
+            Sorter.setDelays(settings.BaseDelayMs, delayUs);
+            mState = MainStates.DROP_BALL;
+            break;
 
-                int delayUs = (nextColumn == ColorPattern.SKIP) ? 0 : settings.ColumnDelaysUs[nextColumn];
-                Sorter.setDelays(settings.BaseDelayMs, delayUs);
-
-                mState = MainStates.DROP_BALL;
-                break;
-
-            // Drop ball
-            case DROP_BALL:
-                mColorPattern.preparePins();
-                Utils.delayMs(settings.BeforeDropDelay);
-                mFeeder.allowDrop();
-                Utils.delayMs(settings.AfterDropDelay);
-                if (mFeeder.getFeederState() != Feeder.FeederState.DROPPING) { mState = MainStates.WAIT_PATTERN; }
-                break;
+        // Drop ball
+        case DROP_BALL:
+            mColorPattern.preparePins();
+            Utils.delayMs(settings.BeforeDropDelay);
+            mFeeder.allowDrop();
+            Utils.delayMs(settings.AfterDropDelay);
+            if (mFeeder.getFeederState() != Feeder.FeederState.DROPPING) { mState = MainStates.WAIT_PATTERN; }
+            break;
         }
     }
 }

@@ -47,22 +47,23 @@
         android:text="@string/memory" />
 
     <TextView
+        android:id="@+id/tvFeederState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/feeder_state" />
+
+    <TextView
         android:id="@+id/tvSlingshotValveState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/slingshot_state"
-        android:layout_marginTop="30dp"/>
+        android:text="@string/slingshot_state" />
+
     <TextView
         android:id="@+id/tvSlingshotMotorState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/slingshot_motor"/>
-
-    <TextView
-        android:id="@+id/tvFeederState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/feeder_state"/>
+        android:text="@string/slingshot_motor" />
 
     <Switch
         android:id="@+id/swSort"

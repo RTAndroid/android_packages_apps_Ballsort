@@ -20,7 +20,11 @@ import rtandroid.ballsort.blocks.AStateBlock;
 import rtandroid.ballsort.blocks.SlingshotValve;
 import rtandroid.ballsort.blocks.SlingshotMotor;
 import rtandroid.ballsort.blocks.color.ColorPattern;
+import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Constants;
+import rtandroid.ballsort.settings.DataState;
+import rtandroid.ballsort.settings.Settings;
+import rtandroid.ballsort.settings.SettingsManager;
 
 public class ResetLoop extends AStateBlock
 {
@@ -42,11 +46,17 @@ public class ResetLoop extends AStateBlock
     {
         super.prepare();
 
+        // no more balls in the feeder
+        DataState data = SettingsManager.getData();
+        data.mDetectedColor = ColorType.EMPTY;
+        data.mDropColor = ColorType.EMPTY;
+        data.mQueuedColor = ColorType.EMPTY;
+
         // start all the other threads
         mSlingshotValve.start();
         mSlingshotMotor.start();
 
-        // Open the pattern
+        // open the pattern
         mColorRows.resetPattern();
     }
 

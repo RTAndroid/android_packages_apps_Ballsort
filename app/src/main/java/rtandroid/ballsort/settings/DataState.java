@@ -20,9 +20,9 @@ import rtandroid.ballsort.blocks.color.ColorType;
 
 public class DataState
 {
-    public ColorType mQueuedColor = ColorType.WHITE;
-    public ColorType mDetectedColor = ColorType.WHITE;
-    public ColorType mDropColor = ColorType.WHITE;
+    public ColorType mQueuedColor = ColorType.EMPTY;
+    public ColorType mDetectedColor = ColorType.EMPTY;
+    public ColorType mDropColor = ColorType.EMPTY;
 
     public String SlingshotValveState = "UNKNOWN";
     public String FeederState = "UNKNOWN";

@@ -18,8 +18,6 @@ package rtandroid.ballsort.hardware;
 
 import android.util.Log;
 
-import java.util.Arrays;
-
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.root.PrivilegeElevator;
@@ -76,10 +74,7 @@ public class ColorSensor
 
     public int[] receive()
     {
-        int[] rgb = readI2C();
-        Log.i(MainActivity.TAG, "Received values: " + Arrays.toString(rgb));
-
-        return rgb;
+        return readI2C();
     }
 
     public boolean close()

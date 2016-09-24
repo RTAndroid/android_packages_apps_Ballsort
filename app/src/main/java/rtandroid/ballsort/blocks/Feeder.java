@@ -21,7 +21,9 @@ import android.util.Log;
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
+import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.NeuralColorClassifier;
+import rtandroid.ballsort.blocks.color.classifier.TreeColorClassifier;
 import rtandroid.ballsort.hardware.ColorSensor;
 import rtandroid.ballsort.hardware.Stepper;
 import rtandroid.ballsort.hardware.pins.TimedGPIOPin;
@@ -44,7 +46,7 @@ public class Feeder extends AStateBlock
     }
 
     private static final int[] ROTATE_PATTERN = { Stepper.WHILE_OPENED, Stepper.WHILE_CLOSED, Stepper.WHILE_OPENED, 32 };
-    private static final IColorClassifier COLOR_CLASSIFIER = new NeuralColorClassifier();
+    private static final IColorClassifier[] COLOR_CLASSIFIER = { new TreeColorClassifier(), new MeanColorClassifier(), new NeuralColorClassifier() };
 
     protected FeederState mState = FeederState.DROPPING;
     protected Stepper mStepper = null;
@@ -116,10 +118,10 @@ public class Feeder extends AStateBlock
         DataState data = SettingsManager.getData();
         data.mDetectedColor = ColorType.EMPTY;
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < settings.ColorSersorRepeats; i++)
         {
             mColorSensor.receive();
-            Utils.delayMs(settings.BeforeDropDelay);
+            Utils.delayMs(settings.ColorSensorDelay);
         }
 
         int[] rgb = mColorSensor.receive();
@@ -127,8 +129,12 @@ public class Feeder extends AStateBlock
         int g = (rgb[3] << 8) | rgb[2];
         int b = (rgb[5] << 8) | rgb[4];
 
-        ColorType colorType = COLOR_CLASSIFIER.classify(r, g, b);
-        Log.d(MainActivity.TAG, COLOR_CLASSIFIER.getName() + " says: (" + r + ", " + g + ", " + b + ") -> " + colorType.name());
+        ColorType colorType = ColorType.EMPTY;
+        for (IColorClassifier classifier : COLOR_CLASSIFIER)
+        {
+            colorType = classifier.classify(r, g, b);
+            Log.d(MainActivity.TAG, classifier.getName() + " says: (" + r + ", " + g + ", " + b + ") -> " + colorType.name());
+        }
 
         return colorType;
     }

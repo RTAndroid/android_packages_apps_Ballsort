@@ -36,7 +36,7 @@ import rtandroid.ballsort.util.Utils;
 public class MainActivity extends Activity
 {
     public static final String TAG = "Ballsort";
-    private static final int REFRESH_RATE_MS = 200;
+    private static final int REFRESH_RATE_MS = 500;
 
     private final Handler mUiUpdateHandler = new Handler();
     private final Runnable mUiUpdateRunnable = this::updateUi;
@@ -54,9 +54,9 @@ public class MainActivity extends Activity
     private TextView mTvBallsDropped = null;
     private TextView mTvFreeMemory = null;
 
+    private TextView mTvFeederState = null;
     private TextView mTvSlingshotValveState = null;
     private TextView mTvSlingshotMotorState = null;
-    private TextView mTvFeederState = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,9 +70,9 @@ public class MainActivity extends Activity
 
         mTvBallsDropped = (TextView) findViewById(R.id.tvBallsDropped);
         mTvFreeMemory = (TextView) findViewById(R.id.tvFreeMemory);
+        mTvFeederState = (TextView) findViewById(R.id.tvFeederState);
         mTvSlingshotValveState = (TextView) findViewById(R.id.tvSlingshotValveState);
         mTvSlingshotMotorState = (TextView) findViewById(R.id.tvSlingshotMotorState);
-        mTvFeederState = (TextView) findViewById(R.id.tvFeederState);
 
         mSwchSort = (Switch) findViewById(R.id.swSort);
         mSwchReset = (Switch) findViewById(R.id.swReset);
