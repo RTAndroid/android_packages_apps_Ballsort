@@ -35,12 +35,11 @@ public class TreeColorClassifier implements IColorClassifier
     public ColorType classify(int r, int g, int b)
     {
         Settings settings = SettingsManager.getSettings();
-
-        long colSum = r + g + b;
         ColorType detected = ColorType.BLACK;
 
+        long colSum = r + g + b;
         long colMean = colSum / 3;
-        Log.d(MainActivity.TAG, "colMean is: "+colMean);
+//        Log.d(MainActivity.TAG, "colMean is: "+colMean);
 
         // light color
         if (colMean > settings.ColorLightColorThreshold)
@@ -65,7 +64,7 @@ public class TreeColorClassifier implements IColorClassifier
             }
             else
             {
-                long maxColValue =0;
+                long maxColValue = 0;
 
                 if (r > maxColValue)
                 {

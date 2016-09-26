@@ -45,7 +45,7 @@ public class Sorter
     @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
     public static void load()
     {
-        if(mLoaded) { return; }
+        if (mLoaded) { return; }
 
         String moduleName = Constants.MODULE_SORTING + ".ko";
         String modulePath = sPath + "/" + moduleName;

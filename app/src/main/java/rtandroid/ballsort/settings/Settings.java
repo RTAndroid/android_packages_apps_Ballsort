@@ -35,7 +35,7 @@ public class Settings implements Serializable
     public final int SlingshotValveOpenDelay = 100;
     public final int SlingshotDelayBeforeShoot = 300;
     public final long SlingshotErrorThreshold =  700000;
-    public final long SlingshotFreeThreshold = 2200000;
+    public final long SlingshotFreeThreshold = 2100000;
 
     public final int BallsToIgnoreAtReset = 3;
     public final int BeforeDropDelay = 100;

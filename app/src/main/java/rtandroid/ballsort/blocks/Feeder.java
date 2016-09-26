@@ -118,16 +118,16 @@ public class Feeder extends AStateBlock
         DataState data = SettingsManager.getData();
         data.mDetectedColor = ColorType.EMPTY;
 
+        int r = 0, g = 0, b = 0;
         for (int i = 0; i < settings.ColorSersorRepeats; i++)
         {
-            mColorSensor.receive();
+            int[] rgb = mColorSensor.receive();
+            r = (rgb[1] << 8) | rgb[0];
+            g = (rgb[3] << 8) | rgb[2];
+            b = (rgb[5] << 8) | rgb[4];
+
             Utils.delayMs(settings.ColorSensorDelay);
         }
-
-        int[] rgb = mColorSensor.receive();
-        int r = (rgb[1] << 8) | rgb[0];
-        int g = (rgb[3] << 8) | rgb[2];
-        int b = (rgb[5] << 8) | rgb[4];
 
         ColorType colorType = ColorType.EMPTY;
         for (IColorClassifier classifier : COLOR_CLASSIFIER)
