@@ -46,8 +46,9 @@ public class ResetLoop extends AStateBlock
     {
         super.prepare();
 
-        // no more balls in the feeder
+        // reset the program state
         DataState data = SettingsManager.getData();
+        data.mDetectedBalls = 0;
         data.mDetectedColor = ColorType.EMPTY;
         data.mDropColor = ColorType.EMPTY;
         data.mQueuedColor = ColorType.EMPTY;

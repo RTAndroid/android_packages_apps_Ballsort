@@ -25,6 +25,7 @@ import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.NeuralColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.TreeColorClassifier;
 import rtandroid.ballsort.hardware.ColorSensor;
+import rtandroid.ballsort.hardware.Sorter;
 import rtandroid.ballsort.hardware.Stepper;
 import rtandroid.ballsort.hardware.pins.TimedGPIOPin;
 import rtandroid.ballsort.settings.Constants;
@@ -122,6 +123,12 @@ public class Feeder extends AStateBlock
         for (int i = 0; i < settings.ColorSersorRepeats; i++)
         {
             int[] rgb = mColorSensor.receive();
+            if (rgb == null)
+            {
+                Log.e(MainActivity.TAG, "Color sensor returned null!");
+                continue;
+            }
+
             r = (rgb[1] << 8) | rgb[0];
             g = (rgb[3] << 8) | rgb[2];
             b = (rgb[5] << 8) | rgb[4];
@@ -130,10 +137,12 @@ public class Feeder extends AStateBlock
         }
 
         ColorType colorType = ColorType.EMPTY;
+        Log.d(MainActivity.TAG, "Detecting RGB values (" + r + ", " + g + ", " + b + ")");
+
         for (IColorClassifier classifier : COLOR_CLASSIFIER)
         {
             colorType = classifier.classify(r, g, b);
-            Log.d(MainActivity.TAG, classifier.getName() + " says: (" + r + ", " + g + ", " + b + ") -> " + colorType.name());
+            Log.d(MainActivity.TAG, classifier.getName() + " -> " + colorType.name());
         }
 
         return colorType;
@@ -144,7 +153,9 @@ public class Feeder extends AStateBlock
     {
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
+
         data.FeederState = mState.name();
+        data.mDetectedBalls = Sorter.getBallCount();
 
         switch (mState)
         {
@@ -163,7 +174,8 @@ public class Feeder extends AStateBlock
 
         // Drop the ball
         case DROPPING:
-            mDropPin.setValueForMs(settings.FeederValveDropDelay, 0);
+            mDropPin.setValueForMs(settings.FeederValveOpenedDelay, 0);
+            Utils.delayMs(settings.FeederAfterDropDelay);
             mState = FeederState.ROTATING;
             break;
         }

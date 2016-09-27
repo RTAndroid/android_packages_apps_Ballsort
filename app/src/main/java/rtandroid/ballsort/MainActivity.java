@@ -167,7 +167,7 @@ public class MainActivity extends Activity
         long freeKB = rt.freeMemory() / 1024;
         long totalKB = rt.totalMemory() / 1024;
         mTvFreeMemory.setText("Free memory: " + freeKB + " kb / " + totalKB + " kb");
-        mTvBallsDropped.setText("Dropped: " + Sorter.getBallCount() + "");
+        mTvBallsDropped.setText("Dropped: " + data.mDetectedBalls + " balls");
 
         // if the loops terminated change the switch
         if (mCurrentSortLoop != null  && !mCurrentSortLoop.isRunning()) { mSwchSort.setChecked(false); }

@@ -84,7 +84,7 @@ public class FeederTest extends Feeder
         dropPin.mWasOpened = false;
         dropPin.mWasClosed = false;
 
-        SettingsManager.getSettings().FeederValveDropDelay = 0;
+        SettingsManager.getSettings().FeederValveOpenedDelay = 0;
         mState = FeederState.DROPPING;
         handleState();
 

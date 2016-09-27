@@ -20,6 +20,8 @@ import rtandroid.ballsort.blocks.color.ColorType;
 
 public class DataState
 {
+    public int mDetectedBalls = 0;
+
     public ColorType mQueuedColor = ColorType.EMPTY;
     public ColorType mDetectedColor = ColorType.EMPTY;
     public ColorType mDropColor = ColorType.EMPTY;

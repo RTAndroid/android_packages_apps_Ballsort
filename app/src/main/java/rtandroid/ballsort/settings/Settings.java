@@ -27,7 +27,8 @@ public class Settings implements Serializable
     public int StepperDisableDelay = 1;
 
     public final int FeederStepperPwmDelay = 750;
-    public int FeederValveDropDelay =  500;
+    public int FeederValveOpenedDelay =  200;
+    public int FeederAfterDropDelay =  200;
 
     public final int SlingshotStepperPwmDelay = 450;
     public final int SlingshotDelayAfterRotate = 300;
@@ -43,7 +44,7 @@ public class Settings implements Serializable
     public final int BusyWaitDelay = 1;
 
     public final int BaseDelayMs = 54;
-    public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7800, 8500, 9220 };
+    public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7790, 8500, 9220 };
 
     public final int ColorSersorRepeats = 10;
     public final int ColorSensorDelay = 50;
