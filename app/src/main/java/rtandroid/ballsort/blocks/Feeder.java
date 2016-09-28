@@ -153,9 +153,7 @@ public class Feeder extends AStateBlock
     {
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
-
         data.FeederState = mState.name();
-        data.mDetectedBalls = Sorter.getBallCount();
 
         switch (mState)
         {
@@ -174,8 +172,8 @@ public class Feeder extends AStateBlock
 
         // Drop the ball
         case DROPPING:
-            mDropPin.setValueForMs(settings.FeederValveOpenedDelay, 0);
-            Utils.delayMs(settings.FeederAfterDropDelay);
+            mDropPin.setValueForMs(settings.FeederValveOpenedDelay, settings.FeederAfterDropDelay);
+            data.mDetectedBalls = Sorter.getBallCount();
             mState = FeederState.ROTATING;
             break;
         }

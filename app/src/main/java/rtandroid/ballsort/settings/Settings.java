@@ -44,9 +44,9 @@ public class Settings implements Serializable
     public final int BusyWaitDelay = 1;
 
     public final int BaseDelayMs = 54;
-    public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7790, 8500, 9220 };
+    public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7780, 8500, 9230 };
 
-    public final int ColorSersorRepeats = 10;
+    public final int ColorSersorRepeats = 12;
     public final int ColorSensorDelay = 50;
 
     public final int ColorLightColorThreshold = 1350;

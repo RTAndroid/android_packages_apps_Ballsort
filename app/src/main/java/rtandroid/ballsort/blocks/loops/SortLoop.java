@@ -97,9 +97,10 @@ public class SortLoop extends AStateBlock
         // Measure current ball
         case RECIEVE_COLORINFO:
             int nextColumn = mColorPattern.getNextColumn(data.mDropColor);
-            Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + nextColumn);
             int delayUs = (nextColumn == ColorPattern.SKIP) ? 0 : settings.ColumnDelaysUs[nextColumn];
+            Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + nextColumn);
             Sorter.setDelays(settings.BaseDelayMs, delayUs);
+
             mState = MainStates.DROP_BALL;
             break;
 
