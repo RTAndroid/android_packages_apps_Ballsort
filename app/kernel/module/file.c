@@ -3,90 +3,52 @@
 #include <linux/mm.h>
 #include <linux/module.h>
 #include <linux/miscdevice.h>
-#include<linux/slab.h>
 #include <linux/types.h>
 #include <linux/uaccess.h>
 
 MODULE_LICENSE("GPL");
 
+#include "../rt_data.h"
 #include "file.h"
+#include "mmap.h"
+
+#ifndef VM_RESERVED
+#define VM_RESERVED (VM_DONTEXPAND | VM_DONTDUMP)
+#endif
 
 #define PERMISSIONS 0666
-#define OFFSET_EOF     1
 
-int base_delay = 0;
-int next_delay = 0;
-int ball_count = 0;
-    
-static int get_next_var(char** buf)
+extern struct vm_operations_struct mmap_vm_ops;
+extern struct mmap_info_t* info;
+
+
+static int file_mmap(struct file* fd, struct vm_area_struct* vma)
 {
-    char *temp;
-    char *delim = ",";
+    vma->vm_ops = &mmap_vm_ops;
+    vma->vm_flags |= VM_RESERVED;
+    mmap_open(vma);
 
-    temp = strsep(buf, delim);
-    if (temp == NULL) { return 0; }
-
-    return simple_strtoul(temp, NULL, 0);
+    return 0;
 }
 
-static ssize_t file_write(struct file *f, const char *buffer, size_t count, loff_t *offset)
+static int file_close(struct inode* inode, struct file* fd)
 {
-    char *buf;
-    char **buf_ptr;
-
-    if (count < 1)
-    {
-        printk("RTDMA: no arguments supplied, action aborted\n");
-        return -EINVAL;
-    }
-
-    buf = kmalloc(count, GFP_KERNEL);
-    buf_ptr = &buf;
-    if (!buf)
-    {
-        printk(KERN_INFO "RTDMA: memory allocation failed\n");
-        return -ENOMEM;
-    }
-
-    if (copy_from_user(buf, buffer, count))
-    {
-        kfree(buf);
-        printk(KERN_INFO "RTDMA: data copy failed\n");
-        return -EFAULT;
-    }
-
-    base_delay = get_next_var(buf_ptr);
-    next_delay = get_next_var(buf_ptr);
-    
-    printk(KERN_INFO "RTDMA: Set delays to %d %d\n", base_delay, next_delay);
-    
-
-    kfree(buf);
-    return count;
+    fd->private_data = NULL;
+    return 0;
 }
 
-static ssize_t file_read(struct file *filep, char *buffer, size_t len, loff_t *offset)
+static int file_open(struct inode* inode, struct file* fd)
 {
-    char result[256];
-    memset(result, 0, sizeof(result));
-    
-    sprintf(result, "%d", ball_count);
-    
-    if (copy_to_user(buffer, result, strlen(result) + 1))
-    {
-        printk(KERN_INFO "RTDMA: copying data to user failed\n");
-        return -EFAULT;
-    }
-    
-    // Next read will lead to EOF
-    return strlen(result) + 1;
+    fd->private_data = info;
+    return 0;
 }
 
 static struct file_operations file_ops =
 {
     .owner =   THIS_MODULE,
-    .write =   file_write,
-    .read =    file_read,
+    .open =    file_open,
+    .release = file_close,
+    .mmap =    file_mmap,
 };
 
 int file_init(void)

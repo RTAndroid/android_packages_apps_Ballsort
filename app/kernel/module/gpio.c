@@ -4,13 +4,12 @@
 #include <linux/slab.h>
 #include <linux/module.h>
 
+#include "../rt_data.h"
+#include "mmap.h"
 #include "gpio.h"
 
 int interruptIRQ;
-
-extern int base_delay;
-extern int next_delay;
-extern int ball_count;
+extern struct mmap_info_t* info;
 
 int initPin(int pinID)
 {
@@ -32,22 +31,37 @@ int initPin(int pinID)
 
 static irqreturn_t gpio_isr(int irq, void* data)
 {
+    int base_delay;
+    int delay;
+    volatile rt_control_data* rtdata;
+
     if (irq != interruptIRQ)
     {
         printk("RTDMA: detected unhandled interrupt\n");
         return IRQ_NONE;
     }
 
+    if (info == NULL || info->data == NULL)
+    {
+        printk("RTDMA: no shared memory available\n");
+        return IRQ_HANDLED;
+    }
+
+    // lets see what we got on that pin
+    rtdata = (rt_control_data*) info->data;
+
     // step 1: base delay
+    base_delay = rtdata->base_delay;
     mdelay(base_delay);
 
     // step 2: open the valve
     gpio_set_value(OUTPUT_PIN, 1);
-    udelay(next_delay);
+    delay = rtdata->next_delay;
+    udelay(delay);
     gpio_set_value(OUTPUT_PIN, 0);
-    ball_count++;
+    rtdata->ball_count++;
 
-    printk("RTDMA: interrupt handled (base=%dms)(time=%dus)\n", base_delay, next_delay);
+    printk("RTDMA: interrupt handled (base=%dms)(time=%dus)\n", base_delay, delay);
     return IRQ_HANDLED;
 }
 
