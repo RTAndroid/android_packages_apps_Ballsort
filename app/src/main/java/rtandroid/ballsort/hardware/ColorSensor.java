@@ -74,7 +74,7 @@ public class ColorSensor
 
     public int[] receive()
     {
-        return readI2C();
+        return readSensor();
     }
 
     public boolean close()
@@ -93,6 +93,7 @@ public class ColorSensor
      */
 
     private static native boolean openI2C();
-    private static native int[] readI2C();
     private static native boolean closeI2C();
+
+    private static native int[] readSensor();
 }

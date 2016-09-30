@@ -74,48 +74,17 @@ extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_openI2C
     {
         LOGE("Failed to ioctl on color I2C at %s", I2CBUS);
         close(i2cFD);
+
+        i2cFD = -1;
         return JNI_FALSE;
     }
 
-    // Set integration time
+    // set gain and integration time
     i2c_command(TCS34725_ATIME, TCS34725_INTEGRATIONTIME_154MS);
-    // Set gain
     i2c_command(TCS34725_CONTROL, TCS34725_GAIN_1X);
-
-    // Enable
-    i2c_command(TCS34725_ENABLE, TCS34725_ENABLE_PON);
-    usleep(3000);
-    i2c_command(TCS34725_ENABLE, TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN);
 
     LOGI("Opened I2C at %s. File descriptor: %d, status: %d", I2CBUS, i2cFD, status);
     return JNI_TRUE;
-}
-
-extern "C" jintArray JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_readI2C(JNIEnv* env, jobject obj)
-{
-    if (i2cFD < 0)
-    {
-        LOGE("Can't read from closed I2C");
-        return 0;
-    }
-
-    uint8_t wbuf[1] = { TCS34725_COMMAND_BIT | TCS34725_RDATAL };
-    i2c_write(wbuf, 1);
-
-    const int COLOR_SIZE = 6;
-    uint8_t rgb[COLOR_SIZE];
-    i2c_read(rgb, COLOR_SIZE);
-
-    // stay aware of out of memory problems
-    jintArray result = env->NewIntArray(COLOR_SIZE);
-    if (result == NULL) { return NULL; }
-
-    // i2c uses uint8, but it's nice to have int in java
-    jint array[COLOR_SIZE] = { rgb[0], rgb[1], rgb[2], rgb[3], rgb[4], rgb[5] };
-
-    // move from the temp structure to the java structure
-    env->SetIntArrayRegion(result, 0, COLOR_SIZE, &array[0]);
-    return result;
 }
 
 extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_closeI2C(JNIEnv* env, jobject obj)
@@ -128,5 +97,56 @@ extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_closeI2
     }
 
     LOGI("Closed I2C file descriptor");
+    i2cFD = -1;
+
     return JNI_TRUE;
+}
+
+extern "C" jintArray JNICALL Java_rtandroid_ballsort_hardware_ColorSensor_readSensor(JNIEnv* env, jobject obj)
+{
+    if (i2cFD < 0)
+    {
+        LOGE("Can't read from closed I2C");
+        return 0;
+    }
+
+    // enable the sensor power first
+    i2c_command(TCS34725_ENABLE, TCS34725_ENABLE_PON);
+    usleep(3000);
+
+    // enable the sensor ADC
+    uint8_t enable = TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN;
+    i2c_command(TCS34725_ENABLE, enable);
+
+    // the color detection will start automatically, but we have to wait at least the current integration time
+    usleep(154 * 2 * 1000);
+
+    // read the result after the integration time finishes
+    uint8_t cbuf[1] = { TCS34725_COMMAND_BIT | TCS34725_RDATAL };
+    i2c_write(cbuf, 1);
+
+    const int COLOR_SIZE = 6;
+    uint8_t rgb[COLOR_SIZE];
+    i2c_read(rgb, COLOR_SIZE);
+
+    // the data was read, turn the sensor off again
+    uint8_t sbuf[1] = { TCS34725_COMMAND_BIT | TCS34725_ENABLE };
+    uint8_t state[1];
+
+    i2c_write(sbuf, 1);
+    i2c_read(state, 1);
+    i2c_command(TCS34725_ENABLE, state[0] & ~enable);
+
+    // stay aware of out of memory problems
+    jintArray result = env->NewIntArray(COLOR_SIZE);
+    if (result != NULL)
+    {
+        // i2c uses uint8, but it's nice to have int in java
+        jint array[COLOR_SIZE] = { rgb[0], rgb[1], rgb[2], rgb[3], rgb[4], rgb[5] };
+        // move from the static array to the java structure
+        env->SetIntArrayRegion(result, 0, COLOR_SIZE, &array[0]);
+    }
+
+    // we are done here
+    return result;
 }

@@ -23,7 +23,6 @@ import rtandroid.ballsort.blocks.color.ColorPattern;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
-import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
 public class ResetLoop extends AStateBlock

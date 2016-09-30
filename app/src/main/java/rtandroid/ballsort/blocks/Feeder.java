@@ -123,16 +123,13 @@ public class Feeder extends AStateBlock
         for (int i = 0; i < settings.ColorSersorRepeats; i++)
         {
             int[] rgb = mColorSensor.receive();
-            if (rgb == null)
-            {
-                Log.e(MainActivity.TAG, "Color sensor returned null!");
-                continue;
-            }
+            if (rgb == null) { continue; }
 
             r = (rgb[1] << 8) | rgb[0];
             g = (rgb[3] << 8) | rgb[2];
             b = (rgb[5] << 8) | rgb[4];
 
+            Log.d(MainActivity.TAG, " - color sensor returned r=" + r + ", g=" + g + ", " + b + ")");
             Utils.delayMs(settings.ColorSensorDelay);
         }
 

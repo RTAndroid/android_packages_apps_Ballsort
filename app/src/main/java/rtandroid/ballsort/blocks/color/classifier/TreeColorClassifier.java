@@ -16,9 +16,6 @@
 
 package rtandroid.ballsort.blocks.color.classifier;
 
-import android.util.Log;
-
-import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
