@@ -1,94 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- Dummy item to prevent receiving focus -->
-    <View
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
-
-    <RelativeLayout
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <rtandroid.ballsort.gui.ColorView
-            android:id="@+id/cvQueuedBall"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
-
-        <rtandroid.ballsort.gui.ColorView
-            android:id="@+id/cvNextBall"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/cvQueuedBall"/>
-
-        <rtandroid.ballsort.gui.ColorView
-            android:id="@+id/cvDropBall"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_toEndOf="@id/cvNextBall"
-            android:layout_below="@id/cvQueuedBall"/>
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tvBallsDropped"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/dropped" />
+        app:tabMode="scrollable" />
 
-    <TextView
-        android:id="@+id/tvFreeMemory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/memory" />
-
-    <TextView
-        android:id="@+id/tvFeederState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/feeder_state" />
-
-    <TextView
-        android:id="@+id/tvSlingshotValveState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/slingshot_state" />
-
-    <TextView
-        android:id="@+id/tvSlingshotMotorState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/slingshot_motor" />
-
-    <Switch
-        android:id="@+id/swSort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/sort" />
-
-    <Switch
-        android:id="@+id/swReset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="@string/reset" />
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save_settings" />
-
-    <Button
-        android:id="@+id/btnLoad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/load_settings" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
 
 </LinearLayout>
