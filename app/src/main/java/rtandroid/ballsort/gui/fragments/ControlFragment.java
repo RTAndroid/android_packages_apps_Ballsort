@@ -51,30 +51,19 @@ public class ControlFragment extends Fragment
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_control, container, false);
-        return view;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+        mCvQueued = (ColorView) view.findViewById(R.id.cvQueuedBall);
+        mCvNext = (ColorView) view.findViewById(R.id.cvNextBall);
+        mCvDrop = (ColorView) view.findViewById(R.id.cvDropBall);
 
-        mSortIntent = new Intent(getActivity(), SortService.class);
-        mResetIntent = new Intent(getActivity(), ResetService.class);
+        mTvBallsDropped = (TextView) view.findViewById(R.id.tvBallsDropped);
+        mTvFreeMemory = (TextView) view.findViewById(R.id.tvFreeMemory);
+        mTvFeederState = (TextView) view.findViewById(R.id.tvFeederState);
+        mTvSlingshotValveState = (TextView) view.findViewById(R.id.tvSlingshotValveState);
+        mTvSlingshotMotorState = (TextView) view.findViewById(R.id.tvSlingshotMotorState);
 
-
-        mCvQueued = (ColorView) getView().findViewById(R.id.cvQueuedBall);
-        mCvNext = (ColorView) getView().findViewById(R.id.cvNextBall);
-        mCvDrop = (ColorView) getView().findViewById(R.id.cvDropBall);
-
-        mTvBallsDropped = (TextView) getView().findViewById(R.id.tvBallsDropped);
-        mTvFreeMemory = (TextView) getView().findViewById(R.id.tvFreeMemory);
-        mTvFeederState = (TextView) getView().findViewById(R.id.tvFeederState);
-        mTvSlingshotValveState = (TextView) getView().findViewById(R.id.tvSlingshotValveState);
-        mTvSlingshotMotorState = (TextView) getView().findViewById(R.id.tvSlingshotMotorState);
-
-        mSwchSort = (Switch) getView().findViewById(R.id.swSort);
-        mSwchReset = (Switch) getView().findViewById(R.id.swReset);
+        mSwchSort = (Switch) view.findViewById(R.id.swSort);
+        mSwchReset = (Switch) view.findViewById(R.id.swReset);
 
 
         mSwchSort.setOnCheckedChangeListener((buttonView, isChecked) ->
@@ -107,6 +96,17 @@ public class ControlFragment extends Fragment
         new ResetLoop();
 
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
+
+        return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        mSortIntent = new Intent(getActivity(), SortService.class);
+        mResetIntent = new Intent(getActivity(), ResetService.class);
     }
 
     private void updateUi()

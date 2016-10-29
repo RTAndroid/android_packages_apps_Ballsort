@@ -26,6 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".services.SortService"
+            android:icon="@android:drawable/presence_online"
+            android:label="Ballsort is running">
+        </service>
+        <service
+            android:name=".services.ResetService"
+            android:icon="@android:drawable/presence_invisible"
+            android:label="Ballsort is resetting">
+        </service>
 
     </application>
 

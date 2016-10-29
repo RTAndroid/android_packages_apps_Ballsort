@@ -20,19 +20,7 @@ public class SettingsFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        Button btnSave = (Button) getView().findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(v ->
-        {
-            SettingsManager.writeToFile();
-            Log.i(MainActivity.TAG, "Settings saved");
-        });
 
-        Button btnLoad = (Button) getView().findViewById(R.id.btnLoad);
-        btnLoad.setOnClickListener(v ->
-        {
-            SettingsManager.readFromFile();
-            Log.i(MainActivity.TAG, "Settings loaded");
-        });
     }
 
     @Override
@@ -40,6 +28,19 @@ public class SettingsFragment extends Fragment
                              Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        Button btnSave = (Button) view.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(v ->
+        {
+            SettingsManager.writeToFile();
+            Log.i(MainActivity.TAG, "Settings saved");
+        });
+
+        Button btnLoad = (Button) view.findViewById(R.id.btnLoad);
+        btnLoad.setOnClickListener(v ->
+        {
+            SettingsManager.readFromFile();
+            Log.i(MainActivity.TAG, "Settings loaded");
+        });
         return view;
     }
 }
