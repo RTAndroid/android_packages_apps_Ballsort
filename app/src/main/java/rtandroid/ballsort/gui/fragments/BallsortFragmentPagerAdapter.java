@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
 {
-    final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Control", "Settings"};
 
     public BallsortFragmentPagerAdapter(FragmentManager fm, Context context)
@@ -19,7 +18,7 @@ public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public int getCount()
     {
-        return PAGE_COUNT;
+        return tabTitles.length;
     }
 
     @Override
@@ -38,6 +37,6 @@ public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        return "page "+position;
+        return tabTitles[position];
     }
 }
