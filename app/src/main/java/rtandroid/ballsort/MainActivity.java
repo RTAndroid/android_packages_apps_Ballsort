@@ -16,6 +16,7 @@
 
 package rtandroid.ballsort;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -32,6 +33,8 @@ import rtandroid.ballsort.blocks.loops.SortLoop;
 import rtandroid.ballsort.gui.ColorView;
 import rtandroid.ballsort.gui.fragments.BallsortFragmentPagerAdapter;
 import rtandroid.ballsort.hardware.Sorter;
+import rtandroid.ballsort.services.ResetService;
+import rtandroid.ballsort.services.SortService;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
@@ -52,11 +55,6 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        // system setup
-        Sorter.extract(this);
-        Sorter.load();
-
     }
 
 
