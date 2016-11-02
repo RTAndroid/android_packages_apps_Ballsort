@@ -76,7 +76,6 @@ public class ColorPattern
         // temporary solution
         int col = color.getDefaultColumn();
         if (mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
-        mFillings[col]++;
 
         // TODO: remove
         if (1 == 1) { return col; }
@@ -94,6 +93,12 @@ public class ColorPattern
         }
 
         return SKIP;
+    }
+
+    public void onBallDropped(int col)
+    {
+        if(col < 0 || col >= mFillings.length) { return; }
+        mFillings[col]++;
     }
 
     /**
