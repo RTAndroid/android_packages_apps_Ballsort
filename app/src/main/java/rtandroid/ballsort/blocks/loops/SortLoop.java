@@ -42,6 +42,8 @@ public class SortLoop extends AStateBlock
     protected MainStates mState = MainStates.WAIT_FEEDER;
     protected Feeder mFeeder = null;
     protected ColorPattern mColorPattern = null;
+    private int mBallsDropped;
+    private int mNextColumn;
 
     public SortLoop()
     {
@@ -59,6 +61,7 @@ public class SortLoop extends AStateBlock
 
         // start all the other threads
         mFeeder.start();
+        mBallsDropped = Sorter.getBallCount();
     }
 
     @Override
@@ -85,6 +88,12 @@ public class SortLoop extends AStateBlock
         {
         // Wait for the ball to arrive
         case WAIT_PATTERN:
+            int count = Sorter.getBallCount();
+            if (mBallsDropped != count)
+            {
+                mBallsDropped = count;
+                mColorPattern.onBallDropped(mNextColumn);
+            }
             if (mColorPattern.isFull()) { terminate(); } // no need to process if everything is finished
                                    else { mState = MainStates.WAIT_FEEDER; }
             break;
@@ -96,9 +105,9 @@ public class SortLoop extends AStateBlock
 
         // Measure current ball
         case RECIEVE_COLORINFO:
-            int nextColumn = mColorPattern.getNextColumn(data.mDropColor);
-            int delayUs = (nextColumn == ColorPattern.SKIP) ? 0 : settings.ColumnDelaysUs[nextColumn];
-            Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + nextColumn);
+            mNextColumn = mColorPattern.getNextColumn(data.mDropColor);
+            int delayUs = (mNextColumn == ColorPattern.SKIP) ? 0 : settings.ColumnDelaysUs[mNextColumn];
+            Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + mNextColumn);
             Sorter.setDelays(settings.BaseDelayMs, delayUs);
 
             mState = MainStates.DROP_BALL;
