@@ -77,4 +77,9 @@ public class ColorView extends View
         mInnerPaint.setColor(color);
         invalidate();
     }
+
+    public int getColor()
+    {
+        return mInnerPaint.getColor();
+    }
 }

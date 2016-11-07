@@ -18,6 +18,8 @@ package rtandroid.ballsort.settings;
 
 import java.io.Serializable;
 
+import rtandroid.ballsort.blocks.color.ColorType;
+
 import static rtandroid.ballsort.settings.Constants.PATTERN_COLUMNS_COUNT;
 import static rtandroid.ballsort.settings.Constants.PATTERN_COLUMNS_SIZE;
 
@@ -44,14 +46,25 @@ public class Settings implements Serializable
     public final int BusyWaitDelay = 1;
 
     public final int BaseDelayMs = 54;
-    public final int[] ColumnDelaysUs = { 4400, 5050, 7000, 7780, 8500, 9230 };
+    public final int[] ColumnDelaysUs = { 4400, 5800, 7000, 7780, 8500, 9230 };
 
-    public final int ColorSersorRepeats = 10;
-    public final int ColorSensorDelay = 100;
+    public final int ColorSersorRepeats = 5;
+    public final int ColorSensorDelay = 30;
 
     public final int ColorLightColorThreshold = 1350;
     public final int ColorBlackThreshold = 580;
     public final double ColorYellowThreshold = 0.8;
 
-    public final int[][] Pattern = new int[PATTERN_COLUMNS_COUNT][PATTERN_COLUMNS_SIZE];
+    public final ColorType[][] Pattern = new ColorType[PATTERN_COLUMNS_COUNT][PATTERN_COLUMNS_SIZE];
+
+    public Settings()
+    {
+        for (int col = 0; col < Constants.PATTERN_COLUMNS_COUNT; col++)
+        {
+            for(int i = 0; i < Constants.PATTERN_COLUMNS_SIZE;i++)
+            {
+                Pattern[col][i] = ColorType.values()[PATTERN_COLUMNS_COUNT-col-1];
+            }
+        }
+    }
 }

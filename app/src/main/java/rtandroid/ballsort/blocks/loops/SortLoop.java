@@ -62,6 +62,7 @@ public class SortLoop extends AStateBlock
         // start all the other threads
         mFeeder.start();
         mBallsDropped = Sorter.getBallCount();
+
     }
 
     @Override

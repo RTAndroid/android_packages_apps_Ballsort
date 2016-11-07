@@ -16,6 +16,7 @@
 
 package rtandroid.ballsort.blocks.color;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
@@ -62,6 +63,7 @@ public class ColorPattern
     public int getNextColumn(ColorType color)
     {
         Settings settings = SettingsManager.getSettings();
+
         if (mIgnoredBalls < settings.BallsToIgnoreAtReset)
         {
             mIgnoredBalls++;
@@ -73,22 +75,14 @@ public class ColorPattern
         // ignore unknown balls
         if (color.equals(ColorType.EMPTY)) { return SKIP; }
 
-        // temporary solution
-        int col = color.getDefaultColumn();
-        if (mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
-
-        // TODO: remove
-        if (1 == 1) { return col; }
-
-        for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
+        for (int col = 0; col < Constants.PATTERN_COLUMNS_COUNT; col++)
         {
-            int place = mFillings[row];
+            int place = mFillings[col];
             if(place >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
-            if (settings.Pattern[row][place] == SKIP) { continue; }
-            if (settings.Pattern[row][place] == color.getPaintColor() && place < Constants.PATTERN_COLUMNS_SIZE)
+            if (settings.Pattern[col][place] == ColorType.EMPTY) { continue; }
+            if (settings.Pattern[col][place] == color && place < Constants.PATTERN_COLUMNS_SIZE)
             {
-                mFillings[row]++;
-                return row;
+                return col;
             }
         }
 
