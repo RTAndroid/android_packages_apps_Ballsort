@@ -40,7 +40,7 @@ public class PatternFragment extends Fragment
         grid.setRowCount(Constants.PATTERN_COLUMNS_SIZE);
         grid.removeAllViews();
 
-        for (int col = 0; col < Constants.PATTERN_COLUMNS_COUNT; col++)
+        for (int col = Constants.PATTERN_COLUMNS_COUNT-1; col>=0 ; col--)
         {
             for(int row = 0; row < Constants.PATTERN_COLUMNS_SIZE; row++)
             {
