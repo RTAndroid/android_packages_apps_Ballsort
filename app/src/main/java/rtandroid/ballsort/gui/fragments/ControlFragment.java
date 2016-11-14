@@ -36,6 +36,7 @@ public class ControlFragment extends Fragment
     private ColorView mCvQueued = null;
     private ColorView mCvNext = null;
     private ColorView mCvDrop = null;
+    private TextView mTvPattern = null;
     private TextView mTvBallsDropped = null;
     private TextView mTvFreeMemory = null;
 
@@ -55,6 +56,8 @@ public class ControlFragment extends Fragment
         mCvQueued = (ColorView) view.findViewById(R.id.cvQueuedBall);
         mCvNext = (ColorView) view.findViewById(R.id.cvNextBall);
         mCvDrop = (ColorView) view.findViewById(R.id.cvDropBall);
+
+        mTvPattern = (TextView) view.findViewById(R.id.tvPatternCount);
 
         mTvBallsDropped = (TextView) view.findViewById(R.id.tvBallsDropped);
         mTvFreeMemory = (TextView) view.findViewById(R.id.tvFreeMemory);
@@ -120,6 +123,13 @@ public class ControlFragment extends Fragment
         mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
         mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
         mTvFeederState.setText("Feeder state: " + data.FeederState + "");
+
+        String patternString = "";
+        for(int i = 0; i < data.mFillings.length; i++)
+        {
+            patternString += data.mFillings[i]+ " ";
+        }
+        mTvPattern.setText("Pattern: "+ patternString);
 
         Runtime rt = Runtime.getRuntime();
         long freeKB = rt.freeMemory() / 1024;

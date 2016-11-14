@@ -25,6 +25,7 @@ public class DataState
     public ColorType mQueuedColor = ColorType.EMPTY;
     public ColorType mDetectedColor = ColorType.EMPTY;
     public ColorType mDropColor = ColorType.EMPTY;
+    public int[] mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
 
     public String SlingshotValveState = "UNKNOWN";
     public String FeederState = "UNKNOWN";

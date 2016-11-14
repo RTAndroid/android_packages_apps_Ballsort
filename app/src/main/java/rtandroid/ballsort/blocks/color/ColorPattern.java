@@ -93,6 +93,8 @@ public class ColorPattern
     {
         if(col < 0 || col >= mFillings.length) { return; }
         mFillings[col]++;
+        DataState data = SettingsManager.getData();
+        data.mFillings = mFillings;
     }
 
     /**
@@ -101,26 +103,8 @@ public class ColorPattern
      */
     public boolean isFull()
     {
-        //TODO remove tmp solution
-        boolean full = true;
 
-        for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
-        {
-            int space = mFillings[row];
-
-            // hack for missing blue balls
-            if(space == 0 && row == ColorType.BLUE.getDefaultColumn()){ continue; }
-            if (space >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
-
-            // else
-            full = false;
-        }
-
-        if (full) { Log.d(MainActivity.TAG, "Pattern is full!"); }
-        return full;
-
-        /*
-        int[][] pattern = SettingsManager.getSettings().Pattern;
+        ColorType[][] pattern = SettingsManager.getSettings().Pattern;
         boolean full = true;
 
         for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
@@ -128,7 +112,7 @@ public class ColorPattern
             int space = mFillings[row];
 
             // next slot in this row should be empty
-            if (space < Constants.PATTERN_COLUMNS_SIZE && pattern[row][space] == SKIP) { continue; }
+            if (space < Constants.PATTERN_COLUMNS_SIZE && pattern[row][space] == ColorType.EMPTY) { continue; }
 
             // row is already full
             if (space >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
@@ -137,7 +121,7 @@ public class ColorPattern
             full = false;
         }
         return full;
-        */
+
     }
 
     public void preparePins()

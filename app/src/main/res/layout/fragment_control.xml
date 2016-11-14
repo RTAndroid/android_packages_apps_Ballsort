@@ -33,6 +33,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="@string/dropped" />
+    <TextView
+        android:id="@+id/tvPatternCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/pattern" />
 
     <TextView
         android:id="@+id/tvFreeMemory"

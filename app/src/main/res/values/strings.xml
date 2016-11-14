@@ -12,4 +12,5 @@
     <string name="feeder_state">Feeder state: UNKNOWN</string>
     <string name="pattern_state">Pattern state: UNKNOWN</string>
     <string name="dropped">Droped: 0</string>
+    <string name="pattern">Pattern:</string>
 </resources>
