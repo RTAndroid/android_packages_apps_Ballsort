@@ -94,7 +94,7 @@ public class ColorPattern
         if(col < 0 || col >= mFillings.length) { return; }
         mFillings[col]++;
         DataState data = SettingsManager.getData();
-        data.mFillings = mFillings;
+        data.mFillings[col]++;
     }
 
     /**
