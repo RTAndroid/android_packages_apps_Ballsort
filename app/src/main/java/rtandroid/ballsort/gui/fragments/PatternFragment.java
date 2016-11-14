@@ -1,8 +1,11 @@
 package rtandroid.ballsort.gui.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
+import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.gui.ColorView;
@@ -21,7 +25,6 @@ import rtandroid.ballsort.settings.SettingsManager;
 public class PatternFragment extends Fragment
 {
     private ColorView mSelectedView = null;
-    private int mOldColor = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -47,18 +50,36 @@ public class PatternFragment extends Fragment
                 View view = inflater.inflate(R.layout.grid_view_entry, null, false);
                 ColorView cv = (ColorView) view.findViewById(R.id.CV);
                 cv.setColor(settings.Pattern[col][row].getPaintColor());
+                int finalRow = Constants.PATTERN_COLUMNS_SIZE-row-1;
+                int finalCol = Constants.PATTERN_COLUMNS_COUNT-col-1;
                 cv.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        if(mSelectedView != null)
-                        {
-                            mSelectedView.setColor(mOldColor);
-                        }
-                        mOldColor = cv.getColor();
-                        cv.setColor(Color.CYAN);
                         mSelectedView = cv;
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Please choose a color:");
+                        builder.setItems(ColorType.names, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                ColorType type = ColorType.values()[which];
+                                settings.Pattern[finalCol][finalRow] = type;
+                                mSelectedView.setColor(type.getPaintColor());
+                                Log.d(MainActivity.TAG, "New color "+finalCol+"  "+finalRow+" is "+type.name());
+                            }
+                        });
+
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id) {}
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     }
                 });
                 grid.addView(view);

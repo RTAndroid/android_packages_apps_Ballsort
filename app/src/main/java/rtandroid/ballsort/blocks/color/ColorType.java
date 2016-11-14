@@ -33,4 +33,13 @@ public enum ColorType
 
     public int getPaintColor() { return mPaintColor; }
     public int getDefaultColumn() { return ordinal(); }
+
+    public static final String[] names = new String[values().length];
+    static
+    {
+        for(ColorType ct : values())
+        {
+            names[ct.ordinal()] = ct.name();
+        }
+    }
 }
