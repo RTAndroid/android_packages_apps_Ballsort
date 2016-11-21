@@ -16,6 +16,9 @@
 
 package rtandroid.ballsort.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.io.Serializable;
 
 import rtandroid.ballsort.blocks.color.ColorType;
@@ -48,7 +51,7 @@ public class Settings implements Serializable
     public final int BaseDelayMs = 54;
     public final int[] ColumnDelaysUs = { 4400, 5800, 7000, 7780, 8500, 9230 };
 
-    public final int ColorSersorRepeats = 5;
+    public int ColorSersorRepeats = 5;
     public final int ColorSensorDelay = 30;
 
     public final int ColorLightColorThreshold = 1350;

@@ -125,9 +125,9 @@ public class ControlFragment extends Fragment
         mTvFeederState.setText("Feeder state: " + data.FeederState + "");
 
         String patternString = "";
-        for(int i = 0; i < data.mFillings.length; i++)
+        for(int i = 1; i <= data.mFillings.length; i++)
         {
-            patternString += data.mFillings[i]+ " ";
+            patternString += data.mFillings[data.mFillings.length-i]+ " ";
         }
         mTvPattern.setText("Pattern: "+ patternString);
 

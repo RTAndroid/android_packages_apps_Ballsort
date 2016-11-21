@@ -1,46 +1,85 @@
 package rtandroid.ballsort.gui.fragments;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+
+import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
+import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
-public class SettingsFragment extends Fragment
+public class SettingsFragment extends PreferenceFragment
 {
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
 
+        Settings settings = SettingsManager.getSettings();
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        Button btnSave = (Button) view.findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(v ->
+        for(int i = 0; i < settings.ColumnDelaysUs.length; i++)
         {
-            SettingsManager.writeToFile();
-            Log.i(MainActivity.TAG, "Settings saved");
-        });
+            String prefName = "timing"+(i+1);
+            String defaultValue = ""+settings.ColumnDelaysUs[i];
 
-        Button btnLoad = (Button) view.findViewById(R.id.btnLoad);
-        btnLoad.setOnClickListener(v ->
+            Preference timingI = findPreference(prefName);
+            if(timingI == null)
+            {
+                Log.e(MainActivity.TAG, "Could not find "+prefName);
+                continue;
+            }
+            timingI.setTitle(defaultValue);
+            timingI.setSummary(timingI.getSummary() + ". Default: "+settings.ColumnDelaysUs[i]);
+
+            int finalI = i;
+            timingI.setOnPreferenceChangeListener((preference, newValue) ->
+            {
+                try
+                {
+                    int newTime = Integer.valueOf((String)newValue);
+                    Log.d(MainActivity.TAG, "New timing is "+newTime);
+                    settings.ColumnDelaysUs[finalI] = newTime;
+                    timingI.setTitle(""+newTime);
+                }
+                catch (Exception e)
+                {
+                    Log.d(MainActivity.TAG, "Wrong type of pref!");
+                    e.printStackTrace();
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        String numReadsName = "colormeassurments";
+        String defaultValue = ""+settings.ColorSersorRepeats;
+        Preference pref = findPreference(numReadsName);
+        if(pref == null)
         {
-            SettingsManager.readFromFile();
-            Log.i(MainActivity.TAG, "Settings loaded");
+            Log.e(MainActivity.TAG, "Could not find "+numReadsName);
+        }
+        pref.setTitle(defaultValue);
+        pref.setOnPreferenceChangeListener((preference, newValue) ->
+        {
+            try
+            {
+                int newTime = Integer.valueOf((String)newValue);
+                Log.d(MainActivity.TAG, "New timing is "+newTime);
+                settings.ColorSersorRepeats = newTime;
+                pref.setTitle(""+newTime);
+            }
+            catch (Exception e)
+            {
+                Log.d(MainActivity.TAG, "Wrong type of pref!");
+                e.printStackTrace();
+                return false;
+            }
+            return true;
         });
-        return view;
     }
 }

@@ -2,16 +2,13 @@ package rtandroid.ballsort.gui.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
@@ -51,7 +48,7 @@ public class PatternFragment extends Fragment
                 ColorView cv = (ColorView) view.findViewById(R.id.CV);
                 cv.setColor(settings.Pattern[col][row].getPaintColor());
                 int finalRow = Constants.PATTERN_COLUMNS_SIZE-row-1;
-                int finalCol = Constants.PATTERN_COLUMNS_COUNT-col-1;
+                int finalCol = col;
                 cv.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -66,6 +63,7 @@ public class PatternFragment extends Fragment
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
+                                Settings settings = SettingsManager.getSettings();
                                 ColorType type = ColorType.values()[which];
                                 settings.Pattern[finalCol][finalRow] = type;
                                 mSelectedView.setColor(type.getPaintColor());

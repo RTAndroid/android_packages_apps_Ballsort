@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:title="Timing 1 (right)"
+        android:key="colormeassurments"
+        android:numeric="integer"
+        android:summary="How often the color should be read"></EditTextPreference>
+    <EditTextPreference android:title="Timing 1 (right)"
+        android:key="timing1"
+        android:numeric="decimal"
+        android:summary="The timing for the first colum"></EditTextPreference>
+    <EditTextPreference android:title="Timing 2"
+        android:key="timing2"
+        android:numeric="decimal"
+        android:summary="The timing for the second colum"></EditTextPreference>
+    <EditTextPreference android:title="Timing 3"
+        android:key="timing3"
+        android:numeric="decimal"
+        android:summary="The timing for the third colum"></EditTextPreference>
+    <EditTextPreference android:title="Timing 4"
+        android:key="timing4"
+        android:numeric="decimal"
+        android:summary="The timing for the fourth colum"></EditTextPreference>
+    <EditTextPreference android:title="Timing 5"
+        android:key="timing5"
+        android:numeric="decimal"
+        android:summary="The timing for the fifth colum"></EditTextPreference>
+    <EditTextPreference android:title="Timing 6 (left)"
+        android:key="timing6"
+        android:numeric="decimal"
+        android:summary="The timing for the sixth colum"></EditTextPreference>
+</PreferenceScreen>

@@ -89,12 +89,6 @@ public class SortLoop extends AStateBlock
         {
         // Wait for the ball to arrive
         case WAIT_PATTERN:
-            int count = Sorter.getBallCount();
-            if (mBallsDropped != count)
-            {
-                mBallsDropped = count;
-                mColorPattern.onBallDropped(mNextColumn);
-            }
             if (mColorPattern.isFull()) { terminate(); } // no need to process if everything is finished
                                    else { mState = MainStates.WAIT_FEEDER; }
             break;
@@ -120,6 +114,17 @@ public class SortLoop extends AStateBlock
             Utils.delayMs(settings.BeforeDropDelay);
             mFeeder.allowDrop();
             Utils.delayMs(settings.AfterDropDelay);
+
+            int count = Sorter.getBallCount();
+            if (mBallsDropped < count)
+            {
+                mBallsDropped = count;
+                if(!mColorPattern.isIgnoring())
+                {
+                    mColorPattern.onBallDropped(mNextColumn);
+                }
+            }
+
             if (mFeeder.getFeederState() != Feeder.FeederState.DROPPING) { mState = MainStates.WAIT_PATTERN; }
             break;
         }

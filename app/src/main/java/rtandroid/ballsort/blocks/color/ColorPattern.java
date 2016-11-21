@@ -34,12 +34,20 @@ public class ColorPattern
     protected int[] mFillings = null;
 
     private int mIgnoredBalls = 0;
-    private int mShouldOpenPins = 0;
+    private PinState mShouldOpenPins = PinState.CLOSED;
 
+    private enum PinState
+    {
+        CLOSED,
+        SHOULD_OPEN,
+        OPENED
+    }
     public ColorPattern()
     {
         mBottomPins = new GPIOPin("ColorPatternReset", Constants.PATTERN_VALVE_PIN, GPIOPin.DIRECTION_OUT, true);
         mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+        DataState data = SettingsManager.getData();
+        data.mFillings = mFillings;
     }
 
     public void cleanup()
@@ -51,7 +59,7 @@ public class ColorPattern
     {
         mBottomPins.setValue(false);
         mIgnoredBalls = 0;
-        mShouldOpenPins = 0;
+        mShouldOpenPins = PinState.CLOSED;
     }
 
     /**
@@ -70,11 +78,13 @@ public class ColorPattern
             return Constants.PATTERN_COLUMNS_COUNT - 1;
         }
 
-        if (mShouldOpenPins == 0) { mShouldOpenPins = 1; }
+        if (mShouldOpenPins == PinState.CLOSED) { mShouldOpenPins = PinState.SHOULD_OPEN; }
         
         // ignore unknown balls
         if (color.equals(ColorType.EMPTY)) { return SKIP; }
 
+        int minHeight = 255;
+        int bestCol = SKIP;
         for (int col = 0; col < Constants.PATTERN_COLUMNS_COUNT; col++)
         {
             int place = mFillings[col];
@@ -82,19 +92,31 @@ public class ColorPattern
             if (settings.Pattern[col][place] == ColorType.EMPTY) { continue; }
             if (settings.Pattern[col][place] == color && place < Constants.PATTERN_COLUMNS_SIZE)
             {
-                return col;
+                if(place < minHeight)
+                {
+                    minHeight = place;
+                    bestCol = col;
+                }
             }
         }
 
-        return SKIP;
+        return bestCol;
+    }
+
+    public boolean isIgnoring()
+    {
+        Settings settings = SettingsManager.getSettings();
+        return mIgnoredBalls != settings.BallsToIgnoreAtReset;
     }
 
     public void onBallDropped(int col)
     {
-        if(col < 0 || col >= mFillings.length) { return; }
+        Settings settings = SettingsManager.getSettings();
+        if(col < 0 || col >= mFillings.length || mIgnoredBalls < settings.BallsToIgnoreAtReset)
+        {
+            return;
+        }
         mFillings[col]++;
-        DataState data = SettingsManager.getData();
-        data.mFillings[col]++;
     }
 
     /**
@@ -126,11 +148,11 @@ public class ColorPattern
 
     public void preparePins()
     {
-        // TODO: WTH is 0,1,2?
-        if (mShouldOpenPins == 1)
+        if (mShouldOpenPins == PinState.SHOULD_OPEN)
         {
             mBottomPins.setValue(true);
-            mShouldOpenPins = 2;
+            mFillings[Constants.PATTERN_COLUMNS_COUNT - 1] = 0;
+            mShouldOpenPins = PinState.OPENED;
         }
     }
 }
