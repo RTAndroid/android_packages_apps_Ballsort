@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:title="Timing 1 (right)"
+    <EditTextPreference android:title="Color Read Number"
         android:key="colormeassurments"
         android:numeric="integer"
         android:summary="How often the color should be read"></EditTextPreference>

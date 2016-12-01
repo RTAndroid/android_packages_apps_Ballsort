@@ -1,83 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:padding="10dp" >
-
-    <RelativeLayout
+    android:layout_width="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <rtandroid.ballsort.gui.ColorView
-            android:id="@+id/cvQueuedBall"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
-        <rtandroid.ballsort.gui.ColorView
-            android:id="@+id/cvNextBall"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@id/cvQueuedBall"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <rtandroid.ballsort.gui.ColorView
+                android:id="@+id/cvQueuedBall"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
 
-        <rtandroid.ballsort.gui.ColorView
-            android:id="@+id/cvDropBall"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_toEndOf="@id/cvNextBall"
-            android:layout_below="@id/cvQueuedBall"/>
-    </RelativeLayout>
+            <rtandroid.ballsort.gui.ColorView
+                android:id="@+id/cvNextBall"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/cvQueuedBall"/>
 
-    <TextView
-        android:id="@+id/tvBallsDropped"
+            <rtandroid.ballsort.gui.ColorView
+                android:id="@+id/cvDropBall"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toEndOf="@id/cvNextBall"
+                android:layout_below="@id/cvQueuedBall"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvBallsDropped"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/dropped" />
+        <TextView
+            android:id="@+id/tvPatternCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/pattern" />
+
+        <TextView
+            android:id="@+id/tvFreeMemory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/memory" />
+
+        <TextView
+            android:id="@+id/tvFeederState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/feeder_state" />
+
+        <TextView
+            android:id="@+id/tvSlingshotValveState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/slingshot_state" />
+
+        <TextView
+            android:id="@+id/tvSlingshotMotorState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/slingshot_motor" />
+
+        <Switch
+            android:id="@+id/swSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/sort" />
+
+        <Switch
+            android:id="@+id/swReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:text="@string/reset" />
+    </LinearLayout>
+    <GridLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/dropped" />
-    <TextView
-        android:id="@+id/tvPatternCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/pattern" />
-
-    <TextView
-        android:id="@+id/tvFreeMemory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/memory" />
-
-    <TextView
-        android:id="@+id/tvFeederState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/feeder_state" />
-
-    <TextView
-        android:id="@+id/tvSlingshotValveState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/slingshot_state" />
-
-    <TextView
-        android:id="@+id/tvSlingshotMotorState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/slingshot_motor" />
-
-    <Switch
-        android:id="@+id/swSort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/sort" />
-
-    <Switch
-        android:id="@+id/swReset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="@string/reset" />
-
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:id="@+id/patternGrid"
+        android:paddingRight="20dp">
+    </GridLayout>
+</RelativeLayout>
