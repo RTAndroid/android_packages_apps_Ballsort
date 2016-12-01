@@ -30,4 +30,5 @@ public class DataState
     public String SlingshotValveState = "UNKNOWN";
     public String FeederState = "UNKNOWN";
     public String SlingshotMotorState = "UNKNOWN";
+    public String mModuleError = "";
 }

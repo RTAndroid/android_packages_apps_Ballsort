@@ -158,7 +158,6 @@ public class ControlFragment extends Fragment
             }
         }
 
-
         return view;
     }
 
@@ -179,9 +178,19 @@ public class ControlFragment extends Fragment
         mCvNext.setColor(data.mQueuedColor.getPaintColor());
         mCvDrop.setColor(data.mDropColor.getPaintColor());
 
-        mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
-        mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
-        mTvFeederState.setText("Feeder state: " + data.FeederState + "");
+        if(!data.mModuleError.isEmpty())
+        {
+            mTvSlingshotValveState.setText(data.mModuleError);
+            mTvSlingshotMotorState.setText(data.mModuleError);
+            mTvFeederState.setText(data.mModuleError);
+        }
+        else
+        {
+            mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
+            mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
+            mTvFeederState.setText("Feeder state: " + data.FeederState + "");
+        }
+
 
         String patternString = "";
         for(int i = 1; i <= data.mFillings.length; i++)
