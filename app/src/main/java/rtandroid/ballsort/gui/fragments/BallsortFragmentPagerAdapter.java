@@ -25,8 +25,8 @@ public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
     public Fragment getItem(int position)
     {
         switch (position){
-            case 0: return new ControlFragment();
-            case 1: return new SettingsFragment();
+            case 0: return ControlFragment.getInstance();
+            case 1: return SettingsFragment.getInstance();
         }
         return null;
     }

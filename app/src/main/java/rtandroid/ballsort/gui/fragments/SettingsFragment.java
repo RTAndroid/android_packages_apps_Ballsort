@@ -14,6 +14,14 @@ import rtandroid.ballsort.settings.SettingsManager;
 public class SettingsFragment extends PreferenceFragment
 {
 
+    private static SettingsFragment mInstance = new SettingsFragment();
+
+    public static SettingsFragment getInstance()
+    {
+        return mInstance;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

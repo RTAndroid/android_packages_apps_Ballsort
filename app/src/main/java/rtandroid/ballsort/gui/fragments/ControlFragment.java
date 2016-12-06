@@ -32,6 +32,13 @@ import rtandroid.ballsort.util.Utils;
 
 public class ControlFragment extends Fragment
 {
+    private static ControlFragment mInstance = new ControlFragment();
+
+    public static ControlFragment getInstance()
+    {
+        return mInstance;
+    }
+
     private static final int REFRESH_RATE_MS = 500;
 
     private final Handler mUiUpdateHandler = new Handler();
