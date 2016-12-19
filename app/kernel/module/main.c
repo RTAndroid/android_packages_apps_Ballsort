@@ -7,7 +7,6 @@
 #include "file.h"
 #include "mmap.h"
 #include "gpio.h"
-#include "ntlink.h"
 
 //! Module enty point
 static int __init rtdma_init(void)
@@ -38,16 +37,6 @@ static int __init rtdma_init(void)
         return -EIO;
     }
 
-    if (ntlink_init() < 0)
-    {
-        printk("RTDMA: ntlink_init failed\n");
-        ntlink_exit();
-        gpio_exit();
-        memory_exit();
-        file_exit();
-        return -EIO;
-    }
-
     printk("RTDMA: loaded\n");
     return 0;
 }
@@ -60,7 +49,6 @@ static void __exit rtdma_exit(void)
     gpio_exit();
     memory_exit();
     file_exit();
-    ntlink_exit();
 
     printk("RTDMA: exited\n");
 }
