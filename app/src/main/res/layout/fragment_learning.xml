@@ -23,4 +23,10 @@
         android:layout_marginBottom="30dp"
         android:text="@string/reset" />
 
+    <TextView
+        android:id="@+id/tvTrainErr"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        />
+
 </LinearLayout>

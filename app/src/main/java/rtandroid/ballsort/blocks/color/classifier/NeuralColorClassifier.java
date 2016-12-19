@@ -35,10 +35,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
+import rtandroid.ballsort.settings.DataState;
+import rtandroid.ballsort.settings.Settings;
+import rtandroid.ballsort.settings.SettingsManager;
 
 import static rtandroid.ballsort.blocks.color.ColorType.*;
 import static rtandroid.ballsort.blocks.color.ColorType.BLACK;
@@ -77,7 +81,7 @@ public class NeuralColorClassifier implements IColorClassifier {
     private static List<double[]> YELLOW_DATA = new ArrayList<>();
     private static List<double[]> WHITE_DATA = new ArrayList<>();
 
-    private static HashMap<ColorType, double[][]> sTrainingData;
+    private static HashMap<ColorType, List<double[]>> sTrainingData;
 
 
     public void resetTrainingsData() {
@@ -85,17 +89,17 @@ public class NeuralColorClassifier implements IColorClassifier {
         mNetwork.randomizeWeights();
 
         sTrainingData = new HashMap<>();
-        sTrainingData.put(BLACK, (double[][]) BLACK_DATA.toArray());
-        sTrainingData.put(BLUE, (double[][]) BLUE_DATA.toArray());
-        sTrainingData.put(GREEN, (double[][]) GREEN_DATA.toArray());
-        sTrainingData.put(RED, (double[][]) RED_DATA.toArray());
-        sTrainingData.put(YELLOW, (double[][]) YELLOW_DATA.toArray());
-        sTrainingData.put(WHITE, (double[][]) WHITE_DATA.toArray());
+        sTrainingData.put(BLACK, BLACK_DATA);
+        sTrainingData.put(BLUE, BLUE_DATA);
+        sTrainingData.put(GREEN, GREEN_DATA);
+        sTrainingData.put(RED,  RED_DATA);
+        sTrainingData.put(YELLOW, YELLOW_DATA);
+        sTrainingData.put(WHITE,  WHITE_DATA);
 
         Iterator it = sTrainingData.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            System.out.println(pair.getKey() + " = " + ((double[]) pair.getValue()).length);
+            System.out.println(pair.getKey() + " = " + ((List<double[]>) pair.getValue()).size());
             it.next();
         }
 
@@ -204,29 +208,20 @@ public class NeuralColorClassifier implements IColorClassifier {
         }
     }
 
-    private boolean mContinueLearning = true;
-
     public void startLearning()
     {
-        mContinueLearning = true;
         resetTrainingsData();
         Runnable learn = this::learn;
         Thread learner = new Thread(learn, "NeuralNet Learning Thread");
         learner.start();
     }
 
-    public void stopLearning()
-    {
-        mContinueLearning = false;
-    }
-
 
     private void learn()
     {
-        while(mContinueLearning) {
             final double learningRate = 0.4;
             final double learningGoal = 1E-100;
-            final int learningIterations = 1000;
+            final int learningIterations = 200000;
 
             // apply learning settings
             final long learningStart = System.nanoTime();
@@ -251,16 +246,18 @@ public class NeuralColorClassifier implements IColorClassifier {
                     Log.i(MainActivity.TAG, "The network was saved to " + NETWORK_FILENAME);
                 } else
                 {
+                    DataState data = SettingsManager.getData();
+                    data.mLearningError =  bp.getTotalNetworkError();
                     Log.i(MainActivity.TAG, "Iteration: " + bp.getCurrentIteration() + " | Error: " + bp.getTotalNetworkError());
                 }
             });
 
             // create a dataset for learning
             DataSet trainingSet = new DataSet(INPUT_COUNT, OUTPUT_COUNT);
-            for (Map.Entry<ColorType, double[][]> entry : sTrainingData.entrySet())
+            for (Map.Entry<ColorType, List<double[]>> entry : sTrainingData.entrySet())
             {
                 ColorType color = entry.getKey();
-                double[][] trainingData = entry.getValue();
+                List<double[]> trainingData = entry.getValue();
 
                 double[] outputs = new double[OUTPUT_COUNT];
                 outputs[color.ordinal()] = 1.0;
@@ -289,7 +286,6 @@ public class NeuralColorClassifier implements IColorClassifier {
 
             // we can finally start learning
             mNetwork.learn(trainingSet);
-        }
     }
 
     private ColorType recognize(double[] inputs)

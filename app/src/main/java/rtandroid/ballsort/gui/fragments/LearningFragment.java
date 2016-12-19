@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
@@ -39,6 +40,7 @@ public class LearningFragment extends Fragment
     private Switch mSwchStart = null;
     private Switch mSwchReset = null;
     private Switch mSwchTrain = null;
+    private TextView mTvErr = null;
 
     private static Intent mResetIntent = null;
 
@@ -51,6 +53,7 @@ public class LearningFragment extends Fragment
         mSwchStart = (Switch) view.findViewById(R.id.swStart);
         mSwchReset = (Switch) view.findViewById(R.id.swReset);
         mSwchTrain = (Switch) view.findViewById(R.id.swTrain);
+        mTvErr = (TextView) view.findViewById(R.id.tvTrainErr);
 
         mSwchStart.setOnCheckedChangeListener((buttonView, isChecked) ->
         {
@@ -66,6 +69,7 @@ public class LearningFragment extends Fragment
                 if (mCurrentLearningLoop == null) { return; }
                 mCurrentLearningLoop.terminate();
                 mCurrentLearningLoop.waitFor();
+                mCurrentLearningLoop = null;
             }
         });
 
@@ -86,10 +90,10 @@ public class LearningFragment extends Fragment
             if (isChecked)
             {
                 NeuralColorClassifier.getInstance().startLearning();
+                mSwchTrain.setActivated(false);
             }
             else
             {
-                NeuralColorClassifier.getInstance().stopLearning();
             }
         });
 
@@ -114,6 +118,7 @@ public class LearningFragment extends Fragment
 
         if(data.mLatestColor != null && mCurrentLearningLoop != null)
         {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Please choose a color:");
             builder.setItems(ColorType.names, (dialog, which) ->
@@ -136,9 +141,11 @@ public class LearningFragment extends Fragment
 
             AlertDialog dialog = builder.create();
             dialog.show();
+
         }
         else
         {
+            mTvErr.setText("Error: " + data.mLearningError);
             mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
         }
     }

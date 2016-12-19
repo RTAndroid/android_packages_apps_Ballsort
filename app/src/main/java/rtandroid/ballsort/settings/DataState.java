@@ -34,4 +34,5 @@ public class DataState
     public String FeederState = "UNKNOWN";
     public String SlingshotMotorState = "UNKNOWN";
     public String mModuleError = "";
+    public double mLearningError = 0;
 }
