@@ -77,7 +77,7 @@ public class ColorPattern
             mIgnoredBalls++;
             return Constants.PATTERN_COLUMNS_COUNT - 1;
         }
-
+        
         if (mShouldOpenPins == PinState.CLOSED) { mShouldOpenPins = PinState.SHOULD_OPEN; }
         
         // ignore unknown balls

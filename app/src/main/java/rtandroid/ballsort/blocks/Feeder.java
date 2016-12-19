@@ -19,6 +19,7 @@ package rtandroid.ballsort.blocks;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
+import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
@@ -47,7 +48,7 @@ public class Feeder extends AStateBlock
     }
 
     private static final int[] ROTATE_PATTERN = { Stepper.WHILE_OPENED, Stepper.WHILE_CLOSED, Stepper.WHILE_OPENED, 32 };
-    private static final IColorClassifier[] COLOR_CLASSIFIER = { new TreeColorClassifier(), new MeanColorClassifier(), new NeuralColorClassifier() };
+    private static final IColorClassifier[] COLOR_CLASSIFIER = { new TreeColorClassifier(), new MeanColorClassifier(), NeuralColorClassifier.getInstance() };
 
     protected FeederState mState = FeederState.DROPPING;
     protected Stepper mStepper = null;
@@ -136,12 +137,15 @@ public class Feeder extends AStateBlock
         ColorType colorType = ColorType.EMPTY;
         Log.d(MainActivity.TAG, "Detecting RGB values (" + r + ", " + g + ", " + b + ")");
 
+        ColorObject color = new ColorObject(r, g, b);
+
         for (IColorClassifier classifier : COLOR_CLASSIFIER)
         {
-            colorType = classifier.classify(r, g, b);
+            colorType = classifier.classify(color);
             Log.d(MainActivity.TAG, classifier.getName() + " -> " + colorType.name());
         }
 
+        data.mLatestColor = color;
         return colorType;
     }
 

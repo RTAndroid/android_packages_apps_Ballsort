@@ -13,4 +13,6 @@
     <string name="pattern_state">Pattern state: UNKNOWN</string>
     <string name="dropped">Droped: 0</string>
     <string name="pattern">Pattern:</string>
+    <string name="start">Start</string>
+    <string name="train">Train</string>
 </resources>
