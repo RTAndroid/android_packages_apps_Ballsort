@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class Constants implements Serializable
 {
     public static final String MODULE_SORTING = "rtdma";
-    public static final int THREAD_BLOCK_PRIORITY = 80;
+    public static final int THREAD_BLOCK_PRIORITY = 50;
 
                                                              // -----------------------------------------------------|
                                                              // | conn |  pin  |  func   | export |  plan            |

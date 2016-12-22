@@ -145,6 +145,10 @@ public class Feeder extends AStateBlock
             Log.d(MainActivity.TAG, classifier.getName() + " -> " + colorType.name());
         }
 
+        IColorClassifier used = COLOR_CLASSIFIER[settings.ColorDetection];
+        colorType = used.classify(color);
+        Log.d(MainActivity.TAG, "Using: "+ used.getName());
+
         data.mLatestColor = color;
         return colorType;
     }

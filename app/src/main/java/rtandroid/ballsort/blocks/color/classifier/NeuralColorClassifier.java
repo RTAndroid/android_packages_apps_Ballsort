@@ -158,12 +158,11 @@ public class NeuralColorClassifier implements IColorClassifier {
         result[7] = hsv[1];
         result[8] = hsv[2];
 
-        if (true) {
+        if (false) {
             StringBuilder builder = new StringBuilder();
             for (double v : result) {
                 builder.append(v).append(",");
             }
-            Log.d(MainActivity.TAG + "/NEURAL", "{" + r + "," + g + "," + b + "},");
             Log.d(MainActivity.TAG + "/NEURAL", "{" + builder.toString() + "},");
         }
 

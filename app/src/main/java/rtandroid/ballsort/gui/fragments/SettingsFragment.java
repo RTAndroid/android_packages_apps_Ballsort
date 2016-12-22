@@ -89,5 +89,31 @@ public class SettingsFragment extends PreferenceFragment
             }
             return true;
         });
+
+        String detectionName = "colordetection";
+        defaultValue = ""+settings.ColorDetection;
+        Preference detPref = findPreference(detectionName);
+        if(detPref == null)
+        {
+            Log.e(MainActivity.TAG, "Could not find "+detectionName);
+        }
+        detPref.setTitle(defaultValue);
+        detPref.setOnPreferenceChangeListener((preference, newValue) ->
+        {
+            try
+            {
+                int newTime = Integer.valueOf((String)newValue);
+                Log.d(MainActivity.TAG, "New timing is "+newTime);
+                settings.ColorSersorRepeats = newTime;
+                detPref.setTitle(""+newTime);
+            }
+            catch (Exception e)
+            {
+                Log.d(MainActivity.TAG, "Wrong type of pref!");
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        });
     }
 }

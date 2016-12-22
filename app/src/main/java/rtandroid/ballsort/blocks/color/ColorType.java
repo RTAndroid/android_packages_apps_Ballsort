@@ -20,13 +20,13 @@ import android.graphics.Color;
 
 public enum ColorType
 {
-    BLACK(Color.BLACK),
-    BLUE(Color.BLUE),
-    GREEN(Color.GREEN),
-    RED(Color.RED),
-    YELLOW(Color.YELLOW),
-    WHITE(Color.WHITE),
-    EMPTY(Color.GRAY);
+    BLACK(Color.rgb(0,0,0)),
+    BLUE(Color.rgb(0,84,159)),
+    GREEN(Color.rgb(87,171,39)),
+    RED(Color.rgb(204,7,30)),
+    YELLOW(Color.rgb(255,237,0)),
+    WHITE(Color.rgb(236,237,237)),
+    EMPTY(Color.rgb(101,101,103));
 
     private int mPaintColor = Color.GRAY;
     ColorType(int paint) { mPaintColor = paint; }
