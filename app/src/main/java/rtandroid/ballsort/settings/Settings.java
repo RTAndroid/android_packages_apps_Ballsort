@@ -44,14 +44,14 @@ public class Settings implements Serializable
     public final long SlingshotFreeThreshold = 2100000;
 
     public final int BallsToIgnoreAtReset = 3;
-    public final int BeforeDropDelay = 100;
+    public final int BeforeDropDelay = 200;
     public final int AfterDropDelay = 500;
     public final int BusyWaitDelay = 1;
 
     public final int BaseDelayMs = 54;
     public final int[] ColumnDelaysUs = { 4400, 5800, 7000, 7780, 8500, 9230 };
 
-    public int ColorSersorRepeats = 1;
+    public int ColorSersorRepeats = 2;
     public final int ColorSensorDelay = 30;
 
     public int ColorLightColorThreshold = 1350;

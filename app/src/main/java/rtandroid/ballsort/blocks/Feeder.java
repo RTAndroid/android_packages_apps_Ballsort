@@ -18,6 +18,8 @@ package rtandroid.ballsort.blocks;
 
 import android.util.Log;
 
+import org.slf4j.helpers.Util;
+
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
@@ -168,6 +170,7 @@ public class Feeder extends AStateBlock
             data.mDropColor = data.mQueuedColor;
             data.mQueuedColor = data.mDetectedColor;
             data.mDetectedColor = detectColor();
+            Utils.delayMs(settings.BeforeDropDelay);
             mState = FeederState.READY;
             break;
 

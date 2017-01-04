@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,6 +26,7 @@ import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
+import rtandroid.ballsort.ui.GridAdapter;
 
 public class ControlFragment extends Fragment
 {
@@ -54,6 +55,8 @@ public class ControlFragment extends Fragment
     private TextView mTvSlingshotValveState = null;
     private TextView mTvSlingshotMotorState = null;
 
+    private GridView mGridView = null;
+
     private static Intent mSortIntent = null;
     private static Intent mResetIntent = null;
 
@@ -79,6 +82,8 @@ public class ControlFragment extends Fragment
 
         mSwchSort = (Switch) view.findViewById(R.id.swSort);
         mSwchReset = (Switch) view.findViewById(R.id.swReset);
+
+        mGridView = (GridView) view.findViewById(R.id.patternGrid);
 
 
         mSwchSort.setOnCheckedChangeListener((buttonView, isChecked) ->
@@ -112,21 +117,17 @@ public class ControlFragment extends Fragment
 
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
 
-        GridLayout grid = (GridLayout) view.findViewById(R.id.patternGrid);
+        GridView grid = (GridView) view.findViewById(R.id.patternGrid);
         Settings settings = SettingsManager.getSettings();
-        grid.setColumnCount(Constants.PATTERN_COLUMNS_COUNT);
-        grid.setRowCount(Constants.PATTERN_COLUMNS_SIZE);
-        grid.removeAllViews();
+
+
+        grid.setAdapter(new GridAdapter(getActivity()));
 
         for (int col = Constants.PATTERN_COLUMNS_COUNT-1; col>=0 ; col--)
         {
             for(int row = 0; row < Constants.PATTERN_COLUMNS_SIZE; row++)
             {
-                View gview = inflater.inflate(R.layout.grid_view_entry, null, false);
-                ColorView cv = (ColorView) gview.findViewById(R.id.CV);
-                cv.setColor(settings.Pattern[col][row].getPaintColor());
-                int finalRow = Constants.PATTERN_COLUMNS_SIZE-row-1;
-                int finalCol = col;
+                ColorView cv = new ColorView(getActivity());
                 cv.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -143,9 +144,9 @@ public class ControlFragment extends Fragment
                             {
                                 Settings settings = SettingsManager.getSettings();
                                 ColorType type = ColorType.values()[which];
-                                settings.Pattern[finalCol][finalRow] = type;
-                                mSelectedView.setColor(type.getPaintColor());
-                                Log.d(MainActivity.TAG, "New color "+finalCol+"  "+finalRow+" is "+type.name());
+                                settings.Pattern[0][0] = type;
+                                mSelectedView.setColor(type.getPrimaryColor());
+                                Log.d(MainActivity.TAG, "New color "+0+"  "+0+" is "+type.name());
                             }
                         });
 
@@ -158,7 +159,6 @@ public class ControlFragment extends Fragment
                         dialog.show();
                     }
                 });
-                grid.addView(gview);
             }
         }
 
@@ -178,9 +178,9 @@ public class ControlFragment extends Fragment
     {
         DataState data = SettingsManager.getData();
 
-        mCvQueued.setColor(data.mDetectedColor.getPaintColor());
-        mCvNext.setColor(data.mQueuedColor.getPaintColor());
-        mCvDrop.setColor(data.mDropColor.getPaintColor());
+        mCvQueued.setColor(data.mDetectedColor.getPrimaryColor());
+        mCvNext.setColor(data.mQueuedColor.getPrimaryColor());
+        mCvDrop.setColor(data.mDropColor.getPrimaryColor());
 
         if(!data.mModuleError.isEmpty())
         {
@@ -208,6 +208,8 @@ public class ControlFragment extends Fragment
         long totalKB = rt.totalMemory() / 1024;
         mTvFreeMemory.setText("Free memory: " + freeKB + " kb / " + totalKB + " kb");
         mTvBallsDropped.setText("Dropped: " + data.mDetectedBalls + " balls");
+
+        mGridView.invalidateViews();
 
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
     }

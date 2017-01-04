@@ -90,12 +90,15 @@
             android:layout_marginBottom="30dp"
             android:text="@string/reset" />
     </LinearLayout>
-    <GridLayout
+    <GridView
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="650dp"
+        android:numColumns="6"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:id="@+id/patternGrid"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="10dp"
         android:paddingRight="20dp">
-    </GridLayout>
+    </GridView>
 </RelativeLayout>
