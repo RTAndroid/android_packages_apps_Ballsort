@@ -57,7 +57,7 @@ public class GridAdapter extends BaseAdapter
         }
 
 
-        int clm = position % Constants.PATTERN_COLUMNS_COUNT;
+        int clm = Constants.PATTERN_COLUMNS_COUNT-1- (position % Constants.PATTERN_COLUMNS_COUNT);
         int row = Constants.PATTERN_COLUMNS_SIZE-1 - (position / Constants.PATTERN_COLUMNS_COUNT);
 
         cv.setOnClickListener(new View.OnClickListener()
