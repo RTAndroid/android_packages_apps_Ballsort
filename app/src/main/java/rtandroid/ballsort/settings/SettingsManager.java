@@ -16,25 +16,9 @@
 
 package rtandroid.ballsort.settings;
 
-import android.os.Environment;
-import android.util.Log;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
-
-import rtandroid.ballsort.MainActivity;
-
 public class SettingsManager
 {
-    private final static String FILENAME ="ballsort.bin";
-
-    private static Settings mSettings = new Settings();
+    private final static Settings mSettings = new Settings();
     private static final DataState mData = new DataState();
 
     /**
@@ -57,65 +41,4 @@ public class SettingsManager
         return mData;
     }
 
-    private static String getPath()
-    {
-         return Environment.getExternalStorageDirectory().getPath() + "/" + FILENAME;
-    }
-
-    /**
-     * Importes serialized objects to Settings class
-     */
-    public static void readFromFile()
-    {
-        File file = new File(getPath());
-        try(FileInputStream filein = new FileInputStream(file);
-            ObjectInputStream in = new ObjectInputStream(filein))
-        {
-            mSettings = (Settings)in.readObject();
-        }
-        catch (FileNotFoundException e)
-        {
-            Log.d(MainActivity.TAG, "Settings not found");
-        }
-        catch (StreamCorruptedException e)
-        {
-            Log.w(MainActivity.TAG, "Settings are broken, deleting.");
-            if (!file.delete()) { Log.e(MainActivity.TAG, "Could not delete file"); }
-        }
-        catch (IOException | ClassNotFoundException e)
-        {
-            Log.d(MainActivity.TAG, "Settings could not be read: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Serializes objects to file
-     */
-    public static void writeToFile()
-    {
-        File file = new File(getPath());
-
-        try
-        {
-            if (!file.exists() && !file.createNewFile())
-            {
-                Log.e(MainActivity.TAG, "Could not create file");
-            }
-        }
-        catch (IOException e)
-        {
-            Log.e(MainActivity.TAG, "Could not access file");
-        }
-
-        try (FileOutputStream fileout = new FileOutputStream(file);
-             ObjectOutputStream out = new ObjectOutputStream(fileout))
-        {
-            out.writeObject(mSettings);
-            Log.i(MainActivity.TAG, "Settings saved");
-        }
-        catch (IOException e)
-        {
-            Log.e(MainActivity.TAG, "Could not save\n" + e.getMessage());
-        }
-    }
 }

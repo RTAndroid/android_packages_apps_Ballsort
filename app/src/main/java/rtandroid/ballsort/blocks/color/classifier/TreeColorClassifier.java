@@ -16,6 +16,10 @@
 
 package rtandroid.ballsort.blocks.color.classifier;
 
+import android.util.Log;
+
+import rtandroid.ballsort.MainActivity;
+import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
@@ -29,8 +33,12 @@ public class TreeColorClassifier implements IColorClassifier
     }
 
     @Override
-    public ColorType classify(int r, int g, int b)
+    public ColorType classify(ColorObject color)
     {
+        int r = color.r;
+        int g = color.g;
+        int b = color.b;
+
         Settings settings = SettingsManager.getSettings();
         ColorType detected = ColorType.BLACK;
 
@@ -54,6 +62,7 @@ public class TreeColorClassifier implements IColorClassifier
         }
         else
         {
+            Log.d(MainActivity.TAG, "Color Mean is "+colMean);
             // black
             if(colMean < settings.ColorBlackThreshold)
             {

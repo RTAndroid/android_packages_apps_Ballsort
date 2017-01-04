@@ -7,7 +7,6 @@ import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.loops.ResetLoop;
-import rtandroid.ballsort.blocks.loops.SortLoop;
 import rtandroid.ballsort.hardware.Sorter;
 import rtandroid.ballsort.util.Utils;
 

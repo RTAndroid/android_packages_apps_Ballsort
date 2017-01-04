@@ -21,18 +21,17 @@ import rtandroid.ballsort.blocks.color.ColorPattern;
 
 public class MockColorPattern extends ColorPattern
 {
-    private int mNextRow = 0;
-    private boolean mResetWasCalled = false;
 
     @Override
     public int getNextColumn(ColorType colorType)
     {
+        int mNextRow = 0;
         return mNextRow;
     }
 
     @Override
     public void resetPattern()
     {
-        mResetWasCalled = true;
+        boolean mResetWasCalled = true;
     }
 }

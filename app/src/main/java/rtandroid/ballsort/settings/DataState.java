@@ -16,6 +16,7 @@
 
 package rtandroid.ballsort.settings;
 
+import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
 
 public class DataState
@@ -25,8 +26,13 @@ public class DataState
     public ColorType mQueuedColor = ColorType.EMPTY;
     public ColorType mDetectedColor = ColorType.EMPTY;
     public ColorType mDropColor = ColorType.EMPTY;
+    public int[] mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+
+    public ColorObject mLatestColor =  null;
 
     public String SlingshotValveState = "UNKNOWN";
     public String FeederState = "UNKNOWN";
     public String SlingshotMotorState = "UNKNOWN";
+    public String mModuleError = "";
+    public double mLearningError = 0;
 }

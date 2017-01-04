@@ -16,9 +16,6 @@
 
 package rtandroid.ballsort.blocks.color;
 
-import android.util.Log;
-
-import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.hardware.pins.GPIOPin;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
@@ -29,16 +26,24 @@ public class ColorPattern
 {
     public static final int SKIP = -1;
 
-    protected GPIOPin mBottomPins = null;
+    private GPIOPin mBottomPins = null;
     protected int[] mFillings = null;
 
     private int mIgnoredBalls = 0;
-    private int mShouldOpenPins = 0;
+    private PinState mShouldOpenPins = PinState.CLOSED;
 
+    private enum PinState
+    {
+        CLOSED,
+        SHOULD_OPEN,
+        OPENED
+    }
     public ColorPattern()
     {
         mBottomPins = new GPIOPin("ColorPatternReset", Constants.PATTERN_VALVE_PIN, GPIOPin.DIRECTION_OUT, true);
         mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+        DataState data = SettingsManager.getData();
+        data.mFillings = mFillings;
     }
 
     public void cleanup()
@@ -50,7 +55,7 @@ public class ColorPattern
     {
         mBottomPins.setValue(false);
         mIgnoredBalls = 0;
-        mShouldOpenPins = 0;
+        mShouldOpenPins = PinState.CLOSED;
     }
 
     /**
@@ -62,42 +67,51 @@ public class ColorPattern
     public int getNextColumn(ColorType color)
     {
         Settings settings = SettingsManager.getSettings();
+
         if (mIgnoredBalls < settings.BallsToIgnoreAtReset)
         {
             mIgnoredBalls++;
             return Constants.PATTERN_COLUMNS_COUNT - 1;
         }
-
-        if (mShouldOpenPins == 0) { mShouldOpenPins = 1; }
+        
+        if (mShouldOpenPins == PinState.CLOSED) { mShouldOpenPins = PinState.SHOULD_OPEN; }
         
         // ignore unknown balls
         if (color.equals(ColorType.EMPTY)) { return SKIP; }
 
-        // temporary solution
-        int col = color.getDefaultColumn();
-        if (mFillings[col] >= Constants.PATTERN_COLUMNS_SIZE)return SKIP;
-
-        // TODO: remove
-        if (1 == 1) { return col; }
-
-        for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
+        int minHeight = 255;
+        int bestCol = SKIP;
+        for (int col = 0; col < Constants.PATTERN_COLUMNS_COUNT; col++)
         {
-            int place = mFillings[row];
+            int place = mFillings[col];
             if(place >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
-            if (settings.Pattern[row][place] == SKIP) { continue; }
-            if (settings.Pattern[row][place] == color.getPaintColor() && place < Constants.PATTERN_COLUMNS_SIZE)
+            if (settings.Pattern[col][place] == ColorType.EMPTY) { continue; }
+            if (settings.Pattern[col][place] == color && place < Constants.PATTERN_COLUMNS_SIZE)
             {
-                mFillings[row]++;
-                return row;
+                if(place < minHeight)
+                {
+                    minHeight = place;
+                    bestCol = col;
+                }
             }
         }
 
-        return SKIP;
+        return bestCol;
+    }
+
+    public boolean isIgnoring()
+    {
+        Settings settings = SettingsManager.getSettings();
+        return mIgnoredBalls != settings.BallsToIgnoreAtReset;
     }
 
     public void onBallDropped(int col)
     {
-        if(col < 0 || col >= mFillings.length) { return; }
+        Settings settings = SettingsManager.getSettings();
+        if(col < 0 || col >= mFillings.length || mIgnoredBalls < settings.BallsToIgnoreAtReset)
+        {
+            return;
+        }
         mFillings[col]++;
     }
 
@@ -107,26 +121,8 @@ public class ColorPattern
      */
     public boolean isFull()
     {
-        //TODO remove tmp solution
-        boolean full = true;
 
-        for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
-        {
-            int space = mFillings[row];
-
-            // hack for missing blue balls
-            if(space == 0 && row == ColorType.BLUE.getDefaultColumn()){ continue; }
-            if (space >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
-
-            // else
-            full = false;
-        }
-
-        if (full) { Log.d(MainActivity.TAG, "Pattern is full!"); }
-        return full;
-
-        /*
-        int[][] pattern = SettingsManager.getSettings().Pattern;
+        ColorType[][] pattern = SettingsManager.getSettings().Pattern;
         boolean full = true;
 
         for (int row = 0; row < Constants.PATTERN_COLUMNS_COUNT; row++)
@@ -134,7 +130,7 @@ public class ColorPattern
             int space = mFillings[row];
 
             // next slot in this row should be empty
-            if (space < Constants.PATTERN_COLUMNS_SIZE && pattern[row][space] == SKIP) { continue; }
+            if (space < Constants.PATTERN_COLUMNS_SIZE && pattern[row][space] == ColorType.EMPTY) { continue; }
 
             // row is already full
             if (space >= Constants.PATTERN_COLUMNS_SIZE) { continue; }
@@ -143,16 +139,16 @@ public class ColorPattern
             full = false;
         }
         return full;
-        */
+
     }
 
     public void preparePins()
     {
-        // TODO: WTH is 0,1,2?
-        if (mShouldOpenPins == 1)
+        if (mShouldOpenPins == PinState.SHOULD_OPEN)
         {
             mBottomPins.setValue(true);
-            mShouldOpenPins = 2;
+            mFillings[Constants.PATTERN_COLUMNS_COUNT - 1] = 0;
+            mShouldOpenPins = PinState.OPENED;
         }
     }
 }

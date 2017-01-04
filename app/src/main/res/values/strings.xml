@@ -1,15 +1,13 @@
 <resources>
     <string name="app_name">Ballsort</string>
-    <string name="load_settings">Load Settings</string>
-    <string name="save_settings">Save Settings</string>
-    <string name="feeder">Feeder: 0</string>
     <string name="memory">Free memory: 0 kb / 0 kb</string>
-    <string name="slingshot">Slingshot: 0</string>
     <string name="reset">Reset</string>
     <string name="sort">Sort</string>
     <string name="slingshot_state">Slingshot state: UNKNOWN</string>
     <string name="slingshot_motor">Slingshot motor: UNKNOWN</string>
     <string name="feeder_state">Feeder state: UNKNOWN</string>
-    <string name="pattern_state">Pattern state: UNKNOWN</string>
     <string name="dropped">Droped: 0</string>
+    <string name="pattern">Pattern:</string>
+    <string name="start">Start</string>
+    <string name="train">Train</string>
 </resources>

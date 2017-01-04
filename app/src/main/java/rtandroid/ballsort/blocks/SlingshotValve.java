@@ -42,10 +42,9 @@ public class SlingshotValve extends AStateBlock
     private long mLastTimestamp = 0;
     private boolean mError = false;
 
-    protected SlingshotState mState = SlingshotState.CHECKING;
-    protected GPIOPin mLightswitch = null;
-    protected TimedGPIOPin mValvePin = null;
-    protected int mEmptyRotations = 0;
+    private SlingshotState mState = SlingshotState.CHECKING;
+    private GPIOPin mLightswitch = null;
+    private TimedGPIOPin mValvePin = null;
 
     public SlingshotValve()
     {
@@ -112,7 +111,6 @@ public class SlingshotValve extends AStateBlock
             {
                 Log.d(MainActivity.TAG, "");
                 mState = SlingshotState.READY;
-                mEmptyRotations = 0;
                 mLastTimestamp = timestampUs;
             }
             break;

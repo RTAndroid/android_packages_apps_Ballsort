@@ -16,8 +16,6 @@
 
 package rtandroid.ballsort.hardware;
 
-import rtandroid.ballsort.blocks.color.ColorType;
-
 public class MockColorSensor extends ColorSensor
 {
     @Override

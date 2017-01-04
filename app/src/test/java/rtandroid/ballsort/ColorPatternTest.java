@@ -38,12 +38,12 @@ public class ColorPatternTest extends ColorPattern
         mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
 
         // Create dummy pattern
-        for (int[] row : settings.Pattern){ Arrays.fill(row, Color.BLUE); }
+        for (ColorType[] row : settings.Pattern){ Arrays.fill(row, Color.BLUE); }
         assertFalse(isFull());
 
         for (int i = 0; i < Constants.PATTERN_COLUMNS_COUNT * Constants.PATTERN_COLUMNS_SIZE; i++)
         {
-            assertThat(getNextColumn(ColorType.BLACK), not(-1));
+            assertThat(getNextColumn(ColorType.BLACK), not(ColorType.EMPTY));
         }
         assertTrue(isFull());
     }
@@ -58,7 +58,7 @@ public class ColorPatternTest extends ColorPattern
         mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
 
         // whole array is SKIP
-        for (int[] row : settings.Pattern){Arrays.fill(row, 1);}
+        for (ColorType[] row : settings.Pattern){Arrays.fill(row, ColorType.EMPTY);}
 
         assertFalse(isFull());
     }

@@ -21,10 +21,13 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
+import java.io.InputStream;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Constants;
+import rtandroid.ballsort.settings.DataState;
+import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
 import rtandroid.root.PrivilegeElevator;
 
@@ -67,6 +70,21 @@ public class Sorter
 
             // load the native library
             System.loadLibrary("sorter");
+
+            Process lsmod = Runtime.getRuntime().exec("lsmod");
+            lsmod.waitFor();
+            InputStream is = lsmod.getInputStream();
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+            String loadedModules =  s.hasNext() ? s.next() : "";
+            is.close();
+            Log.d(MainActivity.TAG, "Loaded Modules: "+loadedModules);
+
+            if(!loadedModules.contains("rtdma"))
+            {
+                Log.e(MainActivity.TAG, "RTDMA did not load");
+                DataState data = SettingsManager.getData();
+                data.mModuleError = "MODULE NOT LOADED!";
+            }
 
             // now we can init
             result = openMemory();

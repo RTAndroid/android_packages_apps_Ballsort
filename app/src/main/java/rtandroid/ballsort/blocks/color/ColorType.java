@@ -20,17 +20,33 @@ import android.graphics.Color;
 
 public enum ColorType
 {
-    BLACK(Color.BLACK),
-    BLUE(Color.BLUE),
-    GREEN(Color.GREEN),
-    RED(Color.RED),
-    YELLOW(Color.YELLOW),
-    WHITE(Color.WHITE),
-    EMPTY(Color.GRAY);
+    BLACK(Color.rgb(0,0,0), Color.rgb(100,101,103)),
+    BLUE(Color.rgb(0,84,159), Color.rgb(64,127,183)),
+    GREEN(Color.rgb(87,171,39), Color.rgb(141,192,96)),
+    RED(Color.rgb(204,7,30), Color.rgb(216,92,65)),
+    YELLOW(Color.rgb(255,237,0), Color.rgb(255,240,85)),
+    WHITE(Color.rgb(236,237,237), Color.rgb(207, 209, 210)),
+    EMPTY(Color.rgb(101,101,103), Color.rgb(156,158,159));
 
-    private int mPaintColor = Color.GRAY;
-    ColorType(int paint) { mPaintColor = paint; }
+    private int mPrimary = Color.GRAY;
+    private int mSecondary = Color.GRAY;
 
-    public int getPaintColor() { return mPaintColor; }
+    ColorType(int primary, int secondary)
+    {
+        mPrimary = primary;
+        mSecondary = secondary;
+    }
+
+    public int getPrimaryColor() { return mPrimary; }
+    public int getSecondaryColor() { return mSecondary; }
     public int getDefaultColumn() { return ordinal(); }
+
+    public static final String[] names = new String[values().length];
+    static
+    {
+        for(ColorType ct : values())
+        {
+            names[ct.ordinal()] = ct.name();
+        }
+    }
 }

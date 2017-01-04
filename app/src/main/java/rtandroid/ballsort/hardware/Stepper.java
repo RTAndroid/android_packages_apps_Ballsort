@@ -81,7 +81,7 @@ public class Stepper
     /**
      * Deactivates motor power.
      */
-    public void disable()
+    protected void disable()
     {
         mEnablePin.setValue(false);
 
