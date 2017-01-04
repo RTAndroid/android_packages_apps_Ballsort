@@ -136,7 +136,7 @@ public class Feeder extends AStateBlock
             Utils.delayMs(settings.ColorSensorDelay);
         }
 
-        ColorType colorType = ColorType.EMPTY;
+        ColorType colorType;
         Log.d(MainActivity.TAG, "Detecting RGB values (" + r + ", " + g + ", " + b + ")");
 
         ColorObject color = new ColorObject(r, g, b);
@@ -156,7 +156,7 @@ public class Feeder extends AStateBlock
     }
 
     @Override
-    public void handleState()
+    protected void handleState()
     {
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -35,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:text="@string/dropped" />
         <TextView
             android:id="@+id/tvPatternCount"
@@ -49,7 +50,7 @@
             android:id="@+id/tvFreeMemory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:text="@string/memory" />
 
         <TextView
@@ -99,6 +100,7 @@
         android:id="@+id/patternGrid"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="10dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
     </GridView>
 </RelativeLayout>

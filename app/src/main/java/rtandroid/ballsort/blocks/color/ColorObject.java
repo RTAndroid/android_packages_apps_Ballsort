@@ -2,9 +2,9 @@ package rtandroid.ballsort.blocks.color;
 
 public class ColorObject
 {
-    public int r;
-    public int g;
-    public int b;
+    public final int r;
+    public final int g;
+    public final int b;
 
     public ColorObject(int r, int g, int b)
     {

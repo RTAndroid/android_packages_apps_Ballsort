@@ -22,13 +22,11 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Set;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
-import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
 import rtandroid.root.PrivilegeElevator;

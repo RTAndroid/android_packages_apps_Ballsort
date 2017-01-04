@@ -11,17 +11,9 @@ import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
+@SuppressWarnings({"ALL", "ConstantConditions"})
 public class SettingsFragment extends PreferenceFragment
 {
-
-    private static SettingsFragment mInstance = new SettingsFragment();
-
-    public static SettingsFragment getInstance()
-    {
-        return mInstance;
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

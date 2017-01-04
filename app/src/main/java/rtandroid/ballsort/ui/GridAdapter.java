@@ -19,7 +19,7 @@ import rtandroid.ballsort.settings.SettingsManager;
 
 public class GridAdapter extends BaseAdapter
 {
-    private Context mContext;
+    private final Context mContext;
 
     public GridAdapter(Context c)
     {
@@ -60,34 +60,29 @@ public class GridAdapter extends BaseAdapter
         int clm = Constants.PATTERN_COLUMNS_COUNT-1- (position % Constants.PATTERN_COLUMNS_COUNT);
         int row = Constants.PATTERN_COLUMNS_SIZE-1 - (position / Constants.PATTERN_COLUMNS_COUNT);
 
-        cv.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+        cv.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("Please choose a color:");
+            builder.setItems(ColorType.names, new DialogInterface.OnClickListener()
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Please choose a color:");
-                builder.setItems(ColorType.names, new DialogInterface.OnClickListener()
+                @Override
+                public void onClick(DialogInterface dialog, int which)
                 {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        Settings settings = SettingsManager.getSettings();
-                        ColorType type = ColorType.values()[which];
-                        settings.Pattern[clm][row] = type;
-                        cv.setColor(type.getPrimaryColor());
-                        Log.d(MainActivity.TAG, "New color "+clm+"  "+row+" is "+type.name());
-                    }
-                });
+                    Settings settings1 = SettingsManager.getSettings();
+                    ColorType type = ColorType.values()[which];
+                    settings1.Pattern[clm][row] = type;
+                    cv.setColor(type.getPrimaryColor());
+                    Log.d(MainActivity.TAG, "New color "+clm+"  "+row+" is "+type.name());
+                }
+            });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id) {}
-                });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int id) {}
+            });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         if(data.mFillings[clm]-1 >= row)

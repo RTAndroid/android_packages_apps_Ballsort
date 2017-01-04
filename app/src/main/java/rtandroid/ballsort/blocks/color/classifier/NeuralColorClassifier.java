@@ -35,17 +35,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.DataState;
-import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
 import static rtandroid.ballsort.blocks.color.ColorType.*;
-import static rtandroid.ballsort.blocks.color.ColorType.BLACK;
 
 public class NeuralColorClassifier implements IColorClassifier {
 
@@ -74,17 +71,17 @@ public class NeuralColorClassifier implements IColorClassifier {
             "_" + OUTPUT_COUNT +
             ".nnet";
 
-    private static List<double[]> BLACK_DATA = new ArrayList<>();
-    private static List<double[]> BLUE_DATA = new ArrayList<>();
-    private static List<double[]> GREEN_DATA = new ArrayList<>();
-    private static List<double[]> RED_DATA = new ArrayList<>();
-    private static List<double[]> YELLOW_DATA = new ArrayList<>();
-    private static List<double[]> WHITE_DATA = new ArrayList<>();
+    private static final List<double[]> BLACK_DATA = new ArrayList<>();
+    private static final List<double[]> BLUE_DATA = new ArrayList<>();
+    private static final List<double[]> GREEN_DATA = new ArrayList<>();
+    private static final List<double[]> RED_DATA = new ArrayList<>();
+    private static final List<double[]> YELLOW_DATA = new ArrayList<>();
+    private static final List<double[]> WHITE_DATA = new ArrayList<>();
 
     private static HashMap<ColorType, List<double[]>> sTrainingData;
 
 
-    public void resetTrainingsData() {
+    private void resetTrainingsData() {
         mNetwork = new MultiLayerPerceptron(INPUT_COUNT, HIDDEN_NEURONS, OUTPUT_COUNT);
         mNetwork.randomizeWeights();
 
@@ -99,6 +96,7 @@ public class NeuralColorClassifier implements IColorClassifier {
         Iterator it = sTrainingData.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
+            //noinspection unchecked
             System.out.println(pair.getKey() + " = " + ((List<double[]>) pair.getValue()).size());
             it.next();
         }
@@ -173,7 +171,7 @@ public class NeuralColorClassifier implements IColorClassifier {
     /**
      * Constructor takes care of network creation and initialization.
      */
-    public NeuralColorClassifier()
+    private NeuralColorClassifier()
     {
         // discard old stuff
         mNetwork = null;

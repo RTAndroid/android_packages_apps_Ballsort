@@ -31,7 +31,7 @@ public abstract class AStateBlock extends Thread
     private boolean mIsRunning = false;
     private String mName = "AStateBlock";
 
-    public AStateBlock(String name, int prio)
+    protected AStateBlock(String name, int prio)
     {
         mName = name;
         mThreadPriority = prio;
@@ -79,7 +79,7 @@ public abstract class AStateBlock extends Thread
         Log.i(MainActivity.TAG, mName + " thread terminated");
     }
 
-    protected void cancel()
+    void cancel()
     {
         // nothing to do
     }

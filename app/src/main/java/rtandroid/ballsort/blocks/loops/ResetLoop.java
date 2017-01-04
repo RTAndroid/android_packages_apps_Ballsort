@@ -27,9 +27,9 @@ import rtandroid.ballsort.settings.SettingsManager;
 
 public class ResetLoop extends AStateBlock
 {
-    protected SlingshotValve mSlingshotValve = null;
-    protected SlingshotMotor mSlingshotMotor = null;
-    protected ColorPattern mColorRows = null;
+    private SlingshotValve mSlingshotValve = null;
+    private SlingshotMotor mSlingshotMotor = null;
+    private ColorPattern mColorRows = null;
 
     public ResetLoop()
     {

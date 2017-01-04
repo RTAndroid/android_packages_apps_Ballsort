@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
 {
-    private String tabTitles[] = new String[] { "Control", "Settings", "Learning"};
+    private final String[] tabTitles = new String[] { "Control", "Settings", "Learning"};
 
     public BallsortFragmentPagerAdapter(FragmentManager fm, Context context)
     {
@@ -25,9 +25,9 @@ public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
     public Fragment getItem(int position)
     {
         switch (position){
-            case 0: return ControlFragment.getInstance();
-            case 1: return SettingsFragment.getInstance();
-            case 2: return LearningFragment.getInstance();
+            case 0: return new ControlFragment();
+            case 1: return new SettingsFragment();
+            case 2: return new LearningFragment();
         }
         return null;
     }

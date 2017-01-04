@@ -27,7 +27,7 @@ public class TimedGPIOPin extends GPIOPin
 
     public TimedGPIOPin(String name, int id, boolean inverted, boolean debug)
     {
-        super(name, id, GPIOPin.DIRECTION_OUT, debug);
+        super(name, id, GPIOPin.DIRECTION_OUT, false);
         mInverted = inverted;
     }
 
@@ -36,7 +36,7 @@ public class TimedGPIOPin extends GPIOPin
         setValueForUs(bothDelay, bothDelay);
     }
 
-    public void setValueForUs(int firstDelay, int secondDelay)
+    private void setValueForUs(int firstDelay, int secondDelay)
     {
         setValue(!mInverted);
         Utils.delayUs(firstDelay);

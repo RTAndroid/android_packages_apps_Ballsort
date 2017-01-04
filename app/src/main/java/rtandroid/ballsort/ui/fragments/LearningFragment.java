@@ -23,13 +23,6 @@ import rtandroid.ballsort.settings.SettingsManager;
 
 public class LearningFragment extends Fragment
 {
-    private static LearningFragment mInstance = new LearningFragment();
-
-    public static LearningFragment getInstance()
-    {
-        return mInstance;
-    }
-
     private static final int REFRESH_RATE_MS = 500;
 
     private final Handler mUiUpdateHandler = new Handler();
@@ -38,7 +31,6 @@ public class LearningFragment extends Fragment
     private LearningLoop mCurrentLearningLoop = null;
 
     private Switch mSwchStart = null;
-    private Switch mSwchReset = null;
     private Switch mSwchTrain = null;
     private TextView mTvErr = null;
 
@@ -51,7 +43,7 @@ public class LearningFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_learning, container, false);
 
         mSwchStart = (Switch) view.findViewById(R.id.swStart);
-        mSwchReset = (Switch) view.findViewById(R.id.swReset);
+        Switch mSwchReset = (Switch) view.findViewById(R.id.swReset);
         mSwchTrain = (Switch) view.findViewById(R.id.swTrain);
         mTvErr = (TextView) view.findViewById(R.id.tvTrainErr);
 
@@ -91,9 +83,6 @@ public class LearningFragment extends Fragment
             {
                 NeuralColorClassifier.getInstance().startLearning();
                 mSwchTrain.setActivated(false);
-            }
-            else
-            {
             }
         });
 

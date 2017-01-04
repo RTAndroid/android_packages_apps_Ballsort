@@ -20,8 +20,8 @@ import rtandroid.ballsort.hardware.pins.GPIOPin;
 
 public class MockInputPin extends GPIOPin
 {
-    public boolean mCurrentValue = false;
-    public boolean mGotValue = false;
+    private final boolean mCurrentValue = false;
+    private boolean mGotValue = false;
 
     public MockInputPin()
     {

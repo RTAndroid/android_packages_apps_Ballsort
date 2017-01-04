@@ -16,9 +16,6 @@
 
 package rtandroid.ballsort.settings;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import java.io.Serializable;
 
 import rtandroid.ballsort.blocks.color.ColorType;
@@ -33,7 +30,7 @@ public class Settings implements Serializable
 
     public final int FeederStepperPwmDelay = 750;
     public int FeederValveOpenedDelay =  200;
-    public int FeederAfterDropDelay =  200;
+    public final int FeederAfterDropDelay =  200;
 
     public final int SlingshotStepperPwmDelay = 450;
     public final int SlingshotDelayAfterRotate = 300;

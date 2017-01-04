@@ -66,7 +66,7 @@ public class SortLoop extends AStateBlock
     }
 
     @Override
-    public void cleanup()
+    protected void cleanup()
     {
         super.cleanup();
 

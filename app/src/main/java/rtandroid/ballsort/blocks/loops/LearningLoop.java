@@ -16,15 +16,8 @@
 
 package rtandroid.ballsort.blocks.loops;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.util.Log;
-
-import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.AStateBlock;
 import rtandroid.ballsort.blocks.Feeder;
-import rtandroid.ballsort.blocks.color.ColorPattern;
-import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.Settings;
@@ -39,8 +32,8 @@ public class LearningLoop extends AStateBlock
         RECIEVE_COLORINFO,
     }
 
-    protected MainStates mState = MainStates.WAIT_FEEDER;
-    protected Feeder mFeeder = null;
+    private MainStates mState = MainStates.WAIT_FEEDER;
+    private Feeder mFeeder = null;
 
     public LearningLoop()
     {

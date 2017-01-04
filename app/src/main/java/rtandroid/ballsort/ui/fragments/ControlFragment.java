@@ -30,20 +30,11 @@ import rtandroid.ballsort.ui.GridAdapter;
 
 public class ControlFragment extends Fragment
 {
-    private static ControlFragment mInstance = new ControlFragment();
-
-    public static ControlFragment getInstance()
-    {
-        return mInstance;
-    }
-
     private static final int REFRESH_RATE_MS = 500;
 
     private final Handler mUiUpdateHandler = new Handler();
     private final Runnable mUiUpdateRunnable = this::updateUi;
 
-    private Switch mSwchSort = null;
-    private Switch mSwchReset = null;
     private ColorView mCvQueued = null;
     private ColorView mCvNext = null;
     private ColorView mCvDrop = null;
@@ -80,8 +71,8 @@ public class ControlFragment extends Fragment
         mTvSlingshotValveState = (TextView) view.findViewById(R.id.tvSlingshotValveState);
         mTvSlingshotMotorState = (TextView) view.findViewById(R.id.tvSlingshotMotorState);
 
-        mSwchSort = (Switch) view.findViewById(R.id.swSort);
-        mSwchReset = (Switch) view.findViewById(R.id.swReset);
+        Switch mSwchSort = (Switch) view.findViewById(R.id.swSort);
+        Switch mSwchReset = (Switch) view.findViewById(R.id.swReset);
 
         mGridView = (GridView) view.findViewById(R.id.patternGrid);
 
@@ -117,47 +108,33 @@ public class ControlFragment extends Fragment
 
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
 
-        GridView grid = (GridView) view.findViewById(R.id.patternGrid);
-        Settings settings = SettingsManager.getSettings();
-
-
-        grid.setAdapter(new GridAdapter(getActivity()));
+        mGridView.setAdapter(new GridAdapter(getActivity()));
 
         for (int col = Constants.PATTERN_COLUMNS_COUNT-1; col>=0 ; col--)
         {
             for(int row = 0; row < Constants.PATTERN_COLUMNS_SIZE; row++)
             {
                 ColorView cv = new ColorView(getActivity());
-                cv.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                cv.setOnClickListener(v -> {
+                    mSelectedView = cv;
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Please choose a color:");
+                    builder.setItems(ColorType.names, (dialog, which) -> {
+                        Settings settings = SettingsManager.getSettings();
+                        ColorType type = ColorType.values()[which];
+                        settings.Pattern[0][0] = type;
+                        mSelectedView.setColor(type.getPrimaryColor());
+                        Log.d(MainActivity.TAG, "New color "+0+"  "+0+" is "+type.name());
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
                     {
-                        mSelectedView = cv;
+                        public void onClick(DialogInterface dialog, int id) {}
+                    });
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Please choose a color:");
-                        builder.setItems(ColorType.names, new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                Settings settings = SettingsManager.getSettings();
-                                ColorType type = ColorType.values()[which];
-                                settings.Pattern[0][0] = type;
-                                mSelectedView.setColor(type.getPrimaryColor());
-                                Log.d(MainActivity.TAG, "New color "+0+"  "+0+" is "+type.name());
-                            }
-                        });
-
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id) {}
-                        });
-
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                    }
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 });
             }
         }

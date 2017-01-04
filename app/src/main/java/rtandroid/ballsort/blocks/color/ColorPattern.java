@@ -16,10 +16,6 @@
 
 package rtandroid.ballsort.blocks.color;
 
-import android.graphics.Color;
-import android.util.Log;
-
-import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.hardware.pins.GPIOPin;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
@@ -30,7 +26,7 @@ public class ColorPattern
 {
     public static final int SKIP = -1;
 
-    protected GPIOPin mBottomPins = null;
+    private GPIOPin mBottomPins = null;
     protected int[] mFillings = null;
 
     private int mIgnoredBalls = 0;
