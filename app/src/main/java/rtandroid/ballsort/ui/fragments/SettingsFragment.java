@@ -1,4 +1,4 @@
-package rtandroid.ballsort.gui.fragments;
+package rtandroid.ballsort.ui.fragments;
 
 import android.os.Bundle;
 import android.preference.Preference;
@@ -106,6 +106,84 @@ public class SettingsFragment extends PreferenceFragment
                 Log.d(MainActivity.TAG, "New timing is "+newTime);
                 settings.ColorSersorRepeats = newTime;
                 detPref.setTitle(""+newTime);
+            }
+            catch (Exception e)
+            {
+                Log.d(MainActivity.TAG, "Wrong type of pref!");
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        });
+
+        String ColorYellowThreshold = "ColorYellowThreshold";
+        defaultValue = ""+settings.ColorYellowThreshold;
+        Preference ColorYellowThresholdPref = findPreference(ColorYellowThreshold);
+        if(ColorYellowThresholdPref == null)
+        {
+            Log.e(MainActivity.TAG, "Could not find "+ColorYellowThreshold);
+        }
+        ColorYellowThresholdPref.setTitle(defaultValue);
+        ColorYellowThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
+        {
+            try
+            {
+                int newTime = Integer.valueOf((String)newValue);
+                Log.d(MainActivity.TAG, "New timing is "+newTime);
+                settings.ColorYellowThreshold = newTime;
+                ColorYellowThresholdPref.setTitle(""+newTime);
+            }
+            catch (Exception e)
+            {
+                Log.d(MainActivity.TAG, "Wrong type of pref!");
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        });
+
+        String ColorBlackThreshold = "ColorBlackThreshold";
+        defaultValue = ""+settings.ColorBlackThreshold;
+        Preference ColorBlackThresholdPref = findPreference(ColorBlackThreshold);
+        if(ColorBlackThresholdPref == null)
+        {
+            Log.e(MainActivity.TAG, "Could not find "+ColorBlackThreshold);
+        }
+        ColorBlackThresholdPref.setTitle(defaultValue);
+        ColorBlackThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
+        {
+            try
+            {
+                int newTime = Integer.valueOf((String)newValue);
+                Log.d(MainActivity.TAG, "New timing is "+newTime);
+                settings.ColorBlackThreshold = newTime;
+                ColorBlackThresholdPref.setTitle(""+newTime);
+            }
+            catch (Exception e)
+            {
+                Log.d(MainActivity.TAG, "Wrong type of pref!");
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        });
+
+        String ColorLightColorThreshold = "ColorLightColorThreshold";
+        defaultValue = ""+settings.ColorYellowThreshold;
+        Preference ColorLightColorThresholdPref = findPreference(ColorLightColorThreshold);
+        if(ColorLightColorThresholdPref == null)
+        {
+            Log.e(MainActivity.TAG, "Could not find "+ColorLightColorThreshold);
+        }
+        ColorLightColorThresholdPref.setTitle(defaultValue);
+        ColorLightColorThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
+        {
+            try
+            {
+                int newTime = Integer.valueOf((String)newValue);
+                Log.d(MainActivity.TAG, "New timing is "+newTime);
+                settings.ColorLightColorThreshold = newTime;
+                ColorLightColorThresholdPref.setTitle(""+newTime);
             }
             catch (Exception e)
             {

@@ -1,4 +1,4 @@
-package rtandroid.ballsort.gui.fragments;
+package rtandroid.ballsort.ui.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

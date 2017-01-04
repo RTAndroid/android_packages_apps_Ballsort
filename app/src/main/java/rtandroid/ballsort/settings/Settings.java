@@ -54,9 +54,9 @@ public class Settings implements Serializable
     public int ColorSersorRepeats = 1;
     public final int ColorSensorDelay = 30;
 
-    public final int ColorLightColorThreshold = 1350;
-    public final int ColorBlackThreshold = 690;
-    public final double ColorYellowThreshold = 0.8;
+    public int ColorLightColorThreshold = 1350;
+    public int ColorBlackThreshold = 690;
+    public double ColorYellowThreshold = 0.8;
 
     public final int ColorDetection = 0;
 

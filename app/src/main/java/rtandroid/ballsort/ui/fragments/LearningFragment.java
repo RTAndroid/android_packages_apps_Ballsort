@@ -1,4 +1,4 @@
-package rtandroid.ballsort.gui.fragments;
+package rtandroid.ballsort.ui.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;

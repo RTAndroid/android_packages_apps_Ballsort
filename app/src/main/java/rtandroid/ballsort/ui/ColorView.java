@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package rtandroid.ballsort.gui;
+package rtandroid.ballsort.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;

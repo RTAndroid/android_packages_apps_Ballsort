@@ -11,18 +11,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <rtandroid.ballsort.gui.ColorView
+            <rtandroid.ballsort.ui.ColorView
                 android:id="@+id/cvQueuedBall"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
 
-            <rtandroid.ballsort.gui.ColorView
+            <rtandroid.ballsort.ui.ColorView
                 android:id="@+id/cvNextBall"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_below="@id/cvQueuedBall"/>
 
-            <rtandroid.ballsort.gui.ColorView
+            <rtandroid.ballsort.ui.ColorView
                 android:id="@+id/cvDropBall"
                 android:layout_width="100dp"
                 android:layout_height="100dp"

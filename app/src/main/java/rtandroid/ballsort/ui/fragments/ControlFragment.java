@@ -1,4 +1,4 @@
-package rtandroid.ballsort.gui.fragments;
+package rtandroid.ballsort.ui.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,25 +10,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
-import rtandroid.ballsort.blocks.AStateBlock;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.loops.ResetLoop;
 import rtandroid.ballsort.blocks.loops.SortLoop;
-import rtandroid.ballsort.gui.ColorView;
+import rtandroid.ballsort.ui.ColorView;
 import rtandroid.ballsort.services.ResetService;
 import rtandroid.ballsort.services.SortService;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
-import rtandroid.ballsort.util.Utils;
 
 public class ControlFragment extends Fragment
 {
