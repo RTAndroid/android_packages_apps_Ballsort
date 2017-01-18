@@ -21,7 +21,6 @@ import rtandroid.ballsort.hardware.pins.GPIOPin;
 public class MockInputPin extends GPIOPin
 {
     private final boolean mCurrentValue = false;
-    private boolean mGotValue = false;
 
     public MockInputPin()
     {
@@ -31,7 +30,6 @@ public class MockInputPin extends GPIOPin
     @Override
     public boolean getValue()
     {
-        mGotValue = true;
         return mCurrentValue;
     }
 }

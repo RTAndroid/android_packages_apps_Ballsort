@@ -48,17 +48,19 @@ public class GridAdapter extends BaseAdapter
         DataState data = SettingsManager.getData();
 
         ColorView cv;
-        if (convertView == null) {
+        if (convertView == null)
+        {
             cv = new ColorView(mContext);
             cv.setLayoutParams(new GridView.LayoutParams(100, 100));
             cv.setPadding(8, 8, 8, 8);
-        } else {
+        }
+        else
+        {
             cv = (ColorView) convertView;
         }
 
-
-        int clm = Constants.PATTERN_COLUMNS_COUNT-1- (position % Constants.PATTERN_COLUMNS_COUNT);
-        int row = Constants.PATTERN_COLUMNS_SIZE-1 - (position / Constants.PATTERN_COLUMNS_COUNT);
+        int col = Constants.PATTERN_COLUMNS_COUNT - 1 - (position % Constants.PATTERN_COLUMNS_COUNT);
+        int row = Constants.PATTERN_COLUMNS_SIZE - 1 - (position / Constants.PATTERN_COLUMNS_COUNT);
 
         cv.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -70,9 +72,9 @@ public class GridAdapter extends BaseAdapter
                 {
                     Settings settings1 = SettingsManager.getSettings();
                     ColorType type = ColorType.values()[which];
-                    settings1.Pattern[clm][row] = type;
+                    settings1.Pattern[col][row] = type;
                     cv.setColor(type.getPrimaryColor());
-                    Log.d(MainActivity.TAG, "New color "+clm+"  "+row+" is "+type.name());
+                    Log.d(MainActivity.TAG, "New color "+col+"  "+row+" is "+type.name());
                 }
             });
 
@@ -85,14 +87,15 @@ public class GridAdapter extends BaseAdapter
             dialog.show();
         });
 
-        if(data.mFillings[clm]-1 >= row)
+        if (data.mFillings[col]-1 >= row)
         {
-            cv.setColor(settings.Pattern[clm][row].getPrimaryColor());
+            cv.setColor(settings.Pattern[col][row].getPrimaryColor());
         }
         else
         {
-            cv.setColor(settings.Pattern[clm][row].getSecondaryColor());
+            cv.setColor(settings.Pattern[col][row].getSecondaryColor());
         }
+
         return cv;
     }
 }

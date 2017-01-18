@@ -26,107 +26,97 @@ import java.io.InputStream;
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Constants;
-import rtandroid.ballsort.settings.DataState;
-import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
 import rtandroid.root.PrivilegeElevator;
 
+@SuppressLint({"SetWorldReadable", "SetWorldWritable"})
 public class Sorter
 {
-    private static String sPath = null;
-    private static boolean mLoaded = false;
+    private static String sModulePath = "";
+    public static boolean sModuleLoaded = false;
 
     public static void extract(Context context)
     {
-        sPath = context.getFilesDir().getAbsolutePath();
+        String moduleName = Constants.MODULE_SORTING + ".ko";
+        sModulePath = context.getFilesDir().getAbsolutePath() + "/" + moduleName;
 
-        String name = Constants.MODULE_SORTING + ".ko";
-        boolean result = Utils.extractRawFile(context, R.raw.rtdma, name);
+        boolean result = Utils.extractRawFile(context, R.raw.rtdma, moduleName);
         Log.i(MainActivity.TAG, "Sorting module extracted: " + result);
     }
 
-    @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
     public static void load()
     {
-        if (mLoaded) { return; }
-
-        String moduleName = Constants.MODULE_SORTING + ".ko";
-        String modulePath = sPath + "/" + moduleName;
-
         try
         {
+            if (sModuleLoaded) { return; }
+
+            // we will need root to open the memory
             PrivilegeElevator.enableRoot();
 
             // change permissions to 666
             boolean result = true;
-            File module = new File(modulePath);
+            File module = new File(sModulePath);
             result = result && module.setReadable(true, false);
             result = result && module.setWritable(true, false);
             if (!result){ Log.e(MainActivity.TAG, "Failed setting module world-readable"); }
 
-            Process insmod = Runtime.getRuntime().exec("insmod " + modulePath);
+            Process insmod = Runtime.getRuntime().exec("insmod " + sModulePath);
             insmod.waitFor();
             if (insmod.exitValue() != 0){ Log.e(MainActivity.TAG, "insmod returned " + insmod.exitValue()); }
 
             // load the native library
             System.loadLibrary("sorter");
 
+            // list all available modules
             Process lsmod = Runtime.getRuntime().exec("lsmod");
             lsmod.waitFor();
             InputStream is = lsmod.getInputStream();
             java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
             String loadedModules =  s.hasNext() ? s.next() : "";
             is.close();
-            Log.d(MainActivity.TAG, "Loaded Modules: "+loadedModules);
 
-            if(!loadedModules.contains("rtdma"))
+            // test if ours was loaded
+            Log.d(MainActivity.TAG, "List of all loaded modules: " + loadedModules);
+            if (!loadedModules.contains("rtdma"))
             {
-                Log.e(MainActivity.TAG, "RTDMA did not load");
-                DataState data = SettingsManager.getData();
-                data.mModuleError = "MODULE NOT LOADED!";
+                Log.e(MainActivity.TAG, "Failed to load RTDMA module!");
+                sModuleLoaded = false;
             }
 
             // now we can init
-            result = openMemory();
-            Log.i(MainActivity.TAG, "Opening native memory returned '" + result + "'");
+            sModuleLoaded = openMemory();
+            Log.i(MainActivity.TAG, "Opening native memory returned '" + sModuleLoaded + "'");
 
+            // everything finished
             PrivilegeElevator.disableRoot();
-            mLoaded = result;
+            Log.i(MainActivity.TAG, "Sorting module loaded");
         }
         catch (Error | Exception e) { Log.e(MainActivity.TAG, "Exception during sorting module loading: " + e.getMessage()); }
-
-        Log.i(MainActivity.TAG, "Sorting module loaded");
     }
 
     public static void unload()
     {
-        if(!mLoaded) { return; }
-
-        closeMemory();
-
-        String moduleName = Constants.MODULE_SORTING + ".ko";
-        String modulePath = sPath + "/" + moduleName;
-
         try
         {
+            if (!sModuleLoaded) { return; }
+            closeMemory();
+
             PrivilegeElevator.enableRoot();
 
-            Process insmod = Runtime.getRuntime().exec("rmmod " + modulePath);
+            Process insmod = Runtime.getRuntime().exec("rmmod " + sModulePath);
             insmod.waitFor();
-            if (insmod.exitValue() != 0){ Log.e(MainActivity.TAG, "rmmod returned " + insmod.exitValue()); }
+            if (insmod.exitValue() != 0) { Log.e(MainActivity.TAG, "rmmod returned " + insmod.exitValue()); }
+            sModuleLoaded = false;
 
             PrivilegeElevator.disableRoot();
+            Log.i(MainActivity.TAG, "Sorting module unloaded");
         }
         catch (Error | Exception e) { Log.e(MainActivity.TAG, "Exception during sorting module unloading: " + e.getMessage()); }
-
-        Log.i(MainActivity.TAG, "Sorting module unloaded");
-        mLoaded = false;
     }
 
-    /** Sends the important delayMs information to the kernel module and receives the current number of balls */
     private static native boolean openMemory();
+    private static native void closeMemory();
     public static native void setDelays(int baseDelay, int nextDelay);
     public static native int getBallCount();
-    private static native void closeMemory();
-
+    public static native void resetBallCount();
 }

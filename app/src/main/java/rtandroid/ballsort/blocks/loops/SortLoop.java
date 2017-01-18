@@ -42,8 +42,7 @@ public class SortLoop extends AStateBlock
     protected MainStates mState = MainStates.WAIT_FEEDER;
     protected Feeder mFeeder = null;
     protected ColorPattern mColorPattern = null;
-    private int mBallsDropped;
-    private int mNextColumn;
+    private int mNextColumn = 0;
 
     public SortLoop()
     {
@@ -61,8 +60,10 @@ public class SortLoop extends AStateBlock
 
         // start all the other threads
         mFeeder.start();
-        mBallsDropped = Sorter.getBallCount();
 
+        // reset ball count
+        Sorter.resetBallCount();
+        SettingsManager.getData().mDetectedBalls = 0;
     }
 
     @Override
@@ -111,19 +112,14 @@ public class SortLoop extends AStateBlock
         // Drop ball
         case DROP_BALL:
             mColorPattern.preparePins();
+            int preCount = Sorter.getBallCount();
+
             Utils.delayMs(settings.BeforeDropDelay);
             mFeeder.allowDrop();
             Utils.delayMs(settings.AfterDropDelay);
 
-            int count = Sorter.getBallCount();
-            if (mBallsDropped < count)
-            {
-                mBallsDropped = count;
-                if(!mColorPattern.isIgnoring())
-                {
-                    mColorPattern.onBallDropped(mNextColumn);
-                }
-            }
+            int postCount = Sorter.getBallCount();
+            if (postCount > preCount) { mColorPattern.onBallDropped(mNextColumn); }
 
             if (mFeeder.getFeederState() != Feeder.FeederState.DROPPING) { mState = MainStates.WAIT_PATTERN; }
             break;

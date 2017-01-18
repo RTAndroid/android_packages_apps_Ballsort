@@ -79,7 +79,7 @@ public abstract class AStateBlock extends Thread
         Log.i(MainActivity.TAG, mName + " thread terminated");
     }
 
-    void cancel()
+    protected void cancel()
     {
         // nothing to do
     }

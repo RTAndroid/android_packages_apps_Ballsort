@@ -86,6 +86,11 @@ extern "C" jint JNICALL Java_rtandroid_ballsort_hardware_Sorter_getBallCount(JNI
     return data->ball_count;
 }
 
+extern "C" void JNICALL Java_rtandroid_ballsort_hardware_Sorter_resetBallCount(JNIEnv* env, jobject obj)
+{
+    data->ball_count = 0;
+}
+
 extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_Sorter_closeMemory(JNIEnv* env, jobject obj)
 {
     LOGI("Closing shared memory");

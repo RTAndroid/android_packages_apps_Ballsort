@@ -1,6 +1,7 @@
 package rtandroid.ballsort.ui.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import rtandroid.ballsort.R;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.loops.ResetLoop;
 import rtandroid.ballsort.blocks.loops.SortLoop;
+import rtandroid.ballsort.hardware.Sorter;
 import rtandroid.ballsort.ui.ColorView;
 import rtandroid.ballsort.services.ResetService;
 import rtandroid.ballsort.services.SortService;
@@ -46,37 +48,33 @@ public class ControlFragment extends Fragment
     private TextView mTvSlingshotValveState = null;
     private TextView mTvSlingshotMotorState = null;
 
+    private ColorView mSelectedView = null;
     private GridView mGridView = null;
 
     private static Intent mSortIntent = null;
     private static Intent mResetIntent = null;
 
-    private ColorView mSelectedView = null;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_control, container, false);
 
         mCvQueued = (ColorView) view.findViewById(R.id.cvQueuedBall);
         mCvNext = (ColorView) view.findViewById(R.id.cvNextBall);
         mCvDrop = (ColorView) view.findViewById(R.id.cvDropBall);
-
         mTvPattern = (TextView) view.findViewById(R.id.tvPatternCount);
-
         mTvBallsDropped = (TextView) view.findViewById(R.id.tvBallsDropped);
         mTvFreeMemory = (TextView) view.findViewById(R.id.tvFreeMemory);
         mTvFeederState = (TextView) view.findViewById(R.id.tvFeederState);
         mTvSlingshotValveState = (TextView) view.findViewById(R.id.tvSlingshotValveState);
         mTvSlingshotMotorState = (TextView) view.findViewById(R.id.tvSlingshotMotorState);
-
-        Switch mSwchSort = (Switch) view.findViewById(R.id.swSort);
-        Switch mSwchReset = (Switch) view.findViewById(R.id.swReset);
-
         mGridView = (GridView) view.findViewById(R.id.patternGrid);
 
+        Context context = getActivity();
+        GridAdapter adapter = new GridAdapter(context);
+        mGridView.setAdapter(adapter);
 
+        Switch mSwchSort = (Switch) view.findViewById(R.id.swSort);
         mSwchSort.setOnCheckedChangeListener((buttonView, isChecked) ->
         {
             if (isChecked)
@@ -89,6 +87,7 @@ public class ControlFragment extends Fragment
             }
         });
 
+        Switch mSwchReset = (Switch) view.findViewById(R.id.swReset);
         mSwchReset.setOnCheckedChangeListener((buttonView, isChecked) ->
         {
             if (isChecked)
@@ -101,44 +100,36 @@ public class ControlFragment extends Fragment
             }
         });
 
-        // create two temporary loops to initialise the needed hardware
-        Log.i(MainActivity.TAG, "Initialising hardware state...");
-        new SortLoop();
-        new ResetLoop();
-
-        mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
-
-        mGridView.setAdapter(new GridAdapter(getActivity()));
-
-        for (int col = Constants.PATTERN_COLUMNS_COUNT-1; col>=0 ; col--)
-        {
-            for(int row = 0; row < Constants.PATTERN_COLUMNS_SIZE; row++)
+        for (int col = Constants.PATTERN_COLUMNS_COUNT - 1; col >= 0 ; col--)
+            for (int row = 0; row < Constants.PATTERN_COLUMNS_SIZE; row++)
             {
-                ColorView cv = new ColorView(getActivity());
-                cv.setOnClickListener(v -> {
+                ColorView cv = new ColorView(context);
+                cv.setOnClickListener(v ->
+                {
                     mSelectedView = cv;
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setNegativeButton("Cancel", (dialog, id) -> {});
                     builder.setTitle("Please choose a color:");
-                    builder.setItems(ColorType.names, (dialog, which) -> {
-                        Settings settings = SettingsManager.getSettings();
-                        ColorType type = ColorType.values()[which];
-                        settings.Pattern[0][0] = type;
-                        mSelectedView.setColor(type.getPrimaryColor());
-                        Log.d(MainActivity.TAG, "New color "+0+"  "+0+" is "+type.name());
-                    });
-
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                    builder.setItems(ColorType.names, (dialog, which) ->
                     {
-                        public void onClick(DialogInterface dialog, int id) {}
+                        ColorType type = ColorType.values()[which];
+                        SettingsManager.getSettings().Pattern[0][0] = type;
+                        mSelectedView.setColor(type.getPrimaryColor());
+                        Log.d(MainActivity.TAG, "New color is " + type.name());
                     });
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 });
             }
-        }
 
+        // create two temporary loops to initialise the needed hardware
+        Log.i(MainActivity.TAG, "Initialising hardware state...");
+        new SortLoop();
+        new ResetLoop();
+
+        mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
         return view;
     }
 
@@ -147,8 +138,9 @@ public class ControlFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        mSortIntent = new Intent(getActivity(), SortService.class);
-        mResetIntent = new Intent(getActivity(), ResetService.class);
+        Context context = getActivity();
+        mSortIntent = new Intent(context, SortService.class);
+        mResetIntent = new Intent(context, ResetService.class);
     }
 
     private void updateUi()
@@ -159,11 +151,11 @@ public class ControlFragment extends Fragment
         mCvNext.setColor(data.mQueuedColor.getPrimaryColor());
         mCvDrop.setColor(data.mDropColor.getPrimaryColor());
 
-        if(!data.mModuleError.isEmpty())
+        if (!Sorter.sModuleLoaded)
         {
-            mTvSlingshotValveState.setText(data.mModuleError);
-            mTvSlingshotMotorState.setText(data.mModuleError);
-            mTvFeederState.setText(data.mModuleError);
+            mTvSlingshotValveState.setText(R.string.module_error);
+            mTvSlingshotMotorState.setText(R.string.module_error);
+            mTvFeederState.setText(R.string.module_error);
         }
         else
         {
@@ -172,13 +164,9 @@ public class ControlFragment extends Fragment
             mTvFeederState.setText("Feeder state: " + data.FeederState + "");
         }
 
-
         String patternString = "";
-        for(int i = 1; i <= data.mFillings.length; i++)
-        {
-            patternString += data.mFillings[data.mFillings.length-i]+ " ";
-        }
-        mTvPattern.setText("Pattern: "+ patternString);
+        for (int i = 1; i <= data.mFillings.length; i++) { patternString += data.mFillings[data.mFillings.length-i] + " "; }
+        mTvPattern.setText("Pattern: " + patternString + "");
 
         Runtime rt = Runtime.getRuntime();
         long freeKB = rt.freeMemory() / 1024;
@@ -187,8 +175,6 @@ public class ControlFragment extends Fragment
         mTvBallsDropped.setText("Dropped: " + data.mDetectedBalls + " balls");
 
         mGridView.invalidateViews();
-
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
     }
-
 }

@@ -59,10 +59,12 @@ public class SettingsFragment extends PreferenceFragment
         String numReadsName = "colormeassurments";
         String defaultValue = ""+settings.ColorSersorRepeats;
         Preference pref = findPreference(numReadsName);
-        if(pref == null)
+        if (pref == null)
         {
             Log.e(MainActivity.TAG, "Could not find "+numReadsName);
+            return;
         }
+
         pref.setTitle(defaultValue);
         pref.setOnPreferenceChangeListener((preference, newValue) ->
         {
@@ -85,10 +87,12 @@ public class SettingsFragment extends PreferenceFragment
         String detectionName = "colordetection";
         defaultValue = ""+settings.ColorDetection;
         Preference detPref = findPreference(detectionName);
-        if(detPref == null)
+        if (detPref == null)
         {
             Log.e(MainActivity.TAG, "Could not find "+detectionName);
+            return;
         }
+
         detPref.setTitle(defaultValue);
         detPref.setOnPreferenceChangeListener((preference, newValue) ->
         {
@@ -111,10 +115,12 @@ public class SettingsFragment extends PreferenceFragment
         String ColorYellowThreshold = "ColorYellowThreshold";
         defaultValue = ""+settings.ColorYellowThreshold;
         Preference ColorYellowThresholdPref = findPreference(ColorYellowThreshold);
-        if(ColorYellowThresholdPref == null)
+        if (ColorYellowThresholdPref == null)
         {
             Log.e(MainActivity.TAG, "Could not find "+ColorYellowThreshold);
+            return;
         }
+
         ColorYellowThresholdPref.setTitle(defaultValue);
         ColorYellowThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
         {
@@ -137,10 +143,12 @@ public class SettingsFragment extends PreferenceFragment
         String ColorBlackThreshold = "ColorBlackThreshold";
         defaultValue = ""+settings.ColorBlackThreshold;
         Preference ColorBlackThresholdPref = findPreference(ColorBlackThreshold);
-        if(ColorBlackThresholdPref == null)
+        if (ColorBlackThresholdPref == null)
         {
-            Log.e(MainActivity.TAG, "Could not find "+ColorBlackThreshold);
+            Log.e(MainActivity.TAG, "Could not find " + ColorBlackThreshold);
+            return;
         }
+
         ColorBlackThresholdPref.setTitle(defaultValue);
         ColorBlackThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
         {
@@ -163,10 +171,12 @@ public class SettingsFragment extends PreferenceFragment
         String ColorLightColorThreshold = "ColorLightColorThreshold";
         defaultValue = ""+settings.ColorYellowThreshold;
         Preference ColorLightColorThresholdPref = findPreference(ColorLightColorThreshold);
-        if(ColorLightColorThresholdPref == null)
+        if (ColorLightColorThresholdPref == null)
         {
             Log.e(MainActivity.TAG, "Could not find "+ColorLightColorThreshold);
+            return;
         }
+
         ColorLightColorThresholdPref.setTitle(defaultValue);
         ColorLightColorThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
         {

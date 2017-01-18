@@ -30,26 +30,20 @@ import rtandroid.realtime.RealTimeProxy;
 
 public class Utils
 {
-    static { System.loadLibrary("util"); }
-
-    private static native void nativeSleepUs(int usec);
-
     public static boolean extractRawFile(Context context, int resourceID, String targetFileName)
     {
         try
         {
-            InputStream is = context.getResources().openRawResource(resourceID);
-
             File target = new File(context.getFilesDir(), targetFileName);
             OutputStream outputStream = new FileOutputStream(target);
+            InputStream is = context.getResources().openRawResource(resourceID);
 
             byte buffer[] = new byte[1024];
             int length;
             while ((length = is.read(buffer)) > 0) { outputStream.write(buffer, 0, length); }
 
-            outputStream.close();
             is.close();
-
+            outputStream.close();
             return true;
         }
         catch (IOException e)
@@ -112,4 +106,7 @@ public class Utils
             Log.e(MainActivity.TAG, "Failed to set RT priority: " + e.getMessage());
         }
     }
+
+    static { System.loadLibrary("util"); }
+    private static native void nativeSleepUs(int usec);
 }

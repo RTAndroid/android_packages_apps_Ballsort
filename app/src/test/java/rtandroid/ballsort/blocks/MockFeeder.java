@@ -18,7 +18,6 @@ package rtandroid.ballsort.blocks;
 
 public class MockFeeder extends Feeder
 {
-    private boolean mDropNextBallCalled = false;
     public boolean mWasTerminated = false;
 
     public void setState(FeederState state)
@@ -33,8 +32,5 @@ public class MockFeeder extends Feeder
     }
 
     @Override
-    public void allowDrop()
-    {
-        mDropNextBallCalled = true;
-    }
+    public void allowDrop() { }
 }

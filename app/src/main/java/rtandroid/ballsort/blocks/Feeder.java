@@ -18,8 +18,6 @@ package rtandroid.ballsort.blocks;
 
 import android.util.Log;
 
-import org.slf4j.helpers.Util;
-
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorObject;
 import rtandroid.ballsort.blocks.color.ColorType;
