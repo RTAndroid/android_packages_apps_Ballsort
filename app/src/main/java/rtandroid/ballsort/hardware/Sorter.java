@@ -103,7 +103,7 @@ public class Sorter
 
             PrivilegeElevator.enableRoot();
 
-            Process insmod = Runtime.getRuntime().exec("rmmod " + sModulePath);
+            Process insmod = Runtime.getRuntime().exec("rmmod " + Constants.MODULE_SORTING);
             insmod.waitFor();
             if (insmod.exitValue() != 0) { Log.e(MainActivity.TAG, "rmmod returned " + insmod.exitValue()); }
             sModuleLoaded = false;

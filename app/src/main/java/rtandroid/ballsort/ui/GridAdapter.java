@@ -2,7 +2,6 @@ package rtandroid.ballsort.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class GridAdapter extends BaseAdapter
         if (convertView == null)
         {
             cv = new ColorView(mContext);
-            cv.setLayoutParams(new GridView.LayoutParams(100, 100));
+            cv.setLayoutParams(new GridView.LayoutParams(60, 60));
             cv.setPadding(8, 8, 8, 8);
         }
         else
@@ -62,25 +61,18 @@ public class GridAdapter extends BaseAdapter
         int col = Constants.PATTERN_COLUMNS_COUNT - 1 - (position % Constants.PATTERN_COLUMNS_COUNT);
         int row = Constants.PATTERN_COLUMNS_SIZE - 1 - (position / Constants.PATTERN_COLUMNS_COUNT);
 
-        cv.setOnClickListener(v -> {
+        cv.setOnClickListener(v ->
+        {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setNegativeButton("Cancel", (dialog, id) -> {});
             builder.setTitle("Please choose a color:");
-            builder.setItems(ColorType.names, new DialogInterface.OnClickListener()
+            builder.setItems(ColorType.names, (dialog, which) ->
             {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    Settings settings1 = SettingsManager.getSettings();
-                    ColorType type = ColorType.values()[which];
-                    settings1.Pattern[col][row] = type;
-                    cv.setColor(type.getPrimaryColor());
-                    Log.d(MainActivity.TAG, "New color "+col+"  "+row+" is "+type.name());
-                }
-            });
-
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int id) {}
+                Settings settings1 = SettingsManager.getSettings();
+                ColorType type = ColorType.values()[which];
+                settings1.Pattern[col][row] = type;
+                cv.setColor(type.getPrimaryColor());
+                Log.d(MainActivity.TAG, "New color "+col+"  "+row+" is "+type.name());
             });
 
             AlertDialog dialog = builder.create();
