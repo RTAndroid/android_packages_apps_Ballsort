@@ -13,13 +13,13 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.loops.ResetLoop;
 import rtandroid.ballsort.blocks.loops.SortLoop;
-import rtandroid.ballsort.hardware.Sorter;
 import rtandroid.ballsort.ui.ColorView;
 import rtandroid.ballsort.services.ResetService;
 import rtandroid.ballsort.services.SortService;
@@ -35,8 +35,11 @@ public class ControlFragment extends Fragment
     private final Handler mUiUpdateHandler = new Handler();
     private final Runnable mUiUpdateRunnable = this::updateUi;
 
+    private static Intent sSortIntent = null;
+    private static Intent sResetIntent = null;
+
+    private ColorView mCvDetected = null;
     private ColorView mCvQueued = null;
-    private ColorView mCvNext = null;
     private ColorView mCvDrop = null;
     private TextView mTvPattern = null;
     private TextView mTvBallsDropped = null;
@@ -49,16 +52,13 @@ public class ControlFragment extends Fragment
     private ColorView mSelectedView = null;
     private GridView mGridView = null;
 
-    private static Intent mSortIntent = null;
-    private static Intent mResetIntent = null;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_control, container, false);
 
+        mCvDetected = (ColorView) view.findViewById(R.id.cvDetectedBall);
         mCvQueued = (ColorView) view.findViewById(R.id.cvQueuedBall);
-        mCvNext = (ColorView) view.findViewById(R.id.cvNextBall);
         mCvDrop = (ColorView) view.findViewById(R.id.cvDropBall);
         mTvPattern = (TextView) view.findViewById(R.id.tvPatternCount);
         mTvBallsDropped = (TextView) view.findViewById(R.id.tvBallsDropped);
@@ -72,29 +72,29 @@ public class ControlFragment extends Fragment
         GridAdapter adapter = new GridAdapter(context);
         mGridView.setAdapter(adapter);
 
-        Switch mSwchSort = (Switch) view.findViewById(R.id.swSort);
-        mSwchSort.setOnCheckedChangeListener((buttonView, isChecked) ->
+        ToggleButton btnSort = (ToggleButton) view.findViewById(R.id.btnSort);
+        btnSort.setOnCheckedChangeListener((buttonView, isChecked) ->
         {
             if (isChecked)
             {
-                getActivity().startService(mSortIntent);
+                getActivity().startService(sSortIntent);
             }
             else
             {
-                getActivity().stopService(mSortIntent);
+                getActivity().stopService(sSortIntent);
             }
         });
 
-        Switch mSwchReset = (Switch) view.findViewById(R.id.swReset);
-        mSwchReset.setOnCheckedChangeListener((buttonView, isChecked) ->
+        ToggleButton btnReset = (ToggleButton) view.findViewById(R.id.btnReset);
+        btnReset.setOnCheckedChangeListener((buttonView, isChecked) ->
         {
             if (isChecked)
             {
-                getActivity().startService(mResetIntent);
+                getActivity().startService(sResetIntent);
             }
             else
             {
-                getActivity().stopService(mResetIntent);
+                getActivity().stopService(sResetIntent);
             }
         });
 
@@ -122,36 +122,39 @@ public class ControlFragment extends Fragment
                 });
             }
 
+        // intents start and stop both services
+        sSortIntent = new Intent(context, SortService.class);
+        sResetIntent = new Intent(context, ResetService.class);
+
         // create two temporary loops to initialise the needed hardware
         Log.i(MainActivity.TAG, "Initialising hardware state...");
         new SortLoop();
         new ResetLoop();
 
+        Log.i(MainActivity.TAG, "Starting UI updates...");
         mUiUpdateHandler.postDelayed(mUiUpdateRunnable, REFRESH_RATE_MS);
         return view;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        Context context = getActivity();
-        mSortIntent = new Intent(context, SortService.class);
-        mResetIntent = new Intent(context, ResetService.class);
     }
 
     private void updateUi()
     {
         DataState data = SettingsManager.getData();
 
-        mCvQueued.setOuterColor(data.mDetectedColor.getColor());
-        mCvNext.setOuterColor(data.mQueuedColor.getColor());
-        mCvDrop.setOuterColor(data.mDropColor.getColor());
+        int detected = data.mDetectedColor.getColor();
+        mCvDetected.setInnerColor(detected);
+        mCvDetected.setOuterColor(detected);
 
+        int next = data.mQueuedColor.getColor();
+        mCvQueued.setInnerColor(next);
+        mCvQueued.setOuterColor(next);
+
+        int drop = data.mDropColor.getColor();
+        mCvDrop.setInnerColor(drop);
+        mCvDrop.setOuterColor(drop);
+
+        mTvFeederState.setText("Feeder: " + data.FeederState + "");
         mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
         mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
-        mTvFeederState.setText("Feeder state: " + data.FeederState + "");
 
         String patternString = "";
         for (int i = 1; i <= data.mFillings.length; i++) { patternString += data.mFillings[data.mFillings.length-i] + " "; }

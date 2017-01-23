@@ -16,9 +16,12 @@
 
 package rtandroid.ballsort.hardware;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
+import rtandroid.ballsort.blocks.color.ColorRGB;
+import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.root.PrivilegeElevator;
 
@@ -66,9 +69,18 @@ public class ColorSensor
         return true;
     }
 
-    public int[] receive()
+    public ColorRGB receive()
     {
-        return readSensor();
+        ColorRGB color = new ColorRGB();
+
+        int[] rgb = readSensor();
+        if (rgb == null) { return color; }
+
+        color.r = (rgb[1] << 8) | rgb[0];
+        color.g = (rgb[3] << 8) | rgb[2];
+        color.b = (rgb[5] << 8) | rgb[4];
+
+        return color;
     }
 
     public boolean close()
@@ -87,7 +99,6 @@ public class ColorSensor
      */
 
     private static native boolean openI2C();
-    private static native boolean closeI2C();
-
     private static native int[] readSensor();
+    private static native boolean closeI2C();
 }

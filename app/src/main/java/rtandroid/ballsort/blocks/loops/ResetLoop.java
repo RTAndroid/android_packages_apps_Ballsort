@@ -52,10 +52,6 @@ public class ResetLoop extends AStateBlock
         data.mDropColor = ColorType.EMPTY;
         data.mQueuedColor = ColorType.EMPTY;
 
-        // reset ball count
-        Sorter.resetBallCount();
-        data.mDetectedBalls = 0;
-
         // start all the other threads
         mSlingshotValve.start();
         mSlingshotMotor.start();

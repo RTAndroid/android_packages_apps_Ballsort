@@ -16,7 +16,12 @@
 
 package rtandroid.ballsort.blocks;
 
+import android.graphics.Color;
 import android.util.Log;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorRGB;
@@ -48,7 +53,7 @@ public class Feeder extends AStateBlock
     }
 
     private static final int[] ROTATE_PATTERN = { Stepper.WHILE_OPENED, Stepper.WHILE_CLOSED, Stepper.WHILE_OPENED, 32 };
-    private static final IColorClassifier[] COLOR_CLASSIFIER = { new TreeColorClassifier(), new MeanColorClassifier(), NeuralColorClassifier.getInstance() };
+    private static final IColorClassifier[] COLOR_CLASSIFIER = { new MeanColorClassifier(), new TreeColorClassifier() };
 
     protected FeederState mState = FeederState.DROPPING;
     protected Stepper mStepper = null;
@@ -118,39 +123,19 @@ public class Feeder extends AStateBlock
     {
         if (!isRunning()) { return ColorType.EMPTY; }
 
-        Settings settings = SettingsManager.getSettings();
-        DataState data = SettingsManager.getData();
-        data.mDetectedColor = ColorType.EMPTY;
-
-        int r = 0, g = 0, b = 0;
-        for (int i = 0; i < settings.ColorSersorRepeats; i++)
-        {
-            int[] rgb = mColorSensor.receive();
-            if (!isRunning()) { return ColorType.EMPTY; }
-            if (rgb == null) { continue; }
-
-            r = (rgb[1] << 8) | rgb[0];
-            g = (rgb[3] << 8) | rgb[2];
-            b = (rgb[5] << 8) | rgb[4];
-
-            Log.d(MainActivity.TAG, " - color sensor returned r=" + r + ", g=" + g + ", " + b + ")");
-            Utils.delayMs(settings.ColorSensorDelay);
-        }
-
-        data.mLatestColor = new ColorRGB(r, g, b);
-        Log.d(MainActivity.TAG, "Detecting RGB values (" + r + ", " + g + ", " + b + ")");
+        ColorType type = null;
+        ColorRGB color = mColorSensor.receive();
 
         for (IColorClassifier classifier : COLOR_CLASSIFIER)
         {
-            ColorType type = classifier.classify(data.mLatestColor);
-            Log.d(MainActivity.TAG, classifier.getName() + " -> " + type.name());
+            type = classifier.classify(color);
+            Log.d(MainActivity.TAG, classifier.getName() + ": " + color.toString() + " -> " + type.name());
         }
 
-        IColorClassifier classifier = COLOR_CLASSIFIER[settings.ColorDetectionAlgorithm];
-        ColorType detectedType = classifier.classify(data.mLatestColor);
-        Log.d(MainActivity.TAG, "Using " + detectedType.name() + " from " + classifier.getName());
+        DataState data = SettingsManager.getData();
+        data.mLatestColor = color;
 
-        return detectedType;
+        return type;
     }
 
     @Override
@@ -158,15 +143,18 @@ public class Feeder extends AStateBlock
     {
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
+
         data.FeederState = mState.name();
+        data.mDetectedBalls = Sorter.getBallCount();
 
         switch (mState)
         {
         // Rotate ball, that is currently in front of the color sensor to the drop
         case ROTATING:
-            mStepper.doSteps(ROTATE_PATTERN);
             data.mDropColor = data.mQueuedColor;
             data.mQueuedColor = data.mDetectedColor;
+            data.mDetectedColor = ColorType.EMPTY;
+            mStepper.doSteps(ROTATE_PATTERN);
             data.mDetectedColor = detectColor();
             Utils.delayMs(settings.BeforeDropDelay);
             mState = FeederState.READY;
@@ -179,7 +167,6 @@ public class Feeder extends AStateBlock
         // Drop the ball
         case DROPPING:
             mDropPin.setValueForMs(settings.FeederValveOpenedDelay, settings.FeederAfterDropDelay);
-            data.mDetectedBalls = Sorter.getBallCount();
             mState = FeederState.ROTATING;
             break;
         }

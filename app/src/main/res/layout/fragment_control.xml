@@ -1,109 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal" >
+
+    <Space
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="2" />
 
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="0dp"
-        android:layout_weight="5"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_weight="4"
+        android:orientation="vertical" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView style="@style/HeaderText" android:text="@string/actions_title" android:layout_marginTop="20dp" />
+        <View style="@style/HeaderDivider" android:layout_marginBottom="10dp" />
 
-            <rtandroid.ballsort.ui.ColorView
-                android:id="@+id/cvQueuedBall"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-
-            <rtandroid.ballsort.ui.ColorView
-                android:id="@+id/cvNextBall"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_toEndOf="@id/cvQueuedBall" />
-
-            <rtandroid.ballsort.ui.ColorView
-                android:id="@+id/cvDropBall"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_toEndOf="@id/cvNextBall" />
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" >
+            <TextView
+                style="@style/LabelText"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/program_sort" />
+            <ToggleButton
+                android:id="@+id/btnSort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tvBallsDropped"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textSize="24sp"
-            android:text="@string/dropped" />
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" >
+            <TextView
+                style="@style/LabelText"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="@string/program_reset" />
+            <ToggleButton
+                android:id="@+id/btnReset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tvPatternCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textSize="24sp"
-            android:text="@string/pattern" />
+        <TextView style="@style/HeaderText" android:text="@string/feeder_title" android:layout_marginTop="20dp" />
+        <View style="@style/HeaderDivider" />
 
-        <TextView
-            android:id="@+id/tvFreeMemory"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/memory" />
+            android:layout_marginTop="10dp"
+            android:gravity="center">
 
-        <TextView
-            android:id="@+id/tvFeederState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textSize="24sp"
-            android:text="@string/feeder_state" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
+                <TextView style="@style/LabelText" android:layout_width="match_parent" android:gravity="center" android:text="@string/state_detected" />
+                <rtandroid.ballsort.ui.ColorView style="@style/ColorImage" android:id="@+id/cvDetectedBall" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvSlingshotValveState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/slingshot_state" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_arrow"
+                android:contentDescription="@string/start" />
 
-        <TextView
-            android:id="@+id/tvSlingshotMotorState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/slingshot_motor" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
+                <TextView style="@style/LabelText" android:layout_width="match_parent" android:gravity="center" android:text="@string/state_queued" />
+                <rtandroid.ballsort.ui.ColorView style="@style/ColorImage" android:id="@+id/cvQueuedBall" />
+            </LinearLayout>
 
-        <Switch
-            android:id="@+id/swSort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_marginTop="30dp"
-            android:text="@string/sort" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_arrow"
+                android:contentDescription="@string/start" />
 
-        <Switch
-            android:id="@+id/swReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_marginBottom="30dp"
-            android:text="@string/reset" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
+                <TextView style="@style/LabelText" android:layout_width="match_parent" android:gravity="center" android:text="@string/state_dropped" />
+                <rtandroid.ballsort.ui.ColorView style="@style/ColorImage" android:id="@+id/cvDropBall" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView style="@style/HeaderText" android:text="@string/state_title" android:layout_marginTop="20dp" />
+        <View style="@style/HeaderDivider" android:layout_marginBottom="10dp" />
+
+        <TextView style="@style/LabelText" android:id="@+id/tvFeederState" android:text="@string/feeder_state" />
+        <TextView style="@style/LabelText" android:id="@+id/tvSlingshotValveState" android:text="@string/slingshot_state" />
+        <TextView style="@style/LabelText" android:id="@+id/tvSlingshotMotorState" android:text="@string/slingshot_motor" />
+        <TextView style="@style/LabelText" android:id="@+id/tvBallsDropped" android:text="@string/dropped" android:layout_marginTop="10dp" />
+        <TextView style="@style/LabelText" android:id="@+id/tvPatternCount" android:text="@string/pattern" />
+        <TextView style="@style/LabelText" android:id="@+id/tvFreeMemory" android:text="@string/memory" />
+
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/patternGrid"
+    <Space
         android:layout_height="match_parent"
         android:layout_width="0dp"
-        android:layout_weight="3"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:numColumns="6" >
-    </GridView>
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
+        <TextView style="@style/HeaderText" android:text="@string/columns_title" android:layout_marginTop="20dp" />
+        <View style="@style/HeaderDivider" />
+
+        <GridView
+            android:id="@+id/patternGrid"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:numColumns="6" >
+        </GridView>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="2" />
 
 </LinearLayout>

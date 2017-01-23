@@ -11,7 +11,6 @@ import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
-@SuppressWarnings({"ALL", "ConstantConditions"})
 public class SettingsFragment extends PreferenceFragment
 {
     @Override
@@ -56,64 +55,8 @@ public class SettingsFragment extends PreferenceFragment
             });
         }
 
-        String numReadsName = "colormeassurments";
-        String defaultValue = ""+settings.ColorSersorRepeats;
-        Preference pref = findPreference(numReadsName);
-        if (pref == null)
-        {
-            Log.e(MainActivity.TAG, "Could not find "+numReadsName);
-            return;
-        }
-
-        pref.setTitle(defaultValue);
-        pref.setOnPreferenceChangeListener((preference, newValue) ->
-        {
-            try
-            {
-                int newTime = Integer.valueOf((String)newValue);
-                Log.d(MainActivity.TAG, "New timing is "+newTime);
-                settings.ColorSersorRepeats = newTime;
-                pref.setTitle(""+newTime);
-            }
-            catch (Exception e)
-            {
-                Log.d(MainActivity.TAG, "Wrong type of pref!");
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        });
-
-        String detectionName = "colordetection";
-        defaultValue = ""+settings.ColorDetectionAlgorithm;
-        Preference detPref = findPreference(detectionName);
-        if (detPref == null)
-        {
-            Log.e(MainActivity.TAG, "Could not find "+detectionName);
-            return;
-        }
-
-        detPref.setTitle(defaultValue);
-        detPref.setOnPreferenceChangeListener((preference, newValue) ->
-        {
-            try
-            {
-                int newTime = Integer.valueOf((String)newValue);
-                Log.d(MainActivity.TAG, "New timing is "+newTime);
-                settings.ColorSersorRepeats = newTime;
-                detPref.setTitle(""+newTime);
-            }
-            catch (Exception e)
-            {
-                Log.d(MainActivity.TAG, "Wrong type of pref!");
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        });
-
         String ColorYellowThreshold = "ColorYellowThreshold";
-        defaultValue = ""+settings.ColorYellowThreshold;
+        String defaultValue = "" + settings.ColorYellowThreshold;
         Preference ColorYellowThresholdPref = findPreference(ColorYellowThreshold);
         if (ColorYellowThresholdPref == null)
         {

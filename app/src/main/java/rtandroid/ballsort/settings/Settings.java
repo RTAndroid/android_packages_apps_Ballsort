@@ -48,13 +48,9 @@ public class Settings implements Serializable
     public final int BaseDelayMs = 54;
     public final int[] ColumnDelaysUs = { 4400, 5800, 7000, 7780, 8500, 9230 };
 
-    public int ColorSersorRepeats = 2;
-    public final int ColorSensorDelay = 30;
-
     public int ColorLightColorThreshold = 1350;
     public int ColorBlackThreshold = 690;
     public double ColorYellowThreshold = 0.8;
-    public final int ColorDetectionAlgorithm = 0;
 
     public final ColorType[][] Pattern = new ColorType[PATTERN_COLUMN_COUNT][PATTERN_COLUMN_CAPACITY];
 

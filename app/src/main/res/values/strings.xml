@@ -5,10 +5,18 @@
     <string name="sort">Sort</string>
     <string name="slingshot_state">Slingshot state: UNKNOWN</string>
     <string name="slingshot_motor">Slingshot motor: UNKNOWN</string>
-    <string name="feeder_state">Feeder state: UNKNOWN</string>
+    <string name="feeder_state">Feeder: UNKNOWN</string>
     <string name="dropped">Droped: 0</string>
     <string name="pattern">Pattern:</string>
     <string name="start">Start</string>
     <string name="train">Train</string>
-    <string name="module_error">Module Error!</string>
+    <string name="columns_title">Sorting progress</string>
+    <string name="state_title">Program state</string>
+    <string name="feeder_title">Color detection</string>
+    <string name="actions_title">Control actions</string>
+    <string name="program_sort">Sorting program:</string>
+    <string name="program_reset">Resetting program:</string>
+    <string name="state_detected">Detected</string>
+    <string name="state_queued">Queued</string>
+    <string name="state_dropped">Dropped</string>
 </resources>

@@ -31,8 +31,8 @@ public class Constants implements Serializable
     public static final int FEEDER_MOTOR_PIN_REF = 34;       // |  11  |    5  |  INT26      |   34   |  ref_shalter1    |
     public static final int FEEDER_DROP_PIN = 28;            // |  10  |   20  |  INT20      |   28   |  ventil2         |
 
-    public static final int PATTERN_IMAGE_BORDER = 6;
-    public static final int PATTERN_IMAGE_SIZE = 80;
+    public static final int PATTERN_IMAGE_BORDER = 5;
+    public static final int PATTERN_IMAGE_SIZE = 75;
     public static final int PATTERN_COLUMN_COUNT = 6;
     public static final int PATTERN_COLUMN_CAPACITY = 8;
     public static final int PATTERN_VALVE_PIN = 18;          // |  10  |   15  |  INT10      |   18   |  ventil3         |
