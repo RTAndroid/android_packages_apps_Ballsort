@@ -19,7 +19,7 @@ package rtandroid.ballsort.blocks;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
@@ -116,6 +116,8 @@ public class Feeder extends AStateBlock
 
     private ColorType detectColor()
     {
+        if (!isRunning()) { return ColorType.EMPTY; }
+
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
         data.mDetectedColor = ColorType.EMPTY;
@@ -124,6 +126,7 @@ public class Feeder extends AStateBlock
         for (int i = 0; i < settings.ColorSersorRepeats; i++)
         {
             int[] rgb = mColorSensor.receive();
+            if (!isRunning()) { return ColorType.EMPTY; }
             if (rgb == null) { continue; }
 
             r = (rgb[1] << 8) | rgb[0];
@@ -134,23 +137,20 @@ public class Feeder extends AStateBlock
             Utils.delayMs(settings.ColorSensorDelay);
         }
 
-        ColorType colorType;
+        data.mLatestColor = new ColorRGB(r, g, b);
         Log.d(MainActivity.TAG, "Detecting RGB values (" + r + ", " + g + ", " + b + ")");
-
-        ColorObject color = new ColorObject(r, g, b);
 
         for (IColorClassifier classifier : COLOR_CLASSIFIER)
         {
-            colorType = classifier.classify(color);
-            Log.d(MainActivity.TAG, classifier.getName() + " -> " + colorType.name());
+            ColorType type = classifier.classify(data.mLatestColor);
+            Log.d(MainActivity.TAG, classifier.getName() + " -> " + type.name());
         }
 
-        IColorClassifier used = COLOR_CLASSIFIER[settings.ColorDetection];
-        colorType = used.classify(color);
-        Log.d(MainActivity.TAG, "Using: "+ used.getName());
+        IColorClassifier classifier = COLOR_CLASSIFIER[settings.ColorDetectionAlgorithm];
+        ColorType detectedType = classifier.classify(data.mLatestColor);
+        Log.d(MainActivity.TAG, "Using " + detectedType.name() + " from " + classifier.getName());
 
-        data.mLatestColor = color;
-        return colorType;
+        return detectedType;
     }
 
     @Override

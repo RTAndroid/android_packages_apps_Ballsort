@@ -19,7 +19,7 @@ package rtandroid.ballsort.blocks.color.classifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 
 public class MeanColorClassifier implements IColorClassifier
@@ -134,7 +134,7 @@ public class MeanColorClassifier implements IColorClassifier
     }
 
     @Override
-    public ColorType classify(ColorObject color)
+    public ColorType classify(ColorRGB color)
     {
         double minDistance = Long.MAX_VALUE;
         ColorType minName = ColorType.BLACK;

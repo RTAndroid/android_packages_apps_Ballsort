@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,13 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
-import rtandroid.ballsort.ui.fragments.BallsortFragmentPagerAdapter;
+import java.io.File;
+
+import rtandroid.ballsort.ui.FragmentAdapter;
 import rtandroid.ballsort.hardware.Sorter;
+import rtandroid.ballsort.util.Utils;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -35,23 +39,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new BallsortFragmentPagerAdapter(getSupportFragmentManager(),
-                MainActivity.this));
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), MainActivity.this));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        // system setup
-        Sorter.extract(this);
-        Sorter.load();
-    }
-
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        Sorter.unload();
     }
 }

@@ -2,12 +2,12 @@ package rtandroid.ballsort.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorType;
@@ -27,7 +27,7 @@ public class GridAdapter extends BaseAdapter
 
     public int getCount()
     {
-        return Constants.PATTERN_COLUMNS_COUNT * Constants.PATTERN_COLUMNS_SIZE;
+        return Constants.PATTERN_COLUMN_COUNT * Constants.PATTERN_COLUMN_CAPACITY;
     }
 
     public Object getItem(int position)
@@ -46,47 +46,46 @@ public class GridAdapter extends BaseAdapter
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
 
+        int col = Constants.PATTERN_COLUMN_COUNT    - 1 - (position % Constants.PATTERN_COLUMN_COUNT);
+        int row = Constants.PATTERN_COLUMN_CAPACITY - 1 - (position / Constants.PATTERN_COLUMN_COUNT);
+
         ColorView cv;
-        if (convertView == null)
-        {
-            cv = new ColorView(mContext);
-            cv.setLayoutParams(new GridView.LayoutParams(60, 60));
-            cv.setPadding(8, 8, 8, 8);
-        }
+        if (convertView != null) { cv = (ColorView) convertView; }
         else
         {
-            cv = (ColorView) convertView;
-        }
+            int size = Constants.PATTERN_IMAGE_SIZE;
+            GridView.LayoutParams lp = new GridView.LayoutParams(size, size);
 
-        int col = Constants.PATTERN_COLUMNS_COUNT - 1 - (position % Constants.PATTERN_COLUMNS_COUNT);
-        int row = Constants.PATTERN_COLUMNS_SIZE - 1 - (position / Constants.PATTERN_COLUMNS_COUNT);
+            cv = new ColorView(mContext);
+            cv.setLayoutParams(lp);
+        }
 
         cv.setOnClickListener(v ->
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setNegativeButton("Cancel", (dialog, id) -> {});
-            builder.setTitle("Please choose a color:");
+            builder.setTitle("Please select new color:");
             builder.setItems(ColorType.names, (dialog, which) ->
             {
-                Settings settings1 = SettingsManager.getSettings();
                 ColorType type = ColorType.values()[which];
-                settings1.Pattern[col][row] = type;
-                cv.setColor(type.getPrimaryColor());
-                Log.d(MainActivity.TAG, "New color "+col+"  "+row+" is "+type.name());
+                settings.Pattern[col][row] = type;
+                Log.d(MainActivity.TAG, "New color in (" + col + ", " + row + "): " + type.name());
+                cv.setOuterColor(type.getColor());
             });
 
             AlertDialog dialog = builder.create();
             dialog.show();
         });
 
-        if (data.mFillings[col]-1 >= row)
-        {
-            cv.setColor(settings.Pattern[col][row].getPrimaryColor());
-        }
-        else
-        {
-            cv.setColor(settings.Pattern[col][row].getSecondaryColor());
-        }
+        // outer color shows which color is expected in this spot
+        ColorType type = settings.Pattern[col][row];
+        int outerColor = type.getColor();
+        cv.setOuterColor(type.getColor());
+
+        // inner color shows whether the ball was already sorted
+        boolean filled = (data.mFillings[col] - 1 >= row);
+        int innerColor = filled ? outerColor : ColorType.EMPTY.getColor() ;
+        cv.setInnerColor(innerColor);
 
         return cv;
     }

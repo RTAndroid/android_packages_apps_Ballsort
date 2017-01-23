@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.SettingsManager;
@@ -100,7 +100,7 @@ public class NeuralColorClassifier implements IColorClassifier {
         }
     }
 
-    public void addTrainingsEntry(ColorType type, ColorObject color)
+    public void addTrainingsEntry(ColorType type, ColorRGB color)
     {
         double[] entry = createInputs(color.r, color.g, color.b);
         switch (type)
@@ -174,7 +174,7 @@ public class NeuralColorClassifier implements IColorClassifier {
         mNetwork = null;
         boolean match = true;
 
-        // try to load the network from file
+        // try to prepare the network from file
         File networkFile = new File(NETWORK_FILENAME);
         if (networkFile.exists())
         {
@@ -193,7 +193,7 @@ public class NeuralColorClassifier implements IColorClassifier {
             mNetwork = null;
         }
 
-        // load wasn't successful, create a new one
+        // prepare wasn't successful, create a new one
         if (mNetwork == null)
         {
             Log.i(MainActivity.TAG, "Creating new neural network...");
@@ -328,7 +328,7 @@ public class NeuralColorClassifier implements IColorClassifier {
     }
 
     @Override
-    public ColorType classify(ColorObject color)
+    public ColorType classify(ColorRGB color)
     {
         double[] inputs = createInputs(color.r, color.g, color.b);
         return recognize(inputs);

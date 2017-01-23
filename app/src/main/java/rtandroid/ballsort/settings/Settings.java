@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 import rtandroid.ballsort.blocks.color.ColorType;
 
-import static rtandroid.ballsort.settings.Constants.PATTERN_COLUMNS_COUNT;
-import static rtandroid.ballsort.settings.Constants.PATTERN_COLUMNS_SIZE;
+import static rtandroid.ballsort.settings.Constants.PATTERN_COLUMN_COUNT;
+import static rtandroid.ballsort.settings.Constants.PATTERN_COLUMN_CAPACITY;
 
 public class Settings implements Serializable
 {
@@ -54,19 +54,17 @@ public class Settings implements Serializable
     public int ColorLightColorThreshold = 1350;
     public int ColorBlackThreshold = 690;
     public double ColorYellowThreshold = 0.8;
+    public final int ColorDetectionAlgorithm = 0;
 
-    public final int ColorDetection = 0;
-
-    public final ColorType[][] Pattern = new ColorType[PATTERN_COLUMNS_COUNT][PATTERN_COLUMNS_SIZE];
+    public final ColorType[][] Pattern = new ColorType[PATTERN_COLUMN_COUNT][PATTERN_COLUMN_CAPACITY];
 
     public Settings()
     {
-        for (int col = 0; col < Constants.PATTERN_COLUMNS_COUNT; col++)
-        {
-            for(int i = 0; i < Constants.PATTERN_COLUMNS_SIZE;i++)
-            {
-                Pattern[col][i] = ColorType.values()[PATTERN_COLUMNS_COUNT-col-1];
-            }
-        }
+        for (int col = 0; col < Constants.PATTERN_COLUMN_COUNT; col++)
+         for (int row = 0; row < Constants.PATTERN_COLUMN_CAPACITY; row++)
+         {
+             int index = PATTERN_COLUMN_COUNT - col - 1;
+             Pattern[col][row] = ColorType.values()[index];
+         }
     }
 }

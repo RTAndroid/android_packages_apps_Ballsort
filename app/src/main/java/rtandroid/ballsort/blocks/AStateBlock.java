@@ -91,6 +91,8 @@ public abstract class AStateBlock extends Thread
 
     public void terminate()
     {
+        Log.i(MainActivity.TAG, "Stopping block " + mName + "...");
+
         mIsRunning = false;
         cancel();
     }

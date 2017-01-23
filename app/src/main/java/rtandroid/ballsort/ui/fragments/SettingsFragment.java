@@ -85,7 +85,7 @@ public class SettingsFragment extends PreferenceFragment
         });
 
         String detectionName = "colordetection";
-        defaultValue = ""+settings.ColorDetection;
+        defaultValue = ""+settings.ColorDetectionAlgorithm;
         Preference detPref = findPreference(detectionName);
         if (detPref == null)
         {

@@ -19,7 +19,7 @@ package rtandroid.ballsort.blocks.color.classifier;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
@@ -33,7 +33,7 @@ public class TreeColorClassifier implements IColorClassifier
     }
 
     @Override
-    public ColorType classify(ColorObject color)
+    public ColorType classify(ColorRGB color)
     {
         int r = color.r;
         int g = color.g;

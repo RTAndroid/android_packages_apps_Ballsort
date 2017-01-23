@@ -2,7 +2,6 @@ package rtandroid.ballsort.ui.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -26,7 +25,6 @@ import rtandroid.ballsort.services.ResetService;
 import rtandroid.ballsort.services.SortService;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
-import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.ui.GridAdapter;
 
@@ -100,8 +98,8 @@ public class ControlFragment extends Fragment
             }
         });
 
-        for (int col = Constants.PATTERN_COLUMNS_COUNT - 1; col >= 0 ; col--)
-            for (int row = 0; row < Constants.PATTERN_COLUMNS_SIZE; row++)
+        for (int col = Constants.PATTERN_COLUMN_COUNT - 1; col >= 0 ; col--)
+            for (int row = 0; row < Constants.PATTERN_COLUMN_CAPACITY; row++)
             {
                 ColorView cv = new ColorView(context);
                 cv.setOnClickListener(v ->
@@ -115,8 +113,8 @@ public class ControlFragment extends Fragment
                     {
                         ColorType type = ColorType.values()[which];
                         SettingsManager.getSettings().Pattern[0][0] = type;
-                        mSelectedView.setColor(type.getPrimaryColor());
                         Log.d(MainActivity.TAG, "New color is " + type.name());
+                        mSelectedView.setOuterColor(type.getColor());
                     });
 
                     AlertDialog dialog = builder.create();
@@ -147,22 +145,13 @@ public class ControlFragment extends Fragment
     {
         DataState data = SettingsManager.getData();
 
-        mCvQueued.setColor(data.mDetectedColor.getPrimaryColor());
-        mCvNext.setColor(data.mQueuedColor.getPrimaryColor());
-        mCvDrop.setColor(data.mDropColor.getPrimaryColor());
+        mCvQueued.setOuterColor(data.mDetectedColor.getColor());
+        mCvNext.setOuterColor(data.mQueuedColor.getColor());
+        mCvDrop.setOuterColor(data.mDropColor.getColor());
 
-        if (!Sorter.sModuleLoaded)
-        {
-            mTvSlingshotValveState.setText(R.string.module_error);
-            mTvSlingshotMotorState.setText(R.string.module_error);
-            mTvFeederState.setText(R.string.module_error);
-        }
-        else
-        {
-            mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
-            mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
-            mTvFeederState.setText("Feeder state: " + data.FeederState + "");
-        }
+        mTvSlingshotValveState.setText("Slingshot Valve: " + data.SlingshotValveState + "");
+        mTvSlingshotMotorState.setText("Slingshot Motor: " + data.SlingshotMotorState + "");
+        mTvFeederState.setText("Feeder state: " + data.FeederState + "");
 
         String patternString = "";
         for (int i = 1; i <= data.mFillings.length; i++) { patternString += data.mFillings[data.mFillings.length-i] + " "; }

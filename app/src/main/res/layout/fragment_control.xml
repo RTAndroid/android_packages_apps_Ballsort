@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+
+    <LinearLayout
         android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical"
         android:padding="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <rtandroid.ballsort.ui.ColorView
                 android:id="@+id/cvQueuedBall"
                 android:layout_width="100dp"
@@ -21,14 +23,13 @@
                 android:id="@+id/cvNextBall"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_below="@id/cvQueuedBall"/>
+                android:layout_toEndOf="@id/cvQueuedBall" />
 
             <rtandroid.ballsort.ui.ColorView
                 android:id="@+id/cvDropBall"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_toEndOf="@id/cvNextBall"
-                android:layout_below="@id/cvQueuedBall"/>
+                android:layout_toEndOf="@id/cvNextBall" />
         </RelativeLayout>
 
         <TextView
@@ -38,12 +39,13 @@
             android:layout_marginTop="30dp"
             android:textSize="24sp"
             android:text="@string/dropped" />
+
         <TextView
             android:id="@+id/tvPatternCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:text="@string/pattern" />
 
         <TextView
@@ -58,28 +60,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:text="@string/feeder_state" />
 
         <TextView
             android:id="@+id/tvSlingshotValveState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:text="@string/slingshot_state" />
 
         <TextView
             android:id="@+id/tvSlingshotMotorState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:text="@string/slingshot_motor" />
 
         <Switch
             android:id="@+id/swSort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:layout_marginTop="30dp"
             android:text="@string/sort" />
 
@@ -87,20 +89,21 @@
             android:id="@+id/swReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:layout_marginBottom="30dp"
             android:text="@string/reset" />
     </LinearLayout>
+
     <GridView
-        android:orientation="vertical"
-        android:layout_width="650dp"
-        android:numColumns="6"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
         android:id="@+id/patternGrid"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:padding="10dp"
         android:verticalSpacing="0dp"
-        android:horizontalSpacing="10dp"
-        android:paddingRight="20dp"
-        tools:ignore="RtlHardcoded,RtlSymmetry">
+        android:horizontalSpacing="0dp"
+        android:numColumns="6" >
     </GridView>
-</RelativeLayout>
+
+</LinearLayout>

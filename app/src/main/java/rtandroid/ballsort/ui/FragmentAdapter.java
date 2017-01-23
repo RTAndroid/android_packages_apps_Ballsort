@@ -1,16 +1,20 @@
-package rtandroid.ballsort.ui.fragments;
+package rtandroid.ballsort.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import rtandroid.ballsort.ui.fragments.ControlFragment;
+import rtandroid.ballsort.ui.fragments.LearningFragment;
+import rtandroid.ballsort.ui.fragments.SettingsFragment;
 
-public class BallsortFragmentPagerAdapter extends FragmentPagerAdapter
+
+public class FragmentAdapter extends FragmentPagerAdapter
 {
     private final String[] tabTitles = new String[] { "Control", "Settings", "Learning"};
 
-    public BallsortFragmentPagerAdapter(FragmentManager fm, Context context)
+    public FragmentAdapter(FragmentManager fm, Context context)
     {
         super(fm);
     }
