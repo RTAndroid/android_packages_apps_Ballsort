@@ -27,7 +27,7 @@ public class GridAdapter extends BaseAdapter
 
     public int getCount()
     {
-        return Constants.PATTERN_COLUMNS_COUNT* Constants.PATTERN_COLUMNS_SIZE;
+        return Constants.PATTERN_COLUMNS_COUNT * Constants.PATTERN_COLUMNS_SIZE;
     }
 
     public Object getItem(int position)
