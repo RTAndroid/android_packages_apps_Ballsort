@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import rtandroid.ballsort.hardware.pins.GPIOPin;
 public class MockInputPin extends GPIOPin
 {
     private final boolean mCurrentValue = false;
-    private boolean mGotValue = false;
 
     public MockInputPin()
     {
@@ -31,7 +30,6 @@ public class MockInputPin extends GPIOPin
     @Override
     public boolean getValue()
     {
-        mGotValue = true;
         return mCurrentValue;
     }
 }

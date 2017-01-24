@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,11 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import rtandroid.ballsort.settings.Constants;
+
 public class ColorView extends View
 {
+    private Paint mSplitPaint = null;
     private Paint mInnerPaint = null;
     private Paint mOuterPaint = null;
 
@@ -48,6 +51,11 @@ public class ColorView extends View
 
     private void init()
     {
+        mSplitPaint = new Paint();
+        mSplitPaint.setStyle(Paint.Style.FILL);
+        mSplitPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        mSplitPaint.setColor(Color.GRAY);
+
         mInnerPaint = new Paint();
         mInnerPaint.setStyle(Paint.Style.FILL);
         mInnerPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -57,6 +65,7 @@ public class ColorView extends View
         mOuterPaint.setStyle(Paint.Style.STROKE);
         mOuterPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mOuterPaint.setColor(Color.BLACK);
+        mOuterPaint.setStrokeWidth(Constants.PATTERN_IMAGE_BORDER);
     }
 
     @Override
@@ -66,15 +75,29 @@ public class ColorView extends View
 
         int x = getWidth() / 2;
         int y = getHeight() / 2;
-        int radius = Math.min(x, y) - 2;
 
-        canvas.drawCircle(x, y, radius, mInnerPaint);
-        canvas.drawCircle(x, y, radius, mOuterPaint);
+        int borderSize = Constants.PATTERN_IMAGE_BORDER;
+        int splitSize = 2;
+
+        int fullRadius = Math.min(x, y);
+        int splitRadius = fullRadius - splitSize;
+        int outerRadius = splitRadius - splitSize * 3;
+        int innerRadius = outerRadius - borderSize;
+
+        canvas.drawCircle(x, y, splitRadius, mSplitPaint);
+        canvas.drawCircle(x, y, innerRadius, mInnerPaint);
+        canvas.drawCircle(x, y, outerRadius, mOuterPaint);
     }
 
-    public void setColor(int color)
+    public void setInnerColor(int color)
     {
         mInnerPaint.setColor(color);
+        invalidate();
+    }
+
+    public void setOuterColor(int color)
+    {
+        mOuterPaint.setColor(color);
         invalidate();
     }
 }

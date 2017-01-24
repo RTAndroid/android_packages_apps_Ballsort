@@ -2,7 +2,7 @@
 
 ##Description
 
-This is a sample Android application for controlling a sorting machine.
+This is a sample Android application for controlling a ball sorting machine with air pressure.
 
 ##License
 

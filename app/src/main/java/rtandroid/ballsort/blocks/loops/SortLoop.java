@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,7 @@ public class SortLoop extends AStateBlock
     protected MainStates mState = MainStates.WAIT_FEEDER;
     protected Feeder mFeeder = null;
     protected ColorPattern mColorPattern = null;
-    private int mBallsDropped;
-    private int mNextColumn;
+    private int mNextColumn = 0;
 
     public SortLoop()
     {
@@ -61,8 +60,10 @@ public class SortLoop extends AStateBlock
 
         // start all the other threads
         mFeeder.start();
-        mBallsDropped = Sorter.getBallCount();
 
+        // reset ball count
+        Sorter.resetBallCount();
+        SettingsManager.getData().mDetectedBalls = 0;
     }
 
     @Override
@@ -98,11 +99,11 @@ public class SortLoop extends AStateBlock
             if (mFeeder.getFeederState() == Feeder.FeederState.READY) { mState = MainStates.RECIEVE_COLORINFO; }
             break;
 
-        // Measure current ball
+        // Detect the color of the current ball
         case RECIEVE_COLORINFO:
             mNextColumn = mColorPattern.getNextColumn(data.mDropColor);
             int delayUs = (mNextColumn == ColorPattern.SKIP) ? 0 : settings.ColumnDelaysUs[mNextColumn];
-            Log.d(MainActivity.TAG, "Color: " + data.mDropColor.name() + " will be shot into column " + mNextColumn);
+            Log.d(MainActivity.TAG, "Color " + data.mDropColor.name() + " will be shot into column " + mNextColumn);
             Sorter.setDelays(settings.BaseDelayMs, delayUs);
 
             mState = MainStates.DROP_BALL;
@@ -111,19 +112,14 @@ public class SortLoop extends AStateBlock
         // Drop ball
         case DROP_BALL:
             mColorPattern.preparePins();
+            int preCount = Sorter.getBallCount();
+
             Utils.delayMs(settings.BeforeDropDelay);
             mFeeder.allowDrop();
             Utils.delayMs(settings.AfterDropDelay);
 
-            int count = Sorter.getBallCount();
-            if (mBallsDropped < count)
-            {
-                mBallsDropped = count;
-                if(!mColorPattern.isIgnoring())
-                {
-                    mColorPattern.onBallDropped(mNextColumn);
-                }
-            }
+            int postCount = Sorter.getBallCount();
+            if (postCount > preCount) { mColorPattern.onBallDropped(mNextColumn); }
 
             if (mFeeder.getFeederState() != Feeder.FeederState.DROPPING) { mState = MainStates.WAIT_PATTERN; }
             break;

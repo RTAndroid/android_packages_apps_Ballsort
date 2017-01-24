@@ -24,7 +24,7 @@ public class ColorPatternTest extends ColorPattern
     @Test
     public void isFullWhenEmpty()
     {
-        mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+        mFillings = new int[Constants.PATTERN_COLUMN_COUNT];
         assertFalse(isFull());
     }
 
@@ -35,13 +35,13 @@ public class ColorPatternTest extends ColorPattern
     public void isFullWhenFull()
     {
         Settings settings = SettingsManager.getSettings();
-        mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+        mFillings = new int[Constants.PATTERN_COLUMN_COUNT];
 
         // Create dummy pattern
         for (ColorType[] row : settings.Pattern){ Arrays.fill(row, Color.BLUE); }
         assertFalse(isFull());
 
-        for (int i = 0; i < Constants.PATTERN_COLUMNS_COUNT * Constants.PATTERN_COLUMNS_SIZE; i++)
+        for (int i = 0; i < Constants.PATTERN_COLUMN_COUNT * Constants.PATTERN_COLUMN_CAPACITY; i++)
         {
             assertThat(getNextColumn(ColorType.BLACK), not(ColorType.EMPTY));
         }
@@ -55,7 +55,7 @@ public class ColorPatternTest extends ColorPattern
     public void getNextRowWhenIgnoring()
     {
         Settings settings = SettingsManager.getSettings();
-        mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+        mFillings = new int[Constants.PATTERN_COLUMN_COUNT];
 
         // whole array is SKIP
         for (ColorType[] row : settings.Pattern){Arrays.fill(row, ColorType.EMPTY);}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.SettingsManager;
@@ -46,22 +46,15 @@ import static rtandroid.ballsort.blocks.color.ColorType.*;
 
 public class NeuralColorClassifier implements IColorClassifier {
 
-    private static NeuralColorClassifier mInstance = null;
-
+    private static NeuralColorClassifier sInstance = null;
     public static NeuralColorClassifier getInstance()
     {
-        if(mInstance == null) { mInstance = new NeuralColorClassifier(); }
-        return mInstance;
+        if (sInstance == null) { sInstance = new NeuralColorClassifier(); }
+        return sInstance;
     }
 
-    /**
-     * The actual neural network instance. Created in the constructor.
-     */
-    private NeuralNetwork mNetwork = null;
-
-
     private static final int INPUT_COUNT = (2 + 2 + 2) + (1 + 1 + 1);       // RGB + HSV;
-    private static final int OUTPUT_COUNT = values().length - 1;  // don't detect EMPTY
+    private static final int OUTPUT_COUNT = values().length - 1;            // don't detect EMPTY
     private static final int HIDDEN_NEURONS = INPUT_COUNT * OUTPUT_COUNT;   // random guess
 
     private static final String NETWORK_FILENAME = Environment.getExternalStorageDirectory().getAbsolutePath() +
@@ -78,10 +71,14 @@ public class NeuralColorClassifier implements IColorClassifier {
     private static final List<double[]> YELLOW_DATA = new ArrayList<>();
     private static final List<double[]> WHITE_DATA = new ArrayList<>();
 
-    private static HashMap<ColorType, List<double[]>> sTrainingData;
+    /**
+     * The actual neural network instance. Created in the constructor.
+     */
+    private NeuralNetwork mNetwork = null;
+    private HashMap<ColorType, List<double[]>> sTrainingData = null;
 
-
-    private void resetTrainingsData() {
+    private void resetTrainingsData()
+    {
         mNetwork = new MultiLayerPerceptron(INPUT_COUNT, HIDDEN_NEURONS, OUTPUT_COUNT);
         mNetwork.randomizeWeights();
 
@@ -94,16 +91,16 @@ public class NeuralColorClassifier implements IColorClassifier {
         sTrainingData.put(WHITE,  WHITE_DATA);
 
         Iterator it = sTrainingData.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            //noinspection unchecked
-            System.out.println(pair.getKey() + " = " + ((List<double[]>) pair.getValue()).size());
+        while (it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry) it.next();
+            List<double[]> list = (List<double[]>) pair.getValue();
+            System.out.println(pair.getKey() + " = " + list.size());
             it.next();
         }
-
     }
 
-    public void addTrainingsEntry(ColorType type, ColorObject color)
+    public void addTrainingsEntry(ColorType type, ColorRGB color)
     {
         double[] entry = createInputs(color.r, color.g, color.b);
         switch (type)
@@ -126,17 +123,18 @@ public class NeuralColorClassifier implements IColorClassifier {
             case WHITE:
                 WHITE_DATA.add(entry);
                 break;
+            default:
+                Log.e(MainActivity.TAG, "Unknown color: " + type);
+                break;
         }
-        Log.d(MainActivity.TAG, "Data added!");
 
         StringBuilder builder = new StringBuilder();
-        for (double v : entry) {
-            builder.append(v).append(",");
-        }
-        Log.d(MainActivity.TAG + "/NEURAL", "{" + builder.toString() + "},");
+        for (double v : entry) { builder.append(v).append(","); }
+        Log.d(MainActivity.TAG, "{" + builder.toString() + "},");
     }
 
-    private static double[] createInputs(int r, int g, int b) {
+    private static double[] createInputs(int r, int g, int b)
+    {
         double[] result = new double[INPUT_COUNT];
 
         // fill the normalized RGB data
@@ -156,12 +154,11 @@ public class NeuralColorClassifier implements IColorClassifier {
         result[7] = hsv[1];
         result[8] = hsv[2];
 
-        if (false) {
+        if (false)
+        {
             StringBuilder builder = new StringBuilder();
-            for (double v : result) {
-                builder.append(v).append(",");
-            }
-            Log.d(MainActivity.TAG + "/NEURAL", "{" + builder.toString() + "},");
+            for (double v : result) { builder.append(v).append(","); }
+            Log.d(MainActivity.TAG, "{" + builder.toString() + "},");
         }
 
         return result;
@@ -177,7 +174,7 @@ public class NeuralColorClassifier implements IColorClassifier {
         mNetwork = null;
         boolean match = true;
 
-        // try to load the network from file
+        // try to prepare the network from file
         File networkFile = new File(NETWORK_FILENAME);
         if (networkFile.exists())
         {
@@ -196,7 +193,7 @@ public class NeuralColorClassifier implements IColorClassifier {
             mNetwork = null;
         }
 
-        // load wasn't successful, create a new one
+        // prepare wasn't successful, create a new one
         if (mNetwork == null)
         {
             Log.i(MainActivity.TAG, "Creating new neural network...");
@@ -213,11 +210,10 @@ public class NeuralColorClassifier implements IColorClassifier {
         learner.start();
     }
 
-
     private void learn()
     {
             final double learningRate = 0.4;
-            final double learningGoal = 1E-100;
+            final double learningGoal = 1E-50;
             final int learningIterations = 200000;
 
             // apply learning settings
@@ -241,7 +237,8 @@ public class NeuralColorClassifier implements IColorClassifier {
 
                     mNetwork.save(NETWORK_FILENAME);
                     Log.i(MainActivity.TAG, "The network was saved to " + NETWORK_FILENAME);
-                } else
+                }
+                else
                 {
                     DataState data = SettingsManager.getData();
                     data.mLearningError =  bp.getTotalNetworkError();
@@ -259,7 +256,8 @@ public class NeuralColorClassifier implements IColorClassifier {
                 double[] outputs = new double[OUTPUT_COUNT];
                 outputs[color.ordinal()] = 1.0;
 
-                for (double[] inputs : trainingData) {
+                for (double[] inputs : trainingData)
+                {
                     DataSetRow dataRow = new DataSetRow(inputs, outputs);
                     trainingSet.addRow(dataRow);
                 }
@@ -301,8 +299,8 @@ public class NeuralColorClassifier implements IColorClassifier {
             String label = neuron.getLabel();
             double output = neuron.getOutput();
 
-            // do some debugging
-//            Log.d(MainActivity.TAG, " - " + label + ": " + output);
+            // show which color was the most probable
+            // Log.d(MainActivity.TAG, " - " + label + ": " + output);
 
             // the neural net may be somehow broken
             if (label == null)
@@ -330,7 +328,7 @@ public class NeuralColorClassifier implements IColorClassifier {
     }
 
     @Override
-    public ColorType classify(ColorObject color)
+    public ColorType classify(ColorRGB color)
     {
         double[] inputs = createInputs(color.r, color.g, color.b);
         return recognize(inputs);

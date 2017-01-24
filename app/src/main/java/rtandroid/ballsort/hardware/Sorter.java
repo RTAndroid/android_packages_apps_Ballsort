@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package rtandroid.ballsort.hardware;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -26,107 +25,94 @@ import java.io.InputStream;
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Constants;
-import rtandroid.ballsort.settings.DataState;
-import rtandroid.ballsort.settings.SettingsManager;
 import rtandroid.ballsort.util.Utils;
 import rtandroid.root.PrivilegeElevator;
 
 public class Sorter
 {
-    private static String sPath = null;
-    private static boolean mLoaded = false;
+    private static final String MODULE_NAME = Constants.MODULE_SORTING + ".ko";
 
-    public static void extract(Context context)
+    private static void extractModule(Context context)
     {
-        sPath = context.getFilesDir().getAbsolutePath();
-
-        String name = Constants.MODULE_SORTING + ".ko";
-        boolean result = Utils.extractRawFile(context, R.raw.rtdma, name);
-        Log.i(MainActivity.TAG, "Sorting module extracted: " + result);
+        boolean extracted = Utils.extractRawFile(context, R.raw.rtdma, Sorter.MODULE_NAME);
+        if (!extracted) { throw new RuntimeException("Failed to extractModule the module!"); }
     }
 
-    @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
-    public static void load()
+    private static boolean isModuleLoaded() throws Exception
     {
-        if (mLoaded) { return; }
+        // list all available modules
+        Process lsmod = Runtime.getRuntime().exec("lsmod");
+        lsmod.waitFor();
+        InputStream is = lsmod.getInputStream();
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        String loadedModules = s.hasNext() ? s.next() : "";
+        is.close();
 
-        String moduleName = Constants.MODULE_SORTING + ".ko";
-        String modulePath = sPath + "/" + moduleName;
+        // test if ours is in the list
+        return loadedModules.contains(Constants.MODULE_SORTING);
+    }
 
+    private static void loadModule(Context context) throws Exception
+    {
+        if (isModuleLoaded()) { return; }
+
+        String modulePath = context.getFilesDir().getAbsolutePath() + "/" + MODULE_NAME;
+        Process insmod = Runtime.getRuntime().exec("insmod " + modulePath);
+        insmod.waitFor();
+        if (insmod.exitValue() != 0) { throw new RuntimeException("insmod module returned " + insmod.exitValue()); }
+    }
+
+    public static void prepare(Context context)
+    {
         try
         {
+            extractModule(context);
+
+            Log.d(MainActivity.TAG, "Module load started");
             PrivilegeElevator.enableRoot();
 
-            // change permissions to 666
-            boolean result = true;
-            File module = new File(modulePath);
-            result = result && module.setReadable(true, false);
-            result = result && module.setWritable(true, false);
-            if (!result){ Log.e(MainActivity.TAG, "Failed setting module world-readable"); }
+            loadModule(context);
+            if (!isModuleLoaded()) { throw new RuntimeException("Failed to insmod module!"); }
 
-            Process insmod = Runtime.getRuntime().exec("insmod " + modulePath);
-            insmod.waitFor();
-            if (insmod.exitValue() != 0){ Log.e(MainActivity.TAG, "insmod returned " + insmod.exitValue()); }
-
-            // load the native library
             System.loadLibrary("sorter");
+            if (!openMemory()) { throw new RuntimeException("Failed to insmod module!"); }
 
-            Process lsmod = Runtime.getRuntime().exec("lsmod");
-            lsmod.waitFor();
-            InputStream is = lsmod.getInputStream();
-            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-            String loadedModules =  s.hasNext() ? s.next() : "";
-            is.close();
-            Log.d(MainActivity.TAG, "Loaded Modules: "+loadedModules);
-
-            if(!loadedModules.contains("rtdma"))
-            {
-                Log.e(MainActivity.TAG, "RTDMA did not load");
-                DataState data = SettingsManager.getData();
-                data.mModuleError = "MODULE NOT LOADED!";
-            }
-
-            // now we can init
-            result = openMemory();
-            Log.i(MainActivity.TAG, "Opening native memory returned '" + result + "'");
-
+            Log.d(MainActivity.TAG, "Module load finished");
             PrivilegeElevator.disableRoot();
-            mLoaded = result;
-        }
-        catch (Error | Exception e) { Log.e(MainActivity.TAG, "Exception during sorting module loading: " + e.getMessage()); }
 
-        Log.i(MainActivity.TAG, "Sorting module loaded");
+        }
+        catch (Error | Exception e)
+        {
+            Log.e(MainActivity.TAG, "Exception during sorting module loading");
+            Log.e(MainActivity.TAG, e.getMessage());
+        }
     }
 
     public static void unload()
     {
-        if(!mLoaded) { return; }
-
-        closeMemory();
-
-        String moduleName = Constants.MODULE_SORTING + ".ko";
-        String modulePath = sPath + "/" + moduleName;
-
         try
         {
+            if (!isModuleLoaded()) { return; }
+            closeMemory();
+
             PrivilegeElevator.enableRoot();
 
-            Process insmod = Runtime.getRuntime().exec("rmmod " + modulePath);
+            Process insmod = Runtime.getRuntime().exec("rmmod " + Constants.MODULE_SORTING);
             insmod.waitFor();
-            if (insmod.exitValue() != 0){ Log.e(MainActivity.TAG, "rmmod returned " + insmod.exitValue()); }
+            if (insmod.exitValue() != 0) { Log.e(MainActivity.TAG, "rmmod returned " + insmod.exitValue()); }
 
             PrivilegeElevator.disableRoot();
+            Log.i(MainActivity.TAG, "Sorting module unloaded");
         }
-        catch (Error | Exception e) { Log.e(MainActivity.TAG, "Exception during sorting module unloading: " + e.getMessage()); }
-
-        Log.i(MainActivity.TAG, "Sorting module unloaded");
-        mLoaded = false;
+        catch (Error | Exception e)
+        {
+            Log.e(MainActivity.TAG, "Exception during sorting module unloading: " + e.getMessage());
+        }
     }
 
-    /** Sends the important delayMs information to the kernel module and receives the current number of balls */
     private static native boolean openMemory();
+    private static native void closeMemory();
     public static native void setDelays(int baseDelay, int nextDelay);
     public static native int getBallCount();
-    private static native void closeMemory();
-
+    public static native void resetBallCount();
 }

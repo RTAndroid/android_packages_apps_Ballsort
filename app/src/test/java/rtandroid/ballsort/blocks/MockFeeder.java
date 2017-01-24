@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package rtandroid.ballsort.blocks;
 
 public class MockFeeder extends Feeder
 {
-    private boolean mDropNextBallCalled = false;
     public boolean mWasTerminated = false;
 
     public void setState(FeederState state)
@@ -33,8 +32,5 @@ public class MockFeeder extends Feeder
     }
 
     @Override
-    public void allowDrop()
-    {
-        mDropNextBallCalled = true;
-    }
+    public void allowDrop() { }
 }

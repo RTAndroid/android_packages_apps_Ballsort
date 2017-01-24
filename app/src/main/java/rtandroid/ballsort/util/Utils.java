@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,30 +26,27 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import rtandroid.ballsort.MainActivity;
+import rtandroid.ballsort.R;
+import rtandroid.ballsort.hardware.Sorter;
+import rtandroid.ballsort.settings.Constants;
 import rtandroid.realtime.RealTimeProxy;
 
 public class Utils
 {
-    static { System.loadLibrary("util"); }
-
-    private static native void nativeSleepUs(int usec);
-
     public static boolean extractRawFile(Context context, int resourceID, String targetFileName)
     {
         try
         {
-            InputStream is = context.getResources().openRawResource(resourceID);
-
             File target = new File(context.getFilesDir(), targetFileName);
             OutputStream outputStream = new FileOutputStream(target);
+            InputStream is = context.getResources().openRawResource(resourceID);
 
             byte buffer[] = new byte[1024];
             int length;
             while ((length = is.read(buffer)) > 0) { outputStream.write(buffer, 0, length); }
 
-            outputStream.close();
             is.close();
-
+            outputStream.close();
             return true;
         }
         catch (IOException e)
@@ -112,4 +109,7 @@ public class Utils
             Log.e(MainActivity.TAG, "Failed to set RT priority: " + e.getMessage());
         }
     }
+
+    static { System.loadLibrary("util"); }
+    private static native void nativeSleepUs(int usec);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package rtandroid.ballsort.blocks.color.classifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 
 public class MeanColorClassifier implements IColorClassifier
@@ -42,37 +42,32 @@ public class MeanColorClassifier implements IColorClassifier
         trainingData.put(new int[] {373,  390, 298}, ColorType.BLACK);
         trainingData.put(new int[] {379,  373, 288}, ColorType.BLACK);
 
-        trainingData.put(new int[] {566,  666, 705}, ColorType.BLUE);
-        trainingData.put(new int[] {598,  687, 740}, ColorType.BLUE);
-        trainingData.put(new int[] {605,  709, 705}, ColorType.BLUE);
-        trainingData.put(new int[] {608,  706, 749}, ColorType.BLUE);
-        trainingData.put(new int[] {648,  727, 785}, ColorType.BLUE);
-        trainingData.put(new int[] {686,  795, 788}, ColorType.BLUE);
-        trainingData.put(new int[] {689,  775, 817}, ColorType.BLUE);
-        trainingData.put(new int[] {718,  835, 918}, ColorType.BLUE);
-        trainingData.put(new int[] {724,  836, 792}, ColorType.BLUE);
+        trainingData.put(new int[] {733,  979, 1035}, ColorType.BLUE);
+        trainingData.put(new int[] {738,  984, 1008}, ColorType.BLUE);
+        trainingData.put(new int[] {741,  991, 1026}, ColorType.BLUE);
+        trainingData.put(new int[] {753, 1010, 1060}, ColorType.BLUE);
+        trainingData.put(new int[] {780, 1039, 1081}, ColorType.BLUE);
+        trainingData.put(new int[] {784, 1041, 1080}, ColorType.BLUE);
+        trainingData.put(new int[] {784, 1046, 1123}, ColorType.BLUE);
+        trainingData.put(new int[] {787, 1044, 1086}, ColorType.BLUE);
+        trainingData.put(new int[] {792, 1054, 1103}, ColorType.BLUE);
+        trainingData.put(new int[] {803, 1069, 1120}, ColorType.BLUE);
 
-        trainingData.put(new int[] {515,  655, 496}, ColorType.GREEN);
-        trainingData.put(new int[] {570,  743, 471}, ColorType.GREEN);
-        trainingData.put(new int[] {605,  765, 483}, ColorType.GREEN);
-        trainingData.put(new int[] {628,  785, 483}, ColorType.GREEN);
-        trainingData.put(new int[] {629,  802, 512}, ColorType.GREEN);
-        trainingData.put(new int[] {634,  820, 511}, ColorType.GREEN);
-        trainingData.put(new int[] {680,  828, 518}, ColorType.GREEN);
-        trainingData.put(new int[] {690,  853, 533}, ColorType.GREEN);
-        trainingData.put(new int[] {764, 1001, 624}, ColorType.GREEN);
+        trainingData.put(new int[] {767, 1033, 733}, ColorType.GREEN);
+        trainingData.put(new int[] {796, 1064, 749}, ColorType.GREEN);
+        trainingData.put(new int[] {797, 1069, 752}, ColorType.GREEN);
+        trainingData.put(new int[] {800, 1070, 749}, ColorType.GREEN);
+        trainingData.put(new int[] {800, 1072, 756}, ColorType.GREEN);
+        trainingData.put(new int[] {808, 1076, 755}, ColorType.GREEN);
+        trainingData.put(new int[] {817, 1086, 763}, ColorType.GREEN);
+        trainingData.put(new int[] {822, 1093, 763}, ColorType.GREEN);
+        trainingData.put(new int[] {824, 1098, 769}, ColorType.GREEN);
+        trainingData.put(new int[] {832, 1096, 761}, ColorType.GREEN);
 
-        trainingData.put(new int[] {1004, 446, 345}, ColorType.RED);
-        trainingData.put(new int[] {1065, 451, 352}, ColorType.RED);
-        trainingData.put(new int[] {1093, 476, 366}, ColorType.RED);
-        trainingData.put(new int[] {1159, 485, 377}, ColorType.RED);
-        trainingData.put(new int[] {1194, 482, 376}, ColorType.RED);
-        trainingData.put(new int[] {1234, 498, 380}, ColorType.RED);
-        trainingData.put(new int[] {1260, 504, 394}, ColorType.RED);
-        trainingData.put(new int[] {1263, 499, 391}, ColorType.RED);
-        trainingData.put(new int[] {1367, 525, 409}, ColorType.RED);
-        trainingData.put(new int[] {1372, 547, 428}, ColorType.RED);
-        trainingData.put(new int[] {1386, 536, 420}, ColorType.RED);
+        trainingData.put(new int[] {1272, 889, 696}, ColorType.RED);
+        trainingData.put(new int[] {1280, 884, 692}, ColorType.RED);
+        trainingData.put(new int[] {1265, 880, 691}, ColorType.RED);
+        trainingData.put(new int[] {1244, 873, 683}, ColorType.RED);
 
         trainingData.put(new int[] {1684, 1764,  779}, ColorType.YELLOW);
         trainingData.put(new int[] {1727, 1815,  806}, ColorType.YELLOW);
@@ -134,7 +129,7 @@ public class MeanColorClassifier implements IColorClassifier
     }
 
     @Override
-    public ColorType classify(ColorObject color)
+    public ColorType classify(ColorRGB color)
     {
         double minDistance = Long.MAX_VALUE;
         ColorType minName = ColorType.BLACK;

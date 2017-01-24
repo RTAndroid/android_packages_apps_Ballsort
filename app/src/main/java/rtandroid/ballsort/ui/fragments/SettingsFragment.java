@@ -11,7 +11,6 @@ import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Settings;
 import rtandroid.ballsort.settings.SettingsManager;
 
-@SuppressWarnings({"ALL", "ConstantConditions"})
 public class SettingsFragment extends PreferenceFragment
 {
     @Override
@@ -56,65 +55,15 @@ public class SettingsFragment extends PreferenceFragment
             });
         }
 
-        String numReadsName = "colormeassurments";
-        String defaultValue = ""+settings.ColorSersorRepeats;
-        Preference pref = findPreference(numReadsName);
-        if(pref == null)
-        {
-            Log.e(MainActivity.TAG, "Could not find "+numReadsName);
-        }
-        pref.setTitle(defaultValue);
-        pref.setOnPreferenceChangeListener((preference, newValue) ->
-        {
-            try
-            {
-                int newTime = Integer.valueOf((String)newValue);
-                Log.d(MainActivity.TAG, "New timing is "+newTime);
-                settings.ColorSersorRepeats = newTime;
-                pref.setTitle(""+newTime);
-            }
-            catch (Exception e)
-            {
-                Log.d(MainActivity.TAG, "Wrong type of pref!");
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        });
-
-        String detectionName = "colordetection";
-        defaultValue = ""+settings.ColorDetection;
-        Preference detPref = findPreference(detectionName);
-        if(detPref == null)
-        {
-            Log.e(MainActivity.TAG, "Could not find "+detectionName);
-        }
-        detPref.setTitle(defaultValue);
-        detPref.setOnPreferenceChangeListener((preference, newValue) ->
-        {
-            try
-            {
-                int newTime = Integer.valueOf((String)newValue);
-                Log.d(MainActivity.TAG, "New timing is "+newTime);
-                settings.ColorSersorRepeats = newTime;
-                detPref.setTitle(""+newTime);
-            }
-            catch (Exception e)
-            {
-                Log.d(MainActivity.TAG, "Wrong type of pref!");
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        });
-
         String ColorYellowThreshold = "ColorYellowThreshold";
-        defaultValue = ""+settings.ColorYellowThreshold;
+        String defaultValue = "" + settings.ColorYellowThreshold;
         Preference ColorYellowThresholdPref = findPreference(ColorYellowThreshold);
-        if(ColorYellowThresholdPref == null)
+        if (ColorYellowThresholdPref == null)
         {
             Log.e(MainActivity.TAG, "Could not find "+ColorYellowThreshold);
+            return;
         }
+
         ColorYellowThresholdPref.setTitle(defaultValue);
         ColorYellowThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
         {
@@ -137,10 +86,12 @@ public class SettingsFragment extends PreferenceFragment
         String ColorBlackThreshold = "ColorBlackThreshold";
         defaultValue = ""+settings.ColorBlackThreshold;
         Preference ColorBlackThresholdPref = findPreference(ColorBlackThreshold);
-        if(ColorBlackThresholdPref == null)
+        if (ColorBlackThresholdPref == null)
         {
-            Log.e(MainActivity.TAG, "Could not find "+ColorBlackThreshold);
+            Log.e(MainActivity.TAG, "Could not find " + ColorBlackThreshold);
+            return;
         }
+
         ColorBlackThresholdPref.setTitle(defaultValue);
         ColorBlackThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
         {
@@ -163,10 +114,12 @@ public class SettingsFragment extends PreferenceFragment
         String ColorLightColorThreshold = "ColorLightColorThreshold";
         defaultValue = ""+settings.ColorYellowThreshold;
         Preference ColorLightColorThresholdPref = findPreference(ColorLightColorThreshold);
-        if(ColorLightColorThresholdPref == null)
+        if (ColorLightColorThresholdPref == null)
         {
             Log.e(MainActivity.TAG, "Could not find "+ColorLightColorThreshold);
+            return;
         }
+
         ColorLightColorThresholdPref.setTitle(defaultValue);
         ColorLightColorThresholdPref.setOnPreferenceChangeListener((preference, newValue) ->
         {

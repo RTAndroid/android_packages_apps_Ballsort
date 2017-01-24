@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,6 +84,11 @@ extern "C" void JNICALL Java_rtandroid_ballsort_hardware_Sorter_setDelays(JNIEnv
 extern "C" jint JNICALL Java_rtandroid_ballsort_hardware_Sorter_getBallCount(JNIEnv* env, jobject obj)
 {
     return data->ball_count;
+}
+
+extern "C" void JNICALL Java_rtandroid_ballsort_hardware_Sorter_resetBallCount(JNIEnv* env, jobject obj)
+{
+    data->ball_count = 0;
 }
 
 extern "C" jboolean JNICALL Java_rtandroid_ballsort_hardware_Sorter_closeMemory(JNIEnv* env, jobject obj)

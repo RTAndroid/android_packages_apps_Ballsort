@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import rtandroid.ballsort.blocks.SlingshotValve;
 import rtandroid.ballsort.blocks.SlingshotMotor;
 import rtandroid.ballsort.blocks.color.ColorPattern;
 import rtandroid.ballsort.blocks.color.ColorType;
+import rtandroid.ballsort.hardware.Sorter;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.SettingsManager;
@@ -47,7 +48,6 @@ public class ResetLoop extends AStateBlock
 
         // reset the program state
         DataState data = SettingsManager.getData();
-        data.mDetectedBalls = 0;
         data.mDetectedColor = ColorType.EMPTY;
         data.mDropColor = ColorType.EMPTY;
         data.mQueuedColor = ColorType.EMPTY;

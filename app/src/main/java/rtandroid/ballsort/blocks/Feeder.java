@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,15 @@
 
 package rtandroid.ballsort.blocks;
 
+import android.graphics.Color;
 import android.util.Log;
 
-import org.slf4j.helpers.Util;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
@@ -50,7 +53,7 @@ public class Feeder extends AStateBlock
     }
 
     private static final int[] ROTATE_PATTERN = { Stepper.WHILE_OPENED, Stepper.WHILE_CLOSED, Stepper.WHILE_OPENED, 32 };
-    private static final IColorClassifier[] COLOR_CLASSIFIER = { new TreeColorClassifier(), new MeanColorClassifier(), NeuralColorClassifier.getInstance() };
+    private static final IColorClassifier[] COLOR_CLASSIFIER = { new MeanColorClassifier(), new TreeColorClassifier() };
 
     protected FeederState mState = FeederState.DROPPING;
     protected Stepper mStepper = null;
@@ -118,41 +121,21 @@ public class Feeder extends AStateBlock
 
     private ColorType detectColor()
     {
-        Settings settings = SettingsManager.getSettings();
-        DataState data = SettingsManager.getData();
-        data.mDetectedColor = ColorType.EMPTY;
+        if (!isRunning()) { return ColorType.EMPTY; }
 
-        int r = 0, g = 0, b = 0;
-        for (int i = 0; i < settings.ColorSersorRepeats; i++)
-        {
-            int[] rgb = mColorSensor.receive();
-            if (rgb == null) { continue; }
-
-            r = (rgb[1] << 8) | rgb[0];
-            g = (rgb[3] << 8) | rgb[2];
-            b = (rgb[5] << 8) | rgb[4];
-
-            Log.d(MainActivity.TAG, " - color sensor returned r=" + r + ", g=" + g + ", " + b + ")");
-            Utils.delayMs(settings.ColorSensorDelay);
-        }
-
-        ColorType colorType;
-        Log.d(MainActivity.TAG, "Detecting RGB values (" + r + ", " + g + ", " + b + ")");
-
-        ColorObject color = new ColorObject(r, g, b);
+        ColorType type = null;
+        ColorRGB color = mColorSensor.receive();
 
         for (IColorClassifier classifier : COLOR_CLASSIFIER)
         {
-            colorType = classifier.classify(color);
-            Log.d(MainActivity.TAG, classifier.getName() + " -> " + colorType.name());
+            type = classifier.classify(color);
+            Log.d(MainActivity.TAG, classifier.getName() + ": " + color.toString() + " -> " + type.name());
         }
 
-        IColorClassifier used = COLOR_CLASSIFIER[settings.ColorDetection];
-        colorType = used.classify(color);
-        Log.d(MainActivity.TAG, "Using: "+ used.getName());
-
+        DataState data = SettingsManager.getData();
         data.mLatestColor = color;
-        return colorType;
+
+        return type;
     }
 
     @Override
@@ -160,15 +143,18 @@ public class Feeder extends AStateBlock
     {
         Settings settings = SettingsManager.getSettings();
         DataState data = SettingsManager.getData();
+
         data.FeederState = mState.name();
+        data.mDetectedBalls = Sorter.getBallCount();
 
         switch (mState)
         {
         // Rotate ball, that is currently in front of the color sensor to the drop
         case ROTATING:
-            mStepper.doSteps(ROTATE_PATTERN);
             data.mDropColor = data.mQueuedColor;
             data.mQueuedColor = data.mDetectedColor;
+            data.mDetectedColor = ColorType.EMPTY;
+            mStepper.doSteps(ROTATE_PATTERN);
             data.mDetectedColor = detectColor();
             Utils.delayMs(settings.BeforeDropDelay);
             mState = FeederState.READY;
@@ -181,7 +167,6 @@ public class Feeder extends AStateBlock
         // Drop the ball
         case DROPPING:
             mDropPin.setValueForMs(settings.FeederValveOpenedDelay, settings.FeederAfterDropDelay);
-            data.mDetectedBalls = Sorter.getBallCount();
             mState = FeederState.ROTATING;
             break;
         }

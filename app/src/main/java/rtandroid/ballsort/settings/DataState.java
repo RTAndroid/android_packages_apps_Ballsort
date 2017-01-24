@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package rtandroid.ballsort.settings;
 
-import rtandroid.ballsort.blocks.color.ColorObject;
+import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 
 public class DataState
@@ -26,13 +26,12 @@ public class DataState
     public ColorType mQueuedColor = ColorType.EMPTY;
     public ColorType mDetectedColor = ColorType.EMPTY;
     public ColorType mDropColor = ColorType.EMPTY;
-    public int[] mFillings = new int[Constants.PATTERN_COLUMNS_COUNT];
+    public int[] mFillings = new int[Constants.PATTERN_COLUMN_COUNT];
 
-    public ColorObject mLatestColor =  null;
+    public ColorRGB mLatestColor =  null;
 
     public String SlingshotValveState = "UNKNOWN";
     public String FeederState = "UNKNOWN";
     public String SlingshotMotorState = "UNKNOWN";
-    public String mModuleError = "";
     public double mLearningError = 0;
 }

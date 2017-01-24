@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public abstract class AStateBlock extends Thread
         Log.i(MainActivity.TAG, mName + " thread terminated");
     }
 
-    void cancel()
+    protected void cancel()
     {
         // nothing to do
     }
@@ -91,6 +91,8 @@ public abstract class AStateBlock extends Thread
 
     public void terminate()
     {
+        Log.i(MainActivity.TAG, "Stopping block " + mName + "...");
+
         mIsRunning = false;
         cancel();
     }
