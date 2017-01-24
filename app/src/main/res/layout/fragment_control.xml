@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:gravity="center_horizontal" >
-
-    <Space
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="2" />
+    android:gravity="center" >
 
     <LinearLayout
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="4"
+        style="@style/FloatingBox"
+        android:id="@+id/boxActions"
         android:orientation="vertical" >
 
-        <TextView style="@style/HeaderText" android:text="@string/actions_title" android:layout_marginTop="20dp" />
+        <TextView style="@style/HeaderText" android:text="@string/actions_title" />
         <View style="@style/HeaderDivider" android:layout_marginBottom="10dp" />
 
         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" >
@@ -46,13 +40,23 @@
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
-        <TextView style="@style/HeaderText" android:text="@string/feeder_title" android:layout_marginTop="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/FloatingBox"
+        android:id="@+id/boxFeeder"
+        android:layout_below="@id/boxActions"
+        android:layout_alignStart="@id/boxActions"
+        android:orientation="vertical" >
+
+        <TextView style="@style/HeaderText" android:text="@string/feeder_title" />
         <View style="@style/HeaderDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             android:gravity="center">
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
@@ -90,30 +94,34 @@
 
         </LinearLayout>
 
-        <TextView style="@style/HeaderText" android:text="@string/state_title" android:layout_marginTop="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/FloatingBox"
+        android:id="@+id/boxState"
+        android:layout_below="@id/boxFeeder"
+        android:layout_alignStart="@id/boxActions"
+        android:orientation="vertical" >
+
+        <TextView style="@style/HeaderText" android:text="@string/state_title" />
         <View style="@style/HeaderDivider" android:layout_marginBottom="10dp" />
 
         <TextView style="@style/LabelText" android:id="@+id/tvFeederState" android:text="@string/feeder_state" />
         <TextView style="@style/LabelText" android:id="@+id/tvSlingshotValveState" android:text="@string/slingshot_state" />
         <TextView style="@style/LabelText" android:id="@+id/tvSlingshotMotorState" android:text="@string/slingshot_motor" />
-        <TextView style="@style/LabelText" android:id="@+id/tvBallsDropped" android:text="@string/dropped" android:layout_marginTop="10dp" />
+        <TextView style="@style/LabelText" android:id="@+id/tvBallsDropped" android:text="@string/dropped" />
         <TextView style="@style/LabelText" android:id="@+id/tvPatternCount" android:text="@string/pattern" />
         <TextView style="@style/LabelText" android:id="@+id/tvFreeMemory" android:text="@string/memory" />
 
     </LinearLayout>
 
-    <Space
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
-
     <LinearLayout
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="4"
+        style="@style/FloatingBox"
+        android:layout_toEndOf="@id/boxActions"
+        android:layout_alignTop="@id/boxActions"
         android:orientation="vertical">
 
-        <TextView style="@style/HeaderText" android:text="@string/columns_title" android:layout_marginTop="20dp" />
+        <TextView style="@style/HeaderText" android:text="@string/columns_title" />
         <View style="@style/HeaderDivider" />
 
         <GridView
@@ -122,14 +130,10 @@
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
+            android:gravity="center"
             android:numColumns="6" >
         </GridView>
 
     </LinearLayout>
 
-    <Space
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="2" />
-
-</LinearLayout>
+</RelativeLayout>

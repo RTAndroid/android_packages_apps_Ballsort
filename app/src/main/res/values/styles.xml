@@ -15,11 +15,21 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="FloatingBox">
+        <item name="android:layout_width">600dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:layout_marginEnd">30dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
     <style name="HeaderText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -28,13 +38,13 @@
         <item name="android:layout_height">2dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">10dp</item>
-        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:background">@color/colorPrimaryAccent</item>
     </style>
 
     <style name="LabelText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 

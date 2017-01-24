@@ -20,13 +20,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import java.io.File;
 
 import rtandroid.ballsort.ui.FragmentAdapter;
-import rtandroid.ballsort.hardware.Sorter;
-import rtandroid.ballsort.util.Utils;
 
 public class MainActivity extends AppCompatActivity
 {
