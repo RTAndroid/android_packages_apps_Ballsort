@@ -21,6 +21,8 @@ import rtandroid.ballsort.blocks.SlingshotValve;
 import rtandroid.ballsort.blocks.SlingshotMotor;
 import rtandroid.ballsort.blocks.color.ColorPattern;
 import rtandroid.ballsort.blocks.color.ColorType;
+import rtandroid.ballsort.hardware.Sorter;
+import rtandroid.ballsort.hardware.pins.TimedGPIOPin;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.SettingsManager;
@@ -30,6 +32,8 @@ public class ResetLoop extends AStateBlock
     private SlingshotValve mSlingshotValve = null;
     private SlingshotMotor mSlingshotMotor = null;
     private ColorPattern mColorRows = null;
+    private TimedGPIOPin mDropPin = null;
+
 
     public ResetLoop()
     {
@@ -38,6 +42,7 @@ public class ResetLoop extends AStateBlock
         mSlingshotValve = new SlingshotValve();
         mSlingshotMotor = new SlingshotMotor();
         mColorRows = new ColorPattern();
+        mDropPin = new TimedGPIOPin("Feeder", Constants.FEEDER_DROP_PIN, true, false);
     }
 
     @Override
@@ -56,6 +61,7 @@ public class ResetLoop extends AStateBlock
         mSlingshotMotor.start();
 
         // open the pattern
+        mDropPin.setValue(false);
         mColorRows.resetPattern();
     }
 

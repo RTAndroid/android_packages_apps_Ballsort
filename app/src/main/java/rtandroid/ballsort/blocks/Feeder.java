@@ -66,8 +66,7 @@ public class Feeder extends AStateBlock
         int stepperDelay = SettingsManager.getSettings().FeederStepperPwmDelay;
         mStepper = new Stepper("Feeder", stepperEnablePinID, stepperStepPinID, stepperDelay, Constants.FEEDER_MOTOR_PIN_REF);
 
-        int dropPinID = Constants.FEEDER_DROP_PIN;
-        mDropPin = new TimedGPIOPin("Feeder", dropPinID, true, false);
+        mDropPin = new TimedGPIOPin("Feeder", Constants.FEEDER_DROP_PIN, true, false);
     }
 
     public FeederState getFeederState()
