@@ -19,14 +19,13 @@ package rtandroid.ballsort.hardware;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.File;
 import java.io.InputStream;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.R;
 import rtandroid.ballsort.settings.Constants;
+import rtandroid.ballsort.util.RootUtils;
 import rtandroid.ballsort.util.Utils;
-import rtandroid.root.PrivilegeElevator;
 
 public class Sorter
 {
@@ -69,7 +68,7 @@ public class Sorter
             extractModule(context);
 
             Log.d(MainActivity.TAG, "Module load started");
-            PrivilegeElevator.enableRoot();
+            RootUtils.enableRoot();
 
             loadModule(context);
             if (!isModuleLoaded()) { throw new RuntimeException("Failed to insmod module!"); }
@@ -78,7 +77,7 @@ public class Sorter
             if (!openMemory()) { throw new RuntimeException("Failed to insmod module!"); }
 
             Log.d(MainActivity.TAG, "Module load finished");
-            PrivilegeElevator.disableRoot();
+            RootUtils.disableRoot();
 
         }
         catch (Error | Exception e)
@@ -93,15 +92,15 @@ public class Sorter
         try
         {
             if (!isModuleLoaded()) { return; }
-            closeMemory();
 
-            PrivilegeElevator.enableRoot();
+            RootUtils.enableRoot();
+            closeMemory();
 
             Process insmod = Runtime.getRuntime().exec("rmmod " + Constants.MODULE_SORTING);
             insmod.waitFor();
             if (insmod.exitValue() != 0) { Log.e(MainActivity.TAG, "rmmod returned " + insmod.exitValue()); }
 
-            PrivilegeElevator.disableRoot();
+            RootUtils.disableRoot();
             Log.i(MainActivity.TAG, "Sorting module unloaded");
         }
         catch (Error | Exception e)

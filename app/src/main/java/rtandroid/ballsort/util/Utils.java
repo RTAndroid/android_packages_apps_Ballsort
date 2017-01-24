@@ -26,9 +26,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.ballsort.R;
-import rtandroid.ballsort.hardware.Sorter;
-import rtandroid.ballsort.settings.Constants;
 import rtandroid.realtime.RealTimeProxy;
 
 public class Utils

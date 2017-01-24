@@ -11,7 +11,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
@@ -28,18 +28,8 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".services.SortService"
-            android:icon="@android:drawable/presence_online"
-            android:label="Ballsort is running">
-        </service>
-
-        <service
-            android:name=".services.ResetService"
-            android:icon="@android:drawable/presence_invisible"
-            android:label="Ballsort is resetting">
-        </service>
+        <service android:name=".services.SortService" />
+        <service android:name=".services.ResetService" />
 
     </application>
-
 </manifest>

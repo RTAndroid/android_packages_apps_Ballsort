@@ -16,25 +16,18 @@
 
 package rtandroid.ballsort.hardware;
 
-import android.graphics.Color;
 import android.util.Log;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorRGB;
-import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.settings.Constants;
-import rtandroid.root.PrivilegeElevator;
+import rtandroid.ballsort.util.RootUtils;
 
 public class ColorSensor
 {
     public boolean open()
     {
-        try { PrivilegeElevator.enableRoot(); }
-        catch (Error | Exception e)
-        {
-            Log.e(MainActivity.TAG, "Failed to close root: " + e.getMessage());
-            return false;
-        }
+        RootUtils.enableRoot();
 
         try
         {
@@ -58,14 +51,7 @@ public class ColorSensor
         boolean result = openI2C();
         Log.i(MainActivity.TAG, "Opening i2c color sensor returned '" + result + "'");
 
-        try { PrivilegeElevator.disableRoot(); }
-        catch (Error | Exception e)
-        {
-            Log.e(MainActivity.TAG, "Failed to close root: " + e.getMessage());
-            return false;
-        }
-
-        Log.i(MainActivity.TAG, "I2C pin was initialized");
+        RootUtils.disableRoot();
         return true;
     }
 

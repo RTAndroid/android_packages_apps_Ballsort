@@ -2,7 +2,6 @@
     <string name="app_name">Ballsort</string>
     <string name="memory">Free memory: 0 kb / 0 kb</string>
     <string name="reset">Reset</string>
-    <string name="sort">Sort</string>
     <string name="slingshot_state">Slingshot state: UNKNOWN</string>
     <string name="slingshot_motor">Slingshot motor: UNKNOWN</string>
     <string name="feeder_state">Feeder: UNKNOWN</string>

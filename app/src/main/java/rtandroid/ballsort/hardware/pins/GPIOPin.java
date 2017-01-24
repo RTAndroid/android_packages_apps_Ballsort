@@ -16,7 +16,6 @@
 
 package rtandroid.ballsort.hardware.pins;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.io.File;
@@ -24,7 +23,7 @@ import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 
 import rtandroid.ballsort.MainActivity;
-import rtandroid.root.PrivilegeElevator;
+import rtandroid.ballsort.util.RootUtils;
 
 /**
  * Basic class for I/O
@@ -74,27 +73,18 @@ public class GPIOPin
     /**
      * Opens the required files for changing the pin states later on
      */
-    @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
     private void initFilesystem()
     {
-        try
-        {
-            PrivilegeElevator.enableRoot();
-        }
-        catch (Exception e)
-        {
-            Log.e(MainActivity.TAG, "Could not acquire root: " + e.getMessage());
-        }
+        RootUtils.enableRoot();
 
-        // unexport pin just to be sure
         unexportPin();
         exportPin();
 
-        File directionFile = new File("/sys/class/gpio/gpio" + mPinID + "/direction");
         mFilename = "/sys/class/gpio/gpio" + mPinID + "/value";
         File valueFile = new File(mFilename);
+        File directionFile = new File("/sys/class/gpio/gpio" + mPinID + "/direction");
 
-        try(FileOutputStream directionFos = new FileOutputStream(directionFile))
+        try (FileOutputStream directionFos = new FileOutputStream(directionFile))
         {
             // change permission of direction file to 777
             boolean result = true;
@@ -106,49 +96,38 @@ public class GPIOPin
             result = result && valueFile.setWritable(true, false);
             result = result && valueFile.setExecutable(true, false);
             result = result && valueFile.setReadable(true, false);
-
-            if(!result)
-            {
-                Log.e(MainActivity.TAG, "Failed to change permission for pin " + mName);
-            }
+            if (!result) { Log.e(MainActivity.TAG, "Failed to change permission for pin " + mName); }
 
             // set direction
             directionFos.write(mDirection.getBytes());
             directionFos.flush();
-
-            PrivilegeElevator.disableRoot();
         }
         catch(Exception e)
         {
             Log.e(MainActivity.TAG, "Failed to export pin " + mName + ": " + e.getMessage());
         }
+
+        RootUtils.disableRoot();
     }
+
     private void exportPin()
     {
-        try(FileOutputStream exportFos = new FileOutputStream(new File(EXPORT)))
+        try (FileOutputStream exportFos = new FileOutputStream(new File(EXPORT)))
         {
-            // export pin
             exportFos.write(mPinID.toString().getBytes());
             exportFos.flush();
         }
-        catch (Exception e)
-        {
-            Log.e(MainActivity.TAG, "Could not export pin " + mPinID + ": " + e.getMessage());
-        }
+        catch (Exception ignored) { }
     }
 
     private void unexportPin()
     {
-        try(FileOutputStream unexportFos = new FileOutputStream(new File(UNEXPORT)))
+        try (FileOutputStream unexportFos = new FileOutputStream(new File(UNEXPORT)))
         {
-            // Will fail, if pin is not exported yet
             unexportFos.write(mPinID.toString().getBytes());
             unexportFos.flush();
         }
-        catch (Exception e)
-        {
-            Log.i(MainActivity.TAG, "Could not unexport pin " + mPinID + ": " + e.getMessage());
-        }
+        catch (Exception ignored) { }
     }
 
     private void initInput()
@@ -233,15 +212,8 @@ public class GPIOPin
 
     public void cleanup()
     {
-        try
-        {
-            PrivilegeElevator.enableRoot();
-            unexportPin();
-            PrivilegeElevator.disableRoot();
-        }
-        catch (Exception e)
-        {
-            Log.e(MainActivity.TAG, "Could not cleanup: " + e.getMessage());
-        }
+        RootUtils.enableRoot();
+        unexportPin();
+        RootUtils.disableRoot();
     }
 }

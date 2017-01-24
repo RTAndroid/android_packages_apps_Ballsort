@@ -21,7 +21,6 @@ import rtandroid.ballsort.blocks.SlingshotValve;
 import rtandroid.ballsort.blocks.SlingshotMotor;
 import rtandroid.ballsort.blocks.color.ColorPattern;
 import rtandroid.ballsort.blocks.color.ColorType;
-import rtandroid.ballsort.hardware.Sorter;
 import rtandroid.ballsort.settings.Constants;
 import rtandroid.ballsort.settings.DataState;
 import rtandroid.ballsort.settings.SettingsManager;

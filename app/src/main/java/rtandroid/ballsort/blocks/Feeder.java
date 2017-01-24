@@ -16,19 +16,13 @@
 
 package rtandroid.ballsort.blocks;
 
-import android.graphics.Color;
 import android.util.Log;
-
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import rtandroid.ballsort.MainActivity;
 import rtandroid.ballsort.blocks.color.ColorRGB;
 import rtandroid.ballsort.blocks.color.ColorType;
 import rtandroid.ballsort.blocks.color.classifier.IColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.MeanColorClassifier;
-import rtandroid.ballsort.blocks.color.classifier.NeuralColorClassifier;
 import rtandroid.ballsort.blocks.color.classifier.TreeColorClassifier;
 import rtandroid.ballsort.hardware.ColorSensor;
 import rtandroid.ballsort.hardware.Sorter;

@@ -154,7 +154,8 @@ public class NeuralColorClassifier implements IColorClassifier {
         result[7] = hsv[1];
         result[8] = hsv[2];
 
-        if (false)
+        // do some debugging
+        if (result.length < 0)
         {
             StringBuilder builder = new StringBuilder();
             for (double v : result) { builder.append(v).append(","); }
