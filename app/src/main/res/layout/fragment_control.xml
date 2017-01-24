@@ -6,7 +6,30 @@
 
     <LinearLayout
         style="@style/FloatingBox"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:id="@+id/boxColumns">
+
+        <TextView style="@style/HeaderText" android:text="@string/columns_title" />
+        <View style="@style/HeaderDivider" />
+
+        <GridView
+            android:id="@+id/patternGrid"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:numColumns="6" >
+        </GridView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/FloatingBox"
         android:id="@+id/boxActions"
+        android:layout_alignTop="@id/boxColumns"
+        android:layout_toStartOf="@id/boxColumns"
         android:orientation="vertical" >
 
         <TextView style="@style/HeaderText" android:text="@string/actions_title" />
@@ -112,27 +135,6 @@
         <TextView style="@style/LabelText" android:id="@+id/tvBallsDropped" android:text="@string/dropped" />
         <TextView style="@style/LabelText" android:id="@+id/tvPatternCount" android:text="@string/pattern" />
         <TextView style="@style/LabelText" android:id="@+id/tvFreeMemory" android:text="@string/memory" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/FloatingBox"
-        android:layout_toEndOf="@id/boxActions"
-        android:layout_alignTop="@id/boxActions"
-        android:orientation="vertical">
-
-        <TextView style="@style/HeaderText" android:text="@string/columns_title" />
-        <View style="@style/HeaderDivider" />
-
-        <GridView
-            android:id="@+id/patternGrid"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:numColumns="6" >
-        </GridView>
 
     </LinearLayout>
 
