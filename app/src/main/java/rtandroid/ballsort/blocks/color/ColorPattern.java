@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 RTAndroid Project
+ * Copyright (C) 2017 RTAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class ColorPattern
 
     public ColorPattern()
     {
-        mBottomPins = new GPIOPin("ColorPatternReset", Constants.PATTERN_VALVE_PIN, GPIOPin.DIRECTION_OUT, true);
+        mBottomPins = new GPIOPin("ColorPatternReset", Constants.PATTERN_VALVE_PIN, GPIOPin.DIRECTION_OUT, false);
         mFillings = new int[Constants.PATTERN_COLUMN_COUNT];
         DataState data = SettingsManager.getData();
         data.mFillings = mFillings;
@@ -76,9 +76,9 @@ public class ColorPattern
             mIgnoredBalls++;
             return Constants.PATTERN_COLUMN_COUNT - 1;
         }
-        
+
         if (mShouldOpenPins == PinState.CLOSED) { mShouldOpenPins = PinState.SHOULD_OPEN; }
-        
+
         // ignore unknown balls
         if (color.equals(ColorType.EMPTY)) { return SKIP; }
 
