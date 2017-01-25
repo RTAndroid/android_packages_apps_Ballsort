@@ -30,6 +30,7 @@
         android:id="@+id/boxActions"
         android:layout_alignTop="@id/boxColumns"
         android:layout_toStartOf="@id/boxColumns"
+        android:layout_marginBottom="21dp"
         android:orientation="vertical" >
 
         <TextView style="@style/HeaderText" android:text="@string/actions_title" />
@@ -70,6 +71,7 @@
         android:id="@+id/boxFeeder"
         android:layout_below="@id/boxActions"
         android:layout_alignStart="@id/boxActions"
+        android:layout_marginBottom="22dp"
         android:orientation="vertical" >
 
         <TextView style="@style/HeaderText" android:text="@string/feeder_title" />
@@ -94,6 +96,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_arrow"
+                android:tint="@color/colorPrimaryAccent"
                 android:contentDescription="@string/start" />
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
@@ -108,6 +111,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_arrow"
+                android:tint="@color/colorPrimaryAccent"
                 android:contentDescription="@string/start" />
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" >
